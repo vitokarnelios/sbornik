@@ -1,4 +1,4 @@
-name: Run Checker VPN
+name: Update VPN Subs
 
 on:
   workflow_dispatch:
@@ -16,28 +16,26 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      # ВОТ ЭТОТ ШАГ ИСПРАВИТ ОШИБКУ: Устанавливаем библиотеку requests
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          pip install requests
 
       - name: Run main script
-        run: python3 main.py
+        run: |
+          python3 main.py
 
       - name: Commit subs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          mkdir -p subs
-          touch subs/.gitkeep
-          
-          git add subs/
-          
+
+          git add subs/*.txt
+
           if git diff --staged --quiet; then
             echo "No changes"
           else
             git commit -m "Auto update validated subs"
-            git push origin main
+            git push
           fi
