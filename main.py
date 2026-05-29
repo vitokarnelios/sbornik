@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os
 import requests
 import base64
@@ -7,258 +6,95 @@ import random
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 FINAL_DIR = os.path.join(BASE_PATH, "subs")
-
 os.makedirs(FINAL_DIR, exist_ok=True)
 
-# =========================================================
-# ИСТОЧНИКИ
-# =========================================================
-
+# ИСКЛЮЧИТЕЛЬНО ПРОВЕРЕННЫЕ БЕЛЫЕ СПИСКИ (БЕЗ МУСОРА)
 SOURCES = [
-
-    # IGARECK
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_SS+All_RUS.txt",
-
-    # HIDDIFY
-    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/27.txt",
-    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/34.txt",
-
-    # KORT0881
-    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/clean/vless.txt",
-    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt",
-
-    # ТВОИ
-    "https://raw.githubusercontent.com/vitokarnelios/sbornik-vless/refs/heads/main/subs/vless_001.txt",
-    "https://raw.githubusercontent.com/vitokarnelios/sbornik-vless/refs/heads/main/subs/hysteria2_001.txt",
-    "https://raw.githubusercontent.com/vitokarnelios/sbornik-vless/refs/heads/main/subs/ss_001.txt",
-    "https://raw.githubusercontent.com/vitokarnelios/sbornik-vless/refs/heads/main/subs/trojan_001.txt",
+    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt"
 ]
 
-# =========================================================
-# ЛИМИТЫ
-# =========================================================
-
-LIMITS = {
-    "vless": 200,
-    "trojan": 120,
-    "ss": 120,
-    "vmess": 80,
-    "hysteria2": 80
-}
-
-# =========================================================
-# BASE64
-# =========================================================
+MAX_NODES = 250  # Оптимальный лимит для Hiddify
 
 def decode_base64_content(text):
-
+    """Безопасная распаковка зашифрованных баз Kort0881"""
     try:
-
         text = text.strip()
-
         if "://" in text:
             return [text]
-
-        if len(text) < 60:
-            return []
-
         padding = len(text) % 4
-
         if padding:
             text += "=" * (4 - padding)
-
-        decoded = base64.b64decode(
-            text
-        ).decode(
-            "utf-8",
-            errors="ignore"
-        )
-
+        decoded = base64.b64decode(text).decode("utf-8", errors="ignore")
         return decoded.splitlines()
-
     except:
         return []
-
-# =========================================================
-# ЗАГРУЗКА
-# =========================================================
 
 def fetch_source(url):
-
     try:
-
-        r = requests.get(
-            url,
-            timeout=20,
-            headers={
-                "User-Agent": "Mozilla/5.0"
-            }
-        )
-
-        if r.status_code != 200:
-            return []
-
-        final = []
-
-        for line in r.text.splitlines():
-
-            line = line.strip()
-
-            if not line:
-                continue
-
-            if "://" not in line:
-                final.extend(
-                    decode_base64_content(line)
-                )
-            else:
-                final.append(line)
-
-        return final
-
+        r = requests.get(url, timeout=15)
+        if r.status_code == 200:
+            final_lines = []
+            for line in r.text.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                # Если строка — пачка Base64, распаковываем её
+                if "://" not in line and len(line) > 50:
+                    final_lines.extend(decode_base64_content(line))
+                else:
+                    final_lines.append(line)
+            return final_lines
     except:
-        return []
+        pass
+    return []
 
-# =========================================================
-# ПРОТОКОЛ
-# =========================================================
-
-def protocol_of(line):
-
-    line = line.lower()
-
-    for proto in [
-        "vless",
-        "trojan",
-        "ss",
-        "vmess",
-        "hysteria2",
-        "hy2"
-    ]:
-
-        if line.startswith(f"{proto}://"):
-            return proto
-
-    return None
-
-# =========================================================
-# VLESS FILTER
-# =========================================================
-
-def valid_vless(line):
-
+def is_valid_reality(line):
+    """Жесткий отбор: только живой VLESS Reality"""
     if not line.startswith("vless://"):
         return False
-
+    # Обязательные параметры, без которых Hiddify выдаст ошибку
     if "pbk=" not in line:
         return False
-
-    if "security=reality" not in line:
+    if "security=reality" not in line and "type=" not in line:
         return False
-
     return True
 
-# =========================================================
-# MAIN
-# =========================================================
-
 def main():
-
-    print("🚀 Загрузка подписок...")
-
-    all_lines = []
-
+    print("🚀 Собираем элитные Reality-ноды из белых списков...")
+    all_nodes = []
+    
     for url in SOURCES:
+        all_nodes.extend(fetch_source(url))
+        
+    print(f"📦 Всего загружено строк из источников: {len(all_nodes)}")
 
-        print(f"📥 {url}")
-
-        all_lines.extend(
-            fetch_source(url)
-        )
-
-    print(f"\n📦 Загружено строк: {len(all_lines)}")
-
-    buckets = {
-        "vless": [],
-        "trojan": [],
-        "ss": [],
-        "vmess": [],
-        "hysteria2": []
-    }
-
+    unique_nodes = []
     seen = set()
-
-    for line in all_lines:
-
+    
+    for line in all_nodes:
         line = line.strip()
-
-        if not line:
+        if not is_valid_reality(line):
             continue
-
-        if "://" not in line:
-            continue
-
         if line in seen:
             continue
-
-        proto = protocol_of(line)
-
-        if not proto:
-            continue
-
-        # ФИЛЬТР REALITY
-        if proto == "vless":
-
-            if not valid_vless(line):
-                continue
-
         seen.add(line)
+        unique_nodes.append(line)
 
-        if proto == "hy2":
-            proto = "hysteria2"
+    print(f"🔍 Найдено уникального валидного Reality: {len(unique_nodes)}")
 
-        if proto in buckets:
-            buckets[proto].append(line)
+    # Рандомизируем список, чтобы при каждом обновлении подписка была свежей
+    random.shuffle(unique_nodes)
+    
+    # Режем строго до лимита
+    final_pack = unique_nodes[:MAX_NODES]
 
-    # =====================================================
-    # СОХРАНЕНИЕ
-    # =====================================================
-
-    for proto, nodes in buckets.items():
-
-        random.shuffle(nodes)
-
-        limit = LIMITS.get(proto, 100)
-
-        final_nodes = nodes[:limit]
-
-        filename = f"{proto}_001.txt"
-
-        out_path = os.path.join(
-            FINAL_DIR,
-            filename
-        )
-
-        with open(
-            out_path,
-            "w",
-            encoding="utf-8"
-        ) as f:
-
-            f.write(
-                "\n".join(final_nodes)
-            )
-
-        print(
-            f"💾 {filename}: "
-            f"{len(final_nodes)} нод"
-        )
-
-    print("\n🔥 ГОТОВО")
-
-# =========================================================
+    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(final_pack))
+        
+    print(f"💾 Успех! Создан vless_001.txt. Сохранено {len(final_pack)} премиум-нод.")
 
 if __name__ == "__main__":
     main()
