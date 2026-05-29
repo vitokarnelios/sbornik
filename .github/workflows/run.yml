@@ -1,52 +1,40 @@
 name: Update VPN Subs
 
 on:
-workflow_dispatch:
-schedule:
-- cron: '0 */4 * * *'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */4 * * *'
 
 jobs:
-update-subs:
-runs-on: ubuntu-latest
+  check-job:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Setup Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-  - name: Install Python dependencies
-    run: |
-      pip install requests pysocks
+      - name: Install dependencies
+        run: pip install requests
 
-  - name: Download sing-box
-    run: |
-      wget https://github.com/SagerNet/sing-box/releases/download/v1.14.0-alpha.26/sing-box-1.14.0-alpha.26-linux-amd64.tar.gz
-      tar -xzf sing-box-1.14.0-alpha.26-linux-amd64.tar.gz
+      - name: Run main script
+        run: python3 main.py
 
-  - name: Make sing-box executable
-    run: |
-      chmod +x sing-box-1.14.0-alpha.26-linux-amd64/sing-box
+      - name: Commit subs
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-  - name: Run checker
-    run: |
-      python3 main.py
+          mkdir -p subs
+          git add subs/
 
-  - name: Commit updated subs
-    run: |
-      git config --global user.name "github-actions[bot]"
-      git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      git add subs/
-
-      if git diff --staged --quiet; then
-        echo "No changes"
-      else
-        git commit -m "Auto update validated Reality nodes"
-        git push
-      fi
-```
+          if git diff --staged --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Auto update validated subs"
+            git push
+          fi
