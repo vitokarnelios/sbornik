@@ -3,11 +3,12 @@ name: Run Checker VPN
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */4 * * *' # Авто-запуск каждые 4 часа
+    - cron: '0 */4 * * *'
 
 jobs:
   check-job:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,10 +19,9 @@ jobs:
           python-version: '3.10'
 
       - name: Run main script
-        run: |
-          python3 main.py
+        run: python3 main.py
 
-      - name: Save cleaned files to GitHub
+      - name: Commit subs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -29,6 +29,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes"
           else
-            git commit -m "Auto-update cleaned subs"
-            git push origin main
+            git commit -m "Auto update validated subs"
+            git push
           fi
