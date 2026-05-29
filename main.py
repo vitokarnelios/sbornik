@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 import os
 import requests
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 FINAL_DIR = os.path.join(BASE_PATH, "subs")
 os.makedirs(FINAL_DIR, exist_ok=True)
 
-# Проверенные источники с гарантированно валидными VLESS-Reality конфигурациями
+# ПОЛНЫЙ СПИСОК ТВОИХ ИСТОЧНИКОВ
 SOURCES = [
+    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/clean/vless.txt",
+    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt",
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_SS+All_RUS.txt",
+    "https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/1.txt",
+    "https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/26.txt",
+    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/27.txt",
+    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/34.txt"
 ]
+
+# Протоколы, которые мы ищем и разделяем
+ALLOWED_PROTOCOLS = ["vless", "ss", "trojan", "vmess"]
 
 def fetch_source(url):
     try:
@@ -23,7 +34,7 @@ def fetch_source(url):
     return []
 
 def main():
-    print("🚀 Старт загрузки валидных VLESS конфигураций...")
+    print("🚀 Старт полной сортировки всех источников по протоколам...")
     all_configs = []
     
     with ThreadPoolExecutor(max_workers=5) as ex:
@@ -31,22 +42,42 @@ def main():
         for configs in results:
             all_configs.extend(configs)
 
-    unique_nodes = []
+    # Ведра для сортировки нод
+    buckets = defaultdict(list)
     seen = set()
     
     for line in all_configs:
         line = line.strip()
-        # Жесткая фильтрация: только VLESS и только с обязательными Reality/TLS параметрами
-        if line.startswith("vless://") and line not in seen:
-            if "pbk=" in line or "sni=" in line:
-                seen.add(line)
-                unique_nodes.append(line)
-
-    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(unique_nodes))
+        if not line or "://" not in line or line in seen:
+            continue
+            
+        # Определяем, какой это протокол
+        proto = line.split("://")[0].lower()
         
-    print(f"✅ Финал! Успешно сохранено {len(unique_nodes)} проверенных VLESS нод.")
+        if proto in ALLOWED_PROTOCOLS:
+            # Если это VLESS, делаем жесткую проверку на Reality/TLS параметры, чтобы Hiddify не ругался
+            if proto == "vless":
+                if "pbk=" not in line and "sni=" not in line and "security=reality" not in line:
+                    continue # Пропускаем битый VLESS без ключей
+            
+            seen.add(line)
+            buckets[proto].append(line)
+
+    # Записываем каждый протокол в свой личный файл
+    for proto in ALLOWED_PROTOCOLS:
+        nodes = buckets[proto]
+        
+        # Задаем правильные имена файлов (для vless оставляем твой старый vless_001.txt)
+        if proto == "vless":
+            filename = "vless_001.txt"
+        else:
+            filename = f"{proto}_001.txt"
+            
+        out_path = os.path.join(FINAL_DIR, filename)
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(nodes))
+            
+        print(f"💾 Файл {filename} сохранен. Собрано нод: {len(nodes)}")
 
 if __name__ == "__main__":
     main()
