@@ -19,22 +19,27 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          pip install requests
 
       - name: Run main script
-        run: python3 main.py
+        run: |
+          python3 main.py
 
       - name: Commit subs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Создаем папку, если её нет, чтобы Git не ругался
           mkdir -p subs
+          
+          # Добавляем всю папку целиком — так Git не упадет, даже если она пустая
           git add subs/
 
           if git diff --staged --quiet; then
             echo "No changes"
           else
             git commit -m "Auto update validated subs"
-            git push
+            git push origin main
           fi
