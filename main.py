@@ -1,101 +1,202 @@
 #!/usr/bin/env python3
+
 import os
-import requests
-import base64
+import json
+import time
 import random
+import requests
+import subprocess
+import signal
 
-BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-FINAL_DIR = os.path.join(BASE_PATH, "subs")
-os.makedirs(FINAL_DIR, exist_ok=True)
+BASE_DIR = os.path.dirname(os.path.abspath(**file**))
 
-# НАШИ НАДЕЖНЫЕ БЕЛЫЕ СПИСКИ
+SUBS_DIR = os.path.join(BASE_DIR, "subs")
+os.makedirs(SUBS_DIR, exist_ok=True)
+
+SINGBOX_PATH = os.path.join(
+BASE_DIR,
+"sing-box-1.14.0-alpha.26-linux-amd64",
+"sing-box"
+)
+
 SOURCES = [
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
-    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt"
+"https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+"https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
+"https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt"
 ]
 
-MAX_NODES = 250
+TEST_URLS = [
+"https://cp.cloudflare.com",
+"https://www.google.com/generate_204"
+]
 
-def decode_base64_content(text):
-    try:
-        text = text.strip()
-        if "://" in text:
-            return [text]
-        padding = len(text) % 4
-        if padding:
-            text += "=" * (4 - padding)
-        decoded = base64.b64decode(text).decode("utf-8", errors="ignore")
-        return decoded.splitlines()
-    except:
-        return []
+MAX_NODES = 70
 
-def fetch_source(url):
+def fetch_nodes():
+all_nodes = []
+
+```
+for url in SOURCES:
     try:
         r = requests.get(url, timeout=15)
+
         if r.status_code == 200:
-            final_lines = []
             for line in r.text.splitlines():
                 line = line.strip()
-                if not line:
-                    continue
-                if "://" not in line and len(line) > 50:
-                    final_lines.extend(decode_base64_content(line))
-                else:
-                    final_lines.append(line)
-            return final_lines
-    except:
-        pass
-    return []
 
-def is_valid_reality(line):
-    # Проверяем строго начало протокола
-    if not line.lower().startswith("vless://"):
-        return False
-    
-    # Переводим в нижний регистр только для проверки условий, чтобы не сломать сам UUID и ключи в ссылке
-    line_lower = line.lower()
-    
-    # Главный маркер Reality — это наличие публичного ключа (pbk)
-    if "pbk=" not in line_lower:
-        return False
-        
+                if line.startswith("vless://"):
+                    if "pbk=" in line.lower():
+                        all_nodes.append(line)
+
+    except Exception as e:
+        print("SOURCE ERROR:", e)
+
+return list(set(all_nodes))
+```
+
+def make_config(node, socks_port):
+return {
+"log": {
+"level": "error"
+},
+"inbounds": [
+{
+"type": "socks",
+"tag": "socks-in",
+"listen": "127.0.0.1",
+"listen_port": socks_port
+}
+],
+"outbounds": [
+{
+"type": "selector",
+"tag": "select",
+"outbounds": [
+"proxy"
+],
+"default": "proxy"
+},
+{
+"type": "vless",
+"tag": "proxy",
+"server": "PLACEHOLDER"
+}
+]
+}
+
+def build_temp_config(node, port):
+config = {
+"log": {
+"level": "error"
+},
+"inbounds": [
+{
+"type": "socks",
+"listen": "127.0.0.1",
+"listen_port": port
+}
+],
+"outbounds": [
+{
+"type": "vless",
+"tag": "proxy",
+"server": "127.0.0.1"
+}
+]
+}
+
+```
+config_path = os.path.join(BASE_DIR, f"temp_{port}.json")
+
+with open(config_path, "w", encoding="utf-8") as f:
+    json.dump(config, f)
+
+return config_path
+```
+
+def test_node(node):
+port = random.randint(20000, 50000)
+
+```
+config_path = build_temp_config(node, port)
+
+proc = None
+
+try:
+    proc = subprocess.Popen(
+        [SINGBOX_PATH, "run", "-c", config_path],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    time.sleep(3)
+
+    proxies = {
+        "http": f"socks5h://127.0.0.1:{port}",
+        "https": f"socks5h://127.0.0.1:{port}"
+    }
+
+    for url in TEST_URLS:
+        r = requests.get(
+            url,
+            proxies=proxies,
+            timeout=8
+        )
+
+        if r.status_code not in [200, 204]:
+            raise Exception("Bad status")
+
     return True
 
+except Exception:
+    return False
+
+finally:
+    try:
+        if proc:
+            proc.kill()
+    except:
+        pass
+
+    try:
+        os.remove(config_path)
+    except:
+        pass
+```
+
 def main():
-    print("🚀 Начинаем мягкую и точную фильтрацию белых списков...")
-    all_nodes = []
-    
-    for url in SOURCES:
-        all_nodes.extend(fetch_source(url))
-        
-    print(f"📦 Всего загружено строк: {len(all_nodes)}")
+print("Loading Reality nodes...")
 
-    unique_nodes = []
-    seen = set()
-    
-    for line in all_nodes:
-        line = line.strip()
-        if not is_valid_reality(line):
-            continue
-        if line in seen:
-            continue
-        seen.add(line)
-        unique_nodes.append(line)
+```
+nodes = fetch_nodes()
 
-    print(f"🔍 Найдено уникальных рабочих Reality-нод: {len(unique_nodes)}")
+print(f"Loaded: {len(nodes)}")
 
-    # Перемешиваем, чтобы список обновлялся
-    random.shuffle(unique_nodes)
-    
-    # Ограничиваем размер файла
-    final_pack = unique_nodes[:MAX_NODES]
+alive = []
 
-    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(final_pack))
-        
-    print(f"💾 Успешно сохранено {len(final_pack)} серверов в vless_001.txt")
+for i, node in enumerate(nodes, 1):
+    print(f"[{i}/{len(nodes)}] checking...")
 
-if __name__ == "__main__":
-    main()
+    ok = test_node(node)
+
+    if ok:
+        print("ALIVE")
+        alive.append(node)
+    else:
+        print("DEAD")
+
+    if len(alive) >= MAX_NODES:
+        break
+
+random.shuffle(alive)
+
+out_path = os.path.join(SUBS_DIR, "vless_001.txt")
+
+with open(out_path, "w", encoding="utf-8") as f:
+    f.write("\n".join(alive))
+
+print(f"SAVED {len(alive)} LIVE NODES")
+```
+
+if **name** == "**main**":
+main()
