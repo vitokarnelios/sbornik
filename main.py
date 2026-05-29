@@ -1,40 +1,102 @@
-name: Update VPN Subs
+#!/usr/bin/env python3
+import os
+import requests
+import base64
+import random
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 */4 * * *'
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+FINAL_DIR = os.path.join(BASE_PATH, "subs")
+os.makedirs(FINAL_DIR, exist_ok=True)
 
-jobs:
-  check-job:
-    runs-on: ubuntu-latest
+SOURCES = [
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
+    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt"
+]
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+MAX_NODES = 250
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+def decode_base64_content(text):
+    try:
+        text = text.strip()
+        if "://" in text:
+            return [text]
 
-      - name: Install dependencies
-        run: pip install requests
+        padding = len(text) % 4
+        if padding:
+            text += "=" * (4 - padding)
 
-      - name: Run main script
-        run: python3 main.py
+        decoded = base64.b64decode(text).decode("utf-8", errors="ignore")
+        return decoded.splitlines()
 
-      - name: Commit subs
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    except:
+        return []
 
-          mkdir -p subs
-          git add subs/
+def fetch_source(url):
+    try:
+        r = requests.get(url, timeout=15)
 
-          if git diff --staged --quiet; then
-            echo "No changes"
-          else
-            git commit -m "Auto update validated subs"
-            git push
-          fi
+        if r.status_code == 200:
+            final_lines = []
+
+            for line in r.text.splitlines():
+                line = line.strip()
+
+                if not line:
+                    continue
+
+                if "://" not in line and len(line) > 50:
+                    final_lines.extend(decode_base64_content(line))
+                else:
+                    final_lines.append(line)
+
+            return final_lines
+
+    except:
+        pass
+
+    return []
+
+def is_valid_reality(line):
+    if not line.lower().startswith("vless://"):
+        return False
+
+    line_lower = line.lower()
+
+    if "pbk=" not in line_lower:
+        return False
+
+    return True
+
+def main():
+    all_nodes = []
+
+    for url in SOURCES:
+        all_nodes.extend(fetch_source(url))
+
+    unique_nodes = []
+    seen = set()
+
+    for line in all_nodes:
+        line = line.strip()
+
+        if not is_valid_reality(line):
+            continue
+
+        if line in seen:
+            continue
+
+        seen.add(line)
+        unique_nodes.append(line)
+
+    random.shuffle(unique_nodes)
+
+    final_pack = unique_nodes[:MAX_NODES]
+
+    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(final_pack))
+
+if __name__ == "__main__":
+    main()
