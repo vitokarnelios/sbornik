@@ -21,8 +21,10 @@ SOURCES = [
     "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/34.txt"
 ]
 
-# Протоколы, которые мы ищем и разделяем
 ALLOWED_PROTOCOLS = ["vless", "ss", "trojan", "vmess"]
+
+# ЖЕСТКИЙ ЛИМИТ: сколько максимум серверов оставлять в каждом файле
+MAX_LINES = 250
 
 def fetch_source(url):
     try:
@@ -34,7 +36,7 @@ def fetch_source(url):
     return []
 
 def main():
-    print("🚀 Старт полной сортировки всех источников по протоколам...")
+    print("🚀 Старт сортировки источников с жестким лимитом строк...")
     all_configs = []
     
     with ThreadPoolExecutor(max_workers=5) as ex:
@@ -42,7 +44,6 @@ def main():
         for configs in results:
             all_configs.extend(configs)
 
-    # Ведра для сортировки нод
     buckets = defaultdict(list)
     seen = set()
     
@@ -51,23 +52,24 @@ def main():
         if not line or "://" not in line or line in seen:
             continue
             
-        # Определяем, какой это протокол
         proto = line.split("://")[0].lower()
         
         if proto in ALLOWED_PROTOCOLS:
-            # Если это VLESS, делаем жесткую проверку на Reality/TLS параметры, чтобы Hiddify не ругался
+            # Валидация VLESS, чтобы не пускать битые строки без Reality/TLS параметров
             if proto == "vless":
                 if "pbk=" not in line and "sni=" not in line and "security=reality" not in line:
-                    continue # Пропускаем битый VLESS без ключей
+                    continue
             
             seen.add(line)
             buckets[proto].append(line)
 
-    # Записываем каждый протокол в свой личный файл
+    # Записываем файлы с жестким ограничением размера
     for proto in ALLOWED_PROTOCOLS:
         nodes = buckets[proto]
         
-        # Задаем правильные имена файлов (для vless оставляем твой старый vless_001.txt)
+        # ОБРЕЗАЕМ СПИСОК СТРОГО ДО 250 ШТУК
+        nodes_limited = nodes[:MAX_LINES]
+        
         if proto == "vless":
             filename = "vless_001.txt"
         else:
@@ -75,9 +77,9 @@ def main():
             
         out_path = os.path.join(FINAL_DIR, filename)
         with open(out_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(nodes))
+            f.write("\n".join(nodes_limited))
             
-        print(f"💾 Файл {filename} сохранен. Собрано нод: {len(nodes)}")
+        print(f"💾 Файл {filename} сохранен. Жестко оставлено нод: {len(nodes_limited)}")
 
 if __name__ == "__main__":
     main()
