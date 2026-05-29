@@ -19,12 +19,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install requests
+        run: pip install requests
 
       - name: Run main script
-        run: |
-          python3 main.py
+        run: python3 main.py
 
       - name: Commit subs
         run: |
@@ -32,7 +30,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           mkdir -p subs
-
           git add subs/
 
           if git diff --staged --quiet; then
