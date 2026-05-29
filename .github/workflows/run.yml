@@ -18,6 +18,10 @@ jobs:
         with:
           python-version: '3.10'
 
+      # ВОТ ЭТОТ ШАГ ИСПРАВИТ ОШИБКУ: Устанавливаем библиотеку requests
+      - name: Install dependencies
+        run: pip install requests
+
       - name: Run main script
         run: python3 main.py
 
@@ -26,7 +30,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Безопасная проверка: создаем пустую папку, если скрипт её не создал, чтобы Git не падал
           mkdir -p subs
           touch subs/.gitkeep
           
