@@ -16,13 +16,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install requests
+      - name: Install Python dependencies
+        run: |
+          pip install requests
+
+      - name: Install sing-box
+        run: |
+          curl -fsSL https://sing-box.app/install.sh | bash
+
+      - name: Verify sing-box
+        run: |
+          which sing-box
+          sing-box version
 
       - name: Run main script
-        run: python3 main.py
+        run: |
+          python3 main.py
 
       - name: Commit subs
         run: |
