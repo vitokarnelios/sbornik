@@ -35,7 +35,6 @@ for i in range(MAX_THREADS):
 
 # Список эндпоинтов для каскадной проверки ноды
 TEST_URLS = [
-    "https://max.ru",
     "https://vk.com",
     "https://yandex.ru",
     "https://www.microsoft.com",
@@ -192,7 +191,7 @@ def check_node_worker(vless_uri):
                     proxies=proxies,
                     timeout=12  # Повышенный таймаут для Reality
                 )
-                if response.status_code in [200, 204]:
+                if response.status_code < 400:
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
             except:
