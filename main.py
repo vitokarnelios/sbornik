@@ -43,9 +43,11 @@ for i in range(MAX_THREADS):
 
 # Список эндпоинтов для каскадной проверки ноды
 TEST_URLS = [
-    "https://cp.cloudflare.com/generate_204",
-    "https://www.gstatic.com/generate_204",
-    "https://www.google.com"
+    "https://max.ru",
+    "https://vk.com",
+    "https://yandex.ru",
+    "https://www.microsoft.com",
+    "https://www.apple.com",
 ]
 
 def decode_base64_content(text):
