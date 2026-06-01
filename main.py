@@ -23,14 +23,6 @@ SOURCES = [
     # Kort0881 (Исправленные актуальные пути)
     "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/clean/vless.txt",
     "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/ru-sni/vless_ru.txt",
-
-    # Nikita29a
-    "https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/1.txt",
-    "https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/26.txt",
-
-    # Hidashimora
-    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/27.txt",
-    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/34.txt"
 ]
 
 MAX_NODES = 150       # Сколько живых нод максимум записать в файл подписки
