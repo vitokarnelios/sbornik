@@ -6,6 +6,7 @@ import random
 import json
 import subprocess
 import time
+import queue
 from urllib.parse import urlparse, parse_qs, unquote
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -19,11 +20,13 @@ SOURCES = [
     "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt"
 ]
 
-MAX_NODES = 100       # Лимит живых нод для сохранения
-MAX_THREADS = 10      # Размер пула потоков
+MAX_NODES = 100       # Сколько живых нод оставить
+MAX_THREADS = 10      # Количество одновременных потоков
 
-# Фиксированный пул портов, чтобы не плодить тысячи сокетов в системе
-AVAILABLE_PORTS = [11000 + i for i in range(MAX_THREADS)]
+# Инициализируем потокобезопасную очередь портов
+port_queue = queue.Queue()
+for i in range(MAX_THREADS):
+    port_queue.put(11000 + i)
 
 def decode_base64_content(text):
     try:
@@ -64,8 +67,6 @@ def is_valid_reality(line):
         return False
     return True
 
-# --- ПАРСИНГ И ДИНАМИЧЕСКАЯ СБОРКА ОБЪЕКТА ---
-
 def parse_vless_reality_to_json(vless_uri, listen_port):
     try:
         parsed = urlparse(vless_uri)
@@ -74,7 +75,6 @@ def parse_vless_reality_to_json(vless_uri, listen_port):
             return None
             
         uuid, server_part = netloc.split('@', 1)
-        
         if ':' in server_part:
             server_address, server_port_str = server_part.split(':', 1)
             server_port = int(server_port_str)
@@ -95,7 +95,6 @@ def parse_vless_reality_to_json(vless_uri, listen_port):
             
         node_name = unquote(parsed.fragment) if parsed.fragment else "vless-reality"
 
-        # Базовый outbound без пустых полей
         outbound = {
             "type": "vless",
             "tag": node_name,
@@ -117,12 +116,11 @@ def parse_vless_reality_to_json(vless_uri, listen_port):
             }
         }
 
-        # Правка 1: Не пишем пустую строку во flow, чтобы свежий sing-box не падал
         if flow and "vision" in flow:
             outbound["flow"] = flow
 
         config = {
-            "log": {"level": "error"},
+            "log": {"level": "info"}, # Ставим info, чтобы видеть логи подключения в файл
             "inbounds": [
                 {
                     "type": "socks",
@@ -137,58 +135,79 @@ def parse_vless_reality_to_json(vless_uri, listen_port):
     except:
         return None
 
-# --- ВОРКЕР С ОТЛАДКОЙ И ПЕРЕХВАТОМ ОШИБОК ---
+# --- ВОРКЕР С ТОТАЛЬНЫМ ДЕБАГОМ ---
 
-def check_node_worker(vless_uri, local_port):
+def check_node_worker(vless_uri):
+    # Берем свободный порт из очереди
+    local_port = port_queue.get()
+    
     temp_config_path = os.path.join(BASE_PATH, f"temp_{local_port}.json")
+    temp_log_path = os.path.join(BASE_PATH, f"singbox_{local_port}.log")
     
     config = parse_vless_reality_to_json(vless_uri, local_port)
     if not config:
+        port_queue.put(local_port)
         return None
 
+    # Записываем конфиг
     with open(temp_config_path, "w", encoding="utf-8") as f:
         json.dump(config, f)
 
     proc = None
     try:
-        # Правка 3: Открываем PIPE для перехвата крашей конфигурации
+        # Избегаем дедлока PIPE: пишем вывод sing-box в реальный файл лога
+        log_file = open(temp_log_path, "w", encoding="utf-8")
+        
+        print(f"[START] Запуск sing-box на порту {local_port}...")
         proc = subprocess.Popen(
             ["sing-box", "run", "-c", temp_config_path],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
+            stdout=log_file,
+            stderr=log_file
         )
         
-        # Правка 2: 2 секунды стабильного ожидания
+        # Ждем инициализации
         time.sleep(2.0)
-
-        # Правка 2.1: Проверяем, не сдох ли процесс сразу на старте
-        if proc.poll() is not None:
-            err_output = proc.stderr.read()
-            print(f"[КРАШ СТАРТА] Порт {local_port} упал! Лог sing-box:\n{err_output.strip()}")
+        
+        # Проверяем статус процесса
+        poll_status = proc.poll()
+        print(f"[STATUS] Порт {local_port} -> poll={poll_status}")
+        
+        if poll_status is not None:
+            # Процесс упал. Читаем файл лога и выводим ошибку конфигурации
+            log_file.close()
+            with open(temp_log_path, "r", encoding="utf-8") as f:
+                print(f"[КРАШ КОНФИГА] Лог sing-box ({local_port}):\n{f.read().strip()}")
             return None
 
+        # Процесс живой, пробуем слать запрос
         proxies = {
             "http": f"socks5h://127.0.0.1:{local_port}",
             "https": f"socks5h://127.0.0.1:{local_port}"
         }
 
-        # Правка 5: Настоящий сквозной запрос
+        print(f"[HTTP-REQ] Отправка запроса через порт {local_port}...")
         response = requests.get(
             "https://cp.cloudflare.com/generate_204",
             proxies=proxies,
             timeout=5
         )
         
+        print(f"[HTTP-RESP] Порт {local_port} вернул статус: {response.status_code}")
+        
         if response.status_code in [200, 204]:
-            print(f"[УСПЕХ] Нода на порту {local_port} СТАБИЛЬНА.")
+            print(f"[УСПЕХ] Нода на порту {local_port} РАБОТАЕТ!")
             return vless_uri
             
     except Exception as e:
-        # Сюда падают таймауты requests, когда прокси жив, но туннель заблокирован
-        pass
+        print(f"[FAIL] Ошибка запроса на порту {local_port}: {e}")
     finally:
-        # Зачистка процессов
+        # Надежное закрытие лог-файла перед удалением
+        try:
+            log_file.close()
+        except:
+            pass
+
+        # Тушим процесс
         if proc:
             proc.terminate()
             try:
@@ -196,17 +215,28 @@ def check_node_worker(vless_uri, local_port):
             except subprocess.TimeoutExpired:
                 proc.kill()
         
+        # Чистим файлы
         if os.path.exists(temp_config_path):
-            try:
-                os.remove(temp_config_path)
-            except:
-                pass
+            os.remove(temp_config_path)
+        if os.path.exists(temp_log_path):
+            os.remove(temp_log_path)
+            
+        # Возвращаем порт обратно в очередь для следующего потока
+        port_queue.put(local_port)
                 
     return None
 
-# --- УПРАВЛЕНИЕ ОЧЕРЕДЬЮ И СТАРТ ПАЙПЛАЙНА ---
+# --- ОСНОВНОЙ ПАЙПЛАЙН ---
 
 def main():
+    # Системный чек версии sing-box прямо в питоне для логов
+    try:
+        sb_v = subprocess.run(["sing-box", "version"], capture_output=True, text=True)
+        print(f"=== СИСТЕМНЫЙ СТАТУС ===\n{sb_v.stdout.strip()}\n========================")
+    except Exception as e:
+        print(f"Критическая ошибка: sing-box не найден в системе! {e}")
+        return
+
     print("--- Шаг 1: Сбор сырых данных ---")
     all_nodes = []
     for url in SOURCES:
@@ -228,54 +258,42 @@ def main():
         unique_nodes.append(line)
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
+    
+    if not unique_nodes:
+        print("Нет нод для проверки.")
+        return
+
+    # Выводим тестовый JSON первой ноды для проверки структуры
+    print("\n=== ТЕСТОВЫЙ СИНТАКСИС JSON (ПЕРВАЯ НОДА) ===")
+    test_json = parse_vless_reality_to_json(unique_nodes[0], 11000)
+    print(json.dumps(test_json, indent=2))
+    print("=============================================\n")
+
     random.shuffle(unique_nodes)
 
-    print(f"\n--- Шаг 3: Настоящий Live-Check через пул портов (Потоков: {MAX_THREADS}) ---")
+    print(f"--- Шаг 3: Настоящий Live-Check через Queue (Потоков: {MAX_THREADS}) ---")
     alive_nodes = []
     
-    # Контролируем пул портов и динамически распределяем их по as_completed
-    # Ограничиваем срез для первой отладки (проверим до 150 штук, чтобы не спамить лог)
-    test_pool = unique_nodes[:150]
+    # Берем первые 40 нод для чистого контролируемого теста логов
+    test_pool = unique_nodes[:40]
     
+    # Теперь итератор as_completed обходит фиксированный список фьючерсов, 
+    # который мы НЕ меняем внутри цикла. Чистая архитектура.
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        # Словарь для отслеживания фьючерсов: {future: (node_url, assigned_port)}
-        futures_map = {}
+        futures = [executor.submit(check_node_worker, node) for node in test_pool]
         
-        # Заполняем первоначальный пул задач на доступные порты
-        for i, node in enumerate(test_pool):
-            if i < MAX_THREADS:
-                port = AVAILABLE_PORTS[i]
-                # Передаем параметры в воркер напрямую
-                fut = executor.submit(check_node_worker, node, port)
-                futures_map[fut] = (node, port)
-            else:
-                break
-                
-        nodes_left_idx = MAX_THREADS
-        
-        # По мере завершения потоков освобождаем порты и закидываем новые ноды
-        for future in as_completed(futures_map):
-            node_uri, used_port = futures_map[future]
+        for future in as_completed(futures):
             try:
-                result = future.result()
-                if result:
-                    alive_nodes.append(result)
-                    # Правка 4: Убираем преждевременный брейк на этапе отладки, 
-                    # чтобы прочекать весь тестовый срез и увидеть процент выживаемости
+                res = future.result()
+                if res:
+                    alive_nodes.append(res)
             except Exception as e:
-                print(f"Исключение в потоке выполнения: {e}")
-                
-            # Если в списке тест-пула еще остались непроверенные ноды — пускаем их на освободившийся порт
-            if nodes_left_idx < len(test_pool):
-                next_node = test_pool[nodes_left_idx]
-                new_fut = executor.submit(check_node_worker, next_node, used_port)
-                futures_map[new_fut] = (next_node, used_port)
-                nodes_left_idx += 1
+                print(f"Ошибка выполнения фьючерса: {e}")
 
-    print(f"\n--- Итог проверки: Найдено Реально Живых нод {len(alive_nodes)} из {len(test_pool)} проверенных ---")
+    print(f"\n--- Итог проверки: Найдено Живых нод {len(alive_nodes)} из {len(test_pool)} проверенных ---")
 
     if len(alive_nodes) == 0:
-        print("Внимание! Ошибка сети или структуры JSON: 0 живых нод. Перезапись отменена.")
+        print("Внимание! 0 живых нод. Перезапись отменена, чтобы защитить старую базу подписок.")
         return
 
     out_path = os.path.join(FINAL_DIR, "vless_001.txt")
