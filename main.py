@@ -15,9 +15,22 @@ FINAL_DIR = os.path.join(BASE_PATH, "subs")
 os.makedirs(FINAL_DIR, exist_ok=True)
 
 SOURCES = [
+    # Igareck
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
-    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_SS+All_RUS.txt",
+
+    # Kort0881
+    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/clean/vless.txt",
+    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/main/githubmirror/ru-sni/vless_ru.txt",
+
+    # Nikita29a
+    "https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/1.txt",
+    "https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/26.txt",
+
+    # Hidashimora
+    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/27.txt",
+    "https://raw.githubusercontent.com/Hidashimora/free-vpn-anti-rkn/main/configs/34.txt"
 ]
 
 MAX_NODES = 100       # Сколько живых нод оставить
