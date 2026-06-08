@@ -20,25 +20,25 @@ SOURCES = [
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_SS+All_RUS.txt",
 
-    # Kort0881 (Исправленные актуальные пути)
+    # Kort0881
     "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/clean/vless.txt",
     "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/ru-sni/vless_ru.txt",
 ]
 
-MAX_NODES = 150       # Сколько живых нод максимум записать в файл подписки
-MAX_THREADS = 30      # Мощный параллельный чекинг для GitHub Actions
+# Изменено: MAX_NODES выставлен на 30
+MAX_NODES = 30       
+MAX_THREADS = 30      
 
 # Автоматически наполняем очередь портов на базе количества потоков
 port_queue = queue.Queue()
 for i in range(MAX_THREADS):
     port_queue.put(11000 + i)
 
-# Список эндпоинтов для каскадной проверки ноды
+# Изменено: Список эндпоинтов откорректирован (Apple убран)
 TEST_URLS = [
     "https://vk.com",
     "https://yandex.ru",
     "https://www.microsoft.com",
-    "https://www.apple.com",
 ]
 
 def decode_base64_content(text):
@@ -171,8 +171,8 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        # Надежное ожидание старта сокета ядра
-        time.sleep(2.0)
+        # Изменено: Время ожидания старта sing-box увеличено до 3.0 секунд
+        time.sleep(3.0)
         
         if proc.poll() is not None:
             log_file.close()
@@ -183,19 +183,19 @@ def check_node_worker(vless_uri):
             "https": f"socks5h://127.0.0.1:{local_port}"
         }
 
-        # Каскадная проверка по разным URL для борьбы с ложными TLS-отказами
         for url in TEST_URLS:
             try:
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=12  # Повышенный таймаут для Reality
+                    timeout=12  
                 )
-                if response.status_code < 400:
+                # Изменено: Строгая проверка кодов ответа, включая редиректы
+                if response.status_code in [200, 204, 301, 302]:
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
             except:
-                continue # Если один URL выдал ошибку, пробуем следующий в списке
+                continue 
 
     except:
         pass
@@ -260,7 +260,6 @@ def main():
     print(f"\n--- Шаг 3: Полный Live-Check ({len(unique_nodes)} нод, Потоков: {MAX_THREADS}) ---")
     alive_nodes = []
     
-    # Теперь пускаем в обработку абсолютно весь массив собранных конфигураций
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = [executor.submit(check_node_worker, node) for node in unique_nodes]
         
@@ -269,7 +268,6 @@ def main():
                 res = future.result()
                 if res:
                     alive_nodes.append(res)
-                    # Мягкое ограничение: когда набрали лимит отличных нод, прекращаем сбор
                     if len(alive_nodes) >= MAX_NODES:
                         print(f"Собрано достаточное количество стабильных прокси ({MAX_NODES}).")
                         break
@@ -277,6 +275,31 @@ def main():
                 print(f"Ошибка фьючерса: {e}")
 
     print(f"\n--- Итог проверки: Найдено Реально Живых нод {len(alive_nodes)} ---")
+
+    # Добавлено: Удаление дубликатов по домену/IP-адресу сервера
+    alive_nodes_unique = []
+    seen_servers = set()
+
+    for node in alive_nodes:
+        try:
+            parsed = urlparse(node)
+            if '@' not in parsed.netloc:
+                continue
+
+            server = parsed.netloc.split('@')[1]
+            if ':' in server:
+                server = server.split(':')[0]
+
+            if server in seen_servers:
+                continue
+
+            seen_servers.add(server)
+            alive_nodes_unique.append(node)
+        except:
+            continue
+
+    alive_nodes = alive_nodes_unique
+    print(f"После удаления дублей серверов: {len(alive_nodes)}")
 
     if len(alive_nodes) == 0:
         print("Внимание! 0 живых нод. Перезапись отменена для защиты кэша подписок.")
