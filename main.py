@@ -25,7 +25,6 @@ SOURCES = [
     "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/ru-sni/vless_ru.txt",
 ]
 
-# Изменено: MAX_NODES выставлен на 30
 MAX_NODES = 30       
 MAX_THREADS = 30      
 
@@ -34,11 +33,12 @@ port_queue = queue.Queue()
 for i in range(MAX_THREADS):
     port_queue.put(11000 + i)
 
-# Изменено: Список эндпоинтов откорректирован (Apple убран)
+# Изменено: Apple возвращен в пул для лучшего прохождения зарубежных нод
 TEST_URLS = [
     "https://vk.com",
     "https://yandex.ru",
     "https://www.microsoft.com",
+    "https://www.apple.com",
 ]
 
 def decode_base64_content(text):
@@ -171,7 +171,6 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        # Изменено: Время ожидания старта sing-box увеличено до 3.0 секунд
         time.sleep(3.0)
         
         if proc.poll() is not None:
@@ -190,7 +189,6 @@ def check_node_worker(vless_uri):
                     proxies=proxies,
                     timeout=12  
                 )
-                # Изменено: Строгая проверка кодов ответа, включая редиректы
                 if response.status_code in [200, 204, 301, 302]:
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
@@ -276,30 +274,10 @@ def main():
 
     print(f"\n--- Итог проверки: Найдено Реально Живых нод {len(alive_nodes)} ---")
 
-    # Добавлено: Удаление дубликатов по домену/IP-адресу сервера
-    alive_nodes_unique = []
-    seen_servers = set()
-
-    for node in alive_nodes:
-        try:
-            parsed = urlparse(node)
-            if '@' not in parsed.netloc:
-                continue
-
-            server = parsed.netloc.split('@')[1]
-            if ':' in server:
-                server = server.split(':')[0]
-
-            if server in seen_servers:
-                continue
-
-            seen_servers.add(server)
-            alive_nodes_unique.append(node)
-        except:
-            continue
-
-    alive_nodes = alive_nodes_unique
-    print(f"После удаления дублей серверов: {len(alive_nodes)}")
+    # Изменено: Агрессивное удаление по IP полностью стёрто.
+    # Оставлен только быстрый и безопасный OrderedDict дедупликатор строк.
+    alive_nodes = list(dict.fromkeys(alive_nodes))
+    print(f"После финальной дедупликации строк: {len(alive_nodes)}")
 
     if len(alive_nodes) == 0:
         print("Внимание! 0 живых нод. Перезапись отменена для защиты кэша подписок.")
