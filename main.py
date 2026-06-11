@@ -28,7 +28,7 @@ with open(SOURCES_FILE, "r", encoding="utf-8") as f:
     ]
 
 # Изменено: MAX_NODES выставлен на 30
-MAX_NODES = 30       
+MAX_NODES = 100       
 MAX_THREADS = 30      
 
 # Автоматически наполняем очередь портов на базе количества потоков
@@ -279,29 +279,8 @@ def main():
     print(f"\n--- Итог проверки: Найдено Реально Живых нод {len(alive_nodes)} ---")
 
     # Добавлено: Удаление дубликатов по домену/IP-адресу сервера
-    alive_nodes_unique = []
-    seen_servers = set()
-
-    for node in alive_nodes:
-        try:
-            parsed = urlparse(node)
-            if '@' not in parsed.netloc:
-                continue
-
-            server = parsed.netloc.split('@')[1]
-            if ':' in server:
-                server = server.split(':')[0]
-
-            if server in seen_servers:
-                continue
-
-            seen_servers.add(server)
-            alive_nodes_unique.append(node)
-        except:
-            continue
-
-    alive_nodes = alive_nodes_unique
-    print(f"После удаления дублей серверов: {len(alive_nodes)}")
+    alive_nodes = list(dict.fromkeys(alive_nodes))
+print(f"После удаления полных дублей: {len(alive_nodes)}")
 
     if len(alive_nodes) == 0:
         print("Внимание! 0 живых нод. Перезапись отменена для защиты кэша подписок.")
