@@ -16,6 +16,10 @@ os.makedirs(FINAL_DIR, exist_ok=True)
 
 SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
 
+if not os.path.exists(SOURCES_FILE):
+    print("Файл sources.txt не найден")
+    exit(1)
+
 with open(SOURCES_FILE, "r", encoding="utf-8") as f:
     SOURCES = [
         line.strip()
