@@ -14,16 +14,14 @@ BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 FINAL_DIR = os.path.join(BASE_PATH, "subs")
 os.makedirs(FINAL_DIR, exist_ok=True)
 
-SOURCES = [
-    # Igareck
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_SS+All_RUS.txt",
+SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
 
-    # Kort0881
-    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/clean/vless.txt",
-    "https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/ru-sni/vless_ru.txt",
-]
+with open(SOURCES_FILE, "r", encoding="utf-8") as f:
+    SOURCES = [
+        line.strip()
+        for line in f
+        if line.strip() and not line.strip().startswith("#")
+    ]
 
 # Изменено: MAX_NODES выставлен на 30
 MAX_NODES = 30       
