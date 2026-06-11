@@ -3,3 +3,5 @@ https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main
 https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_SS+All_RUS.txt
 https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/clean/vless.txt
 https://raw.githubusercontent.com/kort0881/vpn-vless-configs-russia/master/githubmirror/ru-sni/vless_ru.txt
+https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/1.txt
+https://github.com/nikita29a/FreeProxyList/raw/refs/heads/main/mirror/26.txt
