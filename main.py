@@ -28,7 +28,7 @@ with open(SOURCES_FILE, "r", encoding="utf-8") as f:
     ]
 
 # Изменено: MAX_NODES выставлен на 30
-MAX_NODES = 100       
+MAX_NODES = 200       
 MAX_THREADS = 30      
 
 # Автоматически наполняем очередь портов на базе количества потоков
