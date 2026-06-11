@@ -280,7 +280,7 @@ def main():
 
     # Добавлено: Удаление дубликатов по домену/IP-адресу сервера
     alive_nodes = list(dict.fromkeys(alive_nodes))
-print(f"После удаления полных дублей: {len(alive_nodes)}")
+    print(f"После удаления полных дублей: {len(alive_nodes)}")
 
     if len(alive_nodes) == 0:
         print("Внимание! 0 живых нод. Перезапись отменена для защиты кэша подписок.")
