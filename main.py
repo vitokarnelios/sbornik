@@ -42,6 +42,8 @@ for i in range(MAX_THREADS):
 TEST_URLS = [
     "https://vk.com",
     "https://yandex.ru",
+    "https://rutube.ru",
+    "https://ok.ru",
     "https://www.microsoft.com",
 ]
 
