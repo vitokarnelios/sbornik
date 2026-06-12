@@ -27,8 +27,7 @@ with open(SOURCES_FILE, "r", encoding="utf-8") as f:
         if line.strip() and not line.strip().startswith("#")
     ]
 
-# Изменено: MAX_NODES выставлен на 30
-MAX_NODES = 80       
+MAX_NODES = 100       
 MAX_THREADS = 30      
 
 # Автоматически наполняем очередь портов на базе количества потоков
@@ -36,7 +35,6 @@ port_queue = queue.Queue()
 for i in range(MAX_THREADS):
     port_queue.put(11000 + i)
 
-# Изменено: Список эндпоинтов откорректирован (Apple убран)
 TEST_URLS = [
     "https://vk.com",
     "https://yandex.ru",
@@ -173,7 +171,6 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        # Изменено: Время ожидания старта sing-box увеличено до 3.0 секунд
         time.sleep(3.0)
         
         if proc.poll() is not None:
@@ -190,9 +187,8 @@ def check_node_worker(vless_uri):
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=12  
+                    timeout=5  # Изменено: таймаут снижен до 5 секунд
                 )
-                # Изменено: Строгая проверка кодов ответа, включая редиректы
                 if response.status_code in [200, 204, 301, 302]:
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
@@ -253,11 +249,34 @@ def main():
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
     
+    # Добавлено: Чтение кэша старых рабочих нод для приоритезации
+    old_nodes = []
+    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
+    if os.path.exists(out_path):
+        with open(out_path, "r", encoding="utf-8") as f:
+            old_nodes = [x.strip() for x in f if x.strip()]
+    
     if not unique_nodes:
         print("Нет нод для проверки.")
         return
 
     random.shuffle(unique_nodes)
+
+    # Добавлено: Разделение пула на приоритетные (старые) и новые ноды
+    priority_nodes = []
+    other_nodes = []
+    old_set = set(old_nodes)
+
+    for node in unique_nodes:
+        if node in old_set:
+            priority_nodes.append(node)
+        else:
+            other_nodes.append(node)
+
+    random.shuffle(priority_nodes)
+    random.shuffle(other_nodes)
+    
+    unique_nodes = priority_nodes + other_nodes
 
     print(f"\n--- Шаг 3: Полный Live-Check ({len(unique_nodes)} нод, Потоков: {MAX_THREADS}) ---")
     alive_nodes = []
@@ -278,7 +297,6 @@ def main():
 
     print(f"\n--- Итог проверки: Найдено Реально Живых нод {len(alive_nodes)} ---")
 
-    # Добавлено: Удаление дубликатов по домену/IP-адресу сервера
     alive_nodes = list(dict.fromkeys(alive_nodes))
     print(f"После удаления полных дублей: {len(alive_nodes)}")
 
@@ -286,7 +304,6 @@ def main():
         print("Внимание! 0 живых нод. Перезапись отменена для защиты кэша подписок.")
         return
 
-    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(alive_nodes))
         
