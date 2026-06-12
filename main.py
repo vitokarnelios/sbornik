@@ -296,6 +296,26 @@ def main():
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
     
+    # Добавлено: Сохранение свежих уникальных нод в накопительный архив
+    archive_path = os.path.join(BASE_PATH, "archive.txt")
+    archive_nodes = set()
+
+    if os.path.exists(archive_path):
+        with open(archive_path, "r", encoding="utf-8") as f:
+            archive_nodes = set(
+                x.strip()
+                for x in f
+                if x.strip()
+            )
+
+    archive_nodes.update(unique_nodes)
+
+    with open(archive_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(sorted(archive_nodes)))
+
+    print(f"Архив обновлен. Всего в archive.txt содержит: {len(archive_nodes)} нод")
+    
+    # Чтение кэша старых рабочих нод для приоритезации
     old_nodes = []
     out_path = os.path.join(FINAL_DIR, "vless_001.txt")
     if os.path.exists(out_path):
@@ -326,7 +346,6 @@ def main():
     print(f"\n--- Шаг 3: Полный Live-Check ({len(unique_nodes)} нод, Потоков: {MAX_THREADS}) ---")
     alive_nodes = []
     
-    # Заменено: Реализация быстрой остановки пула задач
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = [executor.submit(check_node_worker, node) for node in unique_nodes]
         
