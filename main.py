@@ -28,7 +28,7 @@ with open(SOURCES_FILE, "r", encoding="utf-8") as f:
     ]
 
 MAX_NODES = 100       
-MAX_THREADS = 50      
+MAX_THREADS = 70      
 
 # Автоматически наполняем очередь портов на базе количества потоков
 port_queue = queue.Queue()
