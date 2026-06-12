@@ -104,12 +104,8 @@ def load_repo_sources():
                 name = item.get("name", "").lower()
                 if any(x in name for x in [
                     "sub",
-                    "subscribe",
                     "vless",
                     "reality",
-                    "proxy",
-                    "config",
-                    "white"
                 ]):
                     download = item.get("download_url")
                     if download:
