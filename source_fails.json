@@ -1,0 +1,27 @@
+{
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt": {
+    "fails": 0,
+    "empty_responses": 0,
+    "last_fail": 0
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt": {
+    "fails": 0,
+    "empty_responses": 0,
+    "last_fail": 0
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt": {
+    "fails": 0,
+    "empty_responses": 0,
+    "last_fail": 0
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt": {
+    "fails": 0,
+    "empty_responses": 0,
+    "last_fail": 0
+  },
+  "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt": {
+    "fails": 0,
+    "empty_responses": 0,
+    "last_fail": 0
+  }
+}
