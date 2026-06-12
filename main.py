@@ -8,12 +8,8 @@ import subprocess
 import time
 import queue
 import threading
-import urllib3
 from urllib.parse import urlparse, parse_qs, unquote
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
-# Отключаем предупреждения об отсутствии валидации SSL-сертификатов
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 FINAL_DIR = os.path.join(BASE_PATH, "subs")
@@ -199,20 +195,18 @@ def check_node_worker(vless_uri):
             if stop_event.is_set():
                 break
             try:
-                # Изменено: timeout=15 и отключена проверка SSL (verify=False)
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=15,
-                    verify=False
+                    timeout=10
                 )
                 if response.status_code in [200, 204, 301, 302]:
                     if stop_event.is_set():
                         break
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
-            except Exception as e:
-                print(f"[CONNECT FAIL] Порт {local_port} -> {url} (Ошибка: {type(e).__name__})")
+            except Exception:
+                # Изменено: Убран лог ошибок подключения, чтобы не забивать GitHub Actions
                 continue 
 
     except:
