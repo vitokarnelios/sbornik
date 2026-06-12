@@ -177,7 +177,7 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        time.sleep(2.0)
+        time.sleep(3.0)
         
         if stop_event.is_set():
             return None
