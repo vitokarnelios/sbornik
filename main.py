@@ -293,7 +293,7 @@ def main():
 
     print(f"Общий архив archive.txt обновлен. Всего: {len(archive_list)} нод (Лимит 10000)")
     
-    # Резерв подключается строго в аварийном режиме
+    # Резерв подключается на первом этапе, если источников глобально не хватает
     if len(unique_nodes) < MAX_NODES:
         reserve_nodes = list(alive_archive_list)
         random.shuffle(reserve_nodes)
@@ -303,7 +303,7 @@ def main():
                 unique_nodes.append(node)
                 seen.add(node)
 
-        print(f"Внимание! Аварийный режим. Источников не хватает ({len(unique_nodes)} < {MAX_NODES}). Дозагрузили резерв из архива.")
+        print(f"Внимание! Предварительный резерв. Источников не хватает ({len(unique_nodes)} < {MAX_NODES}). Дозагрузили из архива.")
     
     # Чтение текущего кэша подписки для приоритезации проверки
     old_nodes = []
@@ -353,7 +353,6 @@ def main():
                         
                         for f in futures:
                             f.cancel()
-                        # Контекстный менеджерwith сам корректно закроет пул, убираем деструктивный shutdown
                         break
             except Exception as e:
                 print(f"Ошибка фьючерса: {e}")
@@ -362,6 +361,19 @@ def main():
 
     alive_nodes = list(dict.fromkeys(alive_nodes))
     print(f"После удаления полных дублей: {len(alive_nodes)}")
+
+    # --- ТВОЙ ФИКС: Экстренное добивание подписки из LRU-топа, если живых нод всё ещё меньше лимита ---
+    if len(alive_nodes) < MAX_NODES:
+        added_count = 0
+        # Читаем alive_archive с конца (самые свежие и проверенные временем ноды)
+        for node in reversed(alive_archive_list):
+            if node not in alive_nodes:
+                alive_nodes.append(node)
+                added_count += 1
+
+            if len(alive_nodes) >= MAX_NODES:
+                break
+        print(f"Подписка добита свежими нодами из alive_archive.txt (+{added_count} шт.). Итоговый размер: {len(alive_nodes)}")
 
     # --- Честная LRU Ротация для alive_archive.txt (Лимит 5000) ---
     for node in alive_nodes:
