@@ -72,7 +72,6 @@ def fetch_source(url):
         pass
     return []
 
-# Добавлено: Динамический поиск источников через GitHub API
 def load_repo_sources():
     urls = []
     repo_file = os.path.join(BASE_PATH, "repos.txt")
@@ -86,7 +85,6 @@ def load_repo_sources():
     for repo in repos:
         try:
             api = f"https://api.github.com/repos/{repo}/contents"
-            # Заголовки, чтобы избежать жестких лимитов GitHub API при частых запусках
             headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
             r = requests.get(api, headers=headers, timeout=15)
 
@@ -273,7 +271,6 @@ def main():
     print("--- Шаг 1: Сбор сырых данных ---")
     all_nodes = []
     
-    # Добавлено: подмешивание динамических ссылок из репозиториев repos.txt
     repo_sources = load_repo_sources()
     print(f"Найдено файлов через repos.txt: {len(repo_sources)}")
     for src in repo_sources:
@@ -299,7 +296,6 @@ def main():
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
     
-    # Чтение кэша старых рабочих нод для приоритезации
     old_nodes = []
     out_path = os.path.join(FINAL_DIR, "vless_001.txt")
     if os.path.exists(out_path):
@@ -312,7 +308,6 @@ def main():
 
     random.shuffle(unique_nodes)
 
-    # Разделение пула на приоритетные (старые) и новые ноды
     priority_nodes = []
     other_nodes = []
     old_set = set(old_nodes)
@@ -331,6 +326,7 @@ def main():
     print(f"\n--- Шаг 3: Полный Live-Check ({len(unique_nodes)} нод, Потоков: {MAX_THREADS}) ---")
     alive_nodes = []
     
+    # Заменено: Реализация быстрой остановки пула задач
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = [executor.submit(check_node_worker, node) for node in unique_nodes]
         
@@ -339,8 +335,14 @@ def main():
                 res = future.result()
                 if res:
                     alive_nodes.append(res)
+                    
                     if len(alive_nodes) >= MAX_NODES:
-                        print(f"Собрано достаточное количество стабильных прокси ({MAX_NODES}).")
+                        print(f"Собрано {MAX_NODES} нод. Останавливаем остальные проверки.")
+                        
+                        for f in futures:
+                            f.cancel()
+                            
+                        executor.shutdown(wait=False, cancel_futures=True)
                         break
             except Exception as e:
                 print(f"Ошибка фьючерса: {e}")
