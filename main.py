@@ -29,7 +29,7 @@ with open(SOURCES_FILE, "r", encoding="utf-8") as f:
     ]
 
 MAX_NODES = 100       
-MAX_THREADS = 70      
+MAX_THREADS = 40      
 
 # Глобальный флаг для остановки запуска новых проверок/запросов
 stop_event = threading.Event()
@@ -177,12 +177,14 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        time.sleep(3.0)
+        time.sleep(5.0)       
         
         if stop_event.is_set():
             return None
 
+        # Вставлено временное логирование падения sing-box до начала сетевой проверки
         if proc.poll() is not None:
+            print(f"[SINGBOX FAIL] Порт {local_port} упал до проверки")
             return None
 
         proxies = {
@@ -197,7 +199,7 @@ def check_node_worker(vless_uri):
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=5  
+                    timeout=10  
                 )
                 if response.status_code in [200, 204, 301, 302]:
                     if stop_event.is_set():
@@ -365,7 +367,6 @@ def main():
     # --- ТВОЙ ФИКС: Экстренное добивание подписки из LRU-топа, если живых нод всё ещё меньше лимита ---
     if len(alive_nodes) < MAX_NODES:
         added_count = 0
-        # Читаем alive_archive с конца (самые свежие и проверенные временем ноды)
         for node in reversed(alive_archive_list):
             if node not in alive_nodes:
                 alive_nodes.append(node)
