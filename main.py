@@ -200,7 +200,7 @@ def check_node_worker(vless_uri):
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=3
+                    timeout=6
                 )
                 if response.status_code in [200, 204, 301, 302]:
                     if stop_event.is_set():
