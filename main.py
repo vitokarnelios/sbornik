@@ -182,7 +182,6 @@ def check_node_worker(vless_uri):
         if stop_event.is_set():
             return None
 
-        # Вставлено временное логирование падения sing-box до начала сетевой проверки
         if proc.poll() is not None:
             print(f"[SINGBOX FAIL] Порт {local_port} упал до проверки")
             return None
@@ -206,7 +205,9 @@ def check_node_worker(vless_uri):
                         break
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
-            except:
+            except Exception as e:
+                # Вставлен лог сетевой ошибки/таймаута по конкретному урлу
+                print(f"[CONNECT FAIL] Порт {local_port} -> {url} (Ошибка: {type(e).__name__})")
                 continue 
 
     except:
