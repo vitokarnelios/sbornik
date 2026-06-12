@@ -212,7 +212,7 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        time.sleep(3.0)
+        time.sleep(2.0)
         
         if proc.poll() is not None:
             log_file.close()
