@@ -177,7 +177,8 @@ def check_node_worker(vless_uri):
             stderr=log_file
         )
         
-        time.sleep(5.0)       
+        # Ускорение инициализации (3.0 сек вместо 5.0)
+        time.sleep(3.0)       
         
         if stop_event.is_set():
             return None
@@ -195,10 +196,11 @@ def check_node_worker(vless_uri):
             if stop_event.is_set():
                 break
             try:
+                # Ускорение сетевого таймаута (6 сек вместо 10)
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=10
+                    timeout=6
                 )
                 if response.status_code in [200, 204, 301, 302]:
                     if stop_event.is_set():
@@ -206,7 +208,7 @@ def check_node_worker(vless_uri):
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
             except Exception:
-                # Изменено: Убран лог ошибок подключения, чтобы не забивать GitHub Actions
+                # Ошибки не логируются, чтобы разгрузить консоль GitHub Actions
                 continue 
 
     except:
@@ -364,7 +366,7 @@ def main():
     alive_nodes = list(dict.fromkeys(alive_nodes))
     print(f"После удаления полных дублей: {len(alive_nodes)}")
 
-    # --- ТВОЙ ФИКС: Экстренное добивание подписки из LRU-топа, если живых нод всё ещё меньше лимита ---
+    # Добивание подписки из LRU-топа, если живых нод всё ещё меньше лимита
     if len(alive_nodes) < MAX_NODES:
         added_count = 0
         for node in reversed(alive_archive_list):
@@ -376,7 +378,7 @@ def main():
                 break
         print(f"Подписка добита свежими нодами из alive_archive.txt (+{added_count} шт.). Итоговый размер: {len(alive_nodes)}")
 
-    # --- Честная LRU Ротация для alive_archive.txt (Лимит 5000) ---
+    # Честная LRU Ротация для alive_archive.txt (Лимит 5000)
     for node in alive_nodes:
         if node in alive_archive_list:
             alive_archive_list.remove(node)
