@@ -229,8 +229,6 @@ def main():
 
     print("--- Шаг 1: Сбор сырых данных ---")
     all_nodes = []
-    
-    # Работаем строго по источникам из sources.txt
     all_sources = SOURCES
 
     for url in all_sources:
@@ -253,26 +251,52 @@ def main():
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
     
-    # Сохранение свежих уникальных нод в накопительный архив
+    # --- Работа с Архивами ---
     archive_path = os.path.join(BASE_PATH, "archive.txt")
-    archive_nodes = set()
+    alive_archive_path = os.path.join(BASE_PATH, "alive_archive.txt")
+    
+    archive_list = []
+    alive_archive_list = []
 
+    # Загружаем общий архив (archive.txt)
     if os.path.exists(archive_path):
         with open(archive_path, "r", encoding="utf-8") as f:
-            archive_nodes = set(
-                x.strip()
-                for x in f
-                if x.strip()
-            )
+            archive_list = [x.strip() for x in f if x.strip()]
 
-    archive_nodes.update(unique_nodes)
+    # Загружаем архив только живых нод (alive_archive.txt)
+    if os.path.exists(alive_archive_path):
+        with open(alive_archive_path, "r", encoding="utf-8") as f:
+            alive_archive_list = [x.strip() for x in f if x.strip()]
+
+    # Обновление archive.txt (новые уникальные ноды пушим в конец)
+    archive_seen = set(archive_list)
+    for node in unique_nodes:
+        if node not in archive_seen:
+            archive_list.append(node)
+            archive_seen.add(node)
+
+    # ЛИМИТ 10 000: Удаляем самое старое из начала списка
+    if len(archive_list) > 10000:
+        archive_list = archive_list[-10000:]
 
     with open(archive_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(sorted(archive_nodes)))
+        f.write("\n".join(archive_list))
 
-    print(f"Архив обновлен. Всего в archive.txt содержит: {len(archive_nodes)} нод")
+    print(f"Общий архив archive.txt обновлен. Всего: {len(archive_list)} нод (Лимит 10000)")
     
-    # Чтение кэша старых рабочих нод для приоритезации
+    # ДИНАМИЧЕСКИЙ ПОРОГ: Добор резерва включается, только если источников не хватает на забивку файла подписки
+    if len(unique_nodes) < MAX_NODES:
+        reserve_nodes = list(alive_archive_list)
+        random.shuffle(reserve_nodes)
+
+        for node in reserve_nodes:
+            if node not in seen:
+                unique_nodes.append(node)
+                seen.add(node)
+
+        print(f"Внимание! Слишком мало уникальных данных из источников ({len(unique_nodes)} < {MAX_NODES}). Дозагрузили резерв из alive_archive.")
+    
+    # Чтение текущего кэша подписки для приоритезации проверки
     old_nodes = []
     out_path = os.path.join(FINAL_DIR, "vless_001.txt")
     if os.path.exists(out_path):
@@ -327,6 +351,20 @@ def main():
 
     alive_nodes = list(dict.fromkeys(alive_nodes))
     print(f"После удаления полных дублей: {len(alive_nodes)}")
+
+    # --- LRU Ротация для alive_archive.txt (Лимит 5000) ---
+    for node in alive_nodes:
+        if node in alive_archive_list:
+            alive_archive_list.remove(node)
+        alive_archive_list.append(node)
+
+    if len(alive_archive_list) > 5000:
+        alive_archive_list = alive_archive_list[-5000:]
+
+    with open(alive_archive_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(alive_archive_list))
+
+    print(f"alive_archive.txt успешно обновлен. Актуальных нод в базе: {len(alive_archive_list)} (Лимит 5000)")
 
     if len(alive_nodes) == 0:
         print("Внимание! 0 живых нод. Перезапись отменена для защиты кэша подписок.")
