@@ -362,18 +362,18 @@ def main():
     alive_nodes = list(dict.fromkeys(alive_nodes))
     print(f"После удаления полных дублей: {len(alive_nodes)}")
 
-    # --- ТВОЙ ФИКС ЗАКОММЕНТИРОВАН ДЛЯ ТЕСТА: Экстренное добивание подписки из LRU-топа ---
-    # if len(alive_nodes) < MAX_NODES:
-    #     added_count = 0
-    #     # Читаем alive_archive с конца (самые свежие и проверенные временем ноды)
-    #     for node in reversed(alive_archive_list):
-    #         if node not in alive_nodes:
-    #             alive_nodes.append(node)
-    #             added_count += 1
-    # 
-    #         if len(alive_nodes) >= MAX_NODES:
-    #             break
-    #     print(f"Подписка добита свежими нодами из alive_archive.txt (+{added_count} шт.). Итоговый размер: {len(alive_nodes)}")
+    # --- ТВОЙ ФИКС: Экстренное добивание подписки из LRU-топа, если живых нод всё ещё меньше лимита ---
+    if len(alive_nodes) < MAX_NODES:
+        added_count = 0
+        # Читаем alive_archive с конца (самые свежие и проверенные временем ноды)
+        for node in reversed(alive_archive_list):
+            if node not in alive_nodes:
+                alive_nodes.append(node)
+                added_count += 1
+
+            if len(alive_nodes) >= MAX_NODES:
+                break
+        print(f"Подписка добита свежими нодами из alive_archive.txt (+{added_count} шт.). Итоговый размер: {len(alive_nodes)}")
 
     # --- Честная LRU Ротация для alive_archive.txt (Лимит 5000) ---
     for node in alive_nodes:
