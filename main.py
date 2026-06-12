@@ -72,6 +72,53 @@ def fetch_source(url):
         pass
     return []
 
+# Добавлено: Динамический поиск источников через GitHub API
+def load_repo_sources():
+    urls = []
+    repo_file = os.path.join(BASE_PATH, "repos.txt")
+
+    if not os.path.exists(repo_file):
+        return urls
+
+    with open(repo_file, "r", encoding="utf-8") as f:
+        repos = [x.strip() for x in f if x.strip() and not x.strip().startswith("#")]
+
+    for repo in repos:
+        try:
+            api = f"https://api.github.com/repos/{repo}/contents"
+            # Заголовки, чтобы избежать жестких лимитов GitHub API при частых запусках
+            headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
+            r = requests.get(api, headers=headers, timeout=15)
+
+            if r.status_code != 200:
+                continue
+
+            files = r.json()
+            if not isinstance(files, list):
+                continue
+
+            for item in files:
+                if item.get("type") != "file":
+                    continue
+
+                name = item.get("name", "").lower()
+                if any(x in name for x in [
+                    "sub",
+                    "subscribe",
+                    "vless",
+                    "reality",
+                    "proxy",
+                    "config",
+                    "white"
+                ]):
+                    download = item.get("download_url")
+                    if download:
+                        urls.append(download)
+        except:
+            pass
+
+    return list(set(urls))
+
 def is_valid_reality(line):
     if not line.lower().startswith("vless://"):
         return False
@@ -187,7 +234,7 @@ def check_node_worker(vless_uri):
                 response = requests.get(
                     url,
                     proxies=proxies,
-                    timeout=5  # Изменено: таймаут снижен до 5 секунд
+                    timeout=5  
                 )
                 if response.status_code in [200, 204, 301, 302]:
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
@@ -229,6 +276,13 @@ def main():
 
     print("--- Шаг 1: Сбор сырых данных ---")
     all_nodes = []
+    
+    # Добавлено: подмешивание динамических ссылок из репозиториев repos.txt
+    repo_sources = load_repo_sources()
+    print(f"Найдено файлов через repos.txt: {len(repo_sources)}")
+    for src in repo_sources:
+        SOURCES.append(src)
+
     for url in SOURCES:
         nodes = fetch_source(url)
         print(f"Загружено {len(nodes)} строк из {url}")
@@ -249,7 +303,7 @@ def main():
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
     
-    # Добавлено: Чтение кэша старых рабочих нод для приоритезации
+    # Чтение кэша старых рабочих нод для приоритезации
     old_nodes = []
     out_path = os.path.join(FINAL_DIR, "vless_001.txt")
     if os.path.exists(out_path):
@@ -262,7 +316,7 @@ def main():
 
     random.shuffle(unique_nodes)
 
-    # Добавлено: Разделение пула на приоритетные (старые) и новые ноды
+    # Разделение пула на приоритетные (старые) и новые ноды
     priority_nodes = []
     other_nodes = []
     old_set = set(old_nodes)
