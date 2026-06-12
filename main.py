@@ -7,6 +7,7 @@ import json
 import subprocess
 import time
 import queue
+import threading
 from urllib.parse import urlparse, parse_qs, unquote
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -29,6 +30,9 @@ with open(SOURCES_FILE, "r", encoding="utf-8") as f:
 
 MAX_NODES = 100       
 MAX_THREADS = 70      
+
+# Глобальный флаг для остановки запуска новых проверок/запросов
+stop_event = threading.Event()
 
 # Автоматически наполняем очередь портов на базе количества потоков
 port_queue = queue.Queue()
@@ -149,8 +153,10 @@ def parse_vless_reality_to_json(vless_uri, listen_port):
         return None
 
 def check_node_worker(vless_uri):
+    if stop_event.is_set():
+        return None
+
     local_port = port_queue.get()
-    
     temp_config_path = os.path.join(BASE_PATH, f"temp_{local_port}.json")
     temp_log_path = os.path.join(BASE_PATH, f"singbox_{local_port}.log")
     
@@ -173,8 +179,10 @@ def check_node_worker(vless_uri):
         
         time.sleep(2.0)
         
+        if stop_event.is_set():
+            return None
+
         if proc.poll() is not None:
-            log_file.close()
             return None
 
         proxies = {
@@ -183,6 +191,8 @@ def check_node_worker(vless_uri):
         }
 
         for url in TEST_URLS:
+            if stop_event.is_set():
+                break
             try:
                 response = requests.get(
                     url,
@@ -190,6 +200,8 @@ def check_node_worker(vless_uri):
                     timeout=5  
                 )
                 if response.status_code in [200, 204, 301, 302]:
+                    if stop_event.is_set():
+                        break
                     print(f"[УСПЕХ] Нода ответила через эндпоинт {url} (Порт {local_port})")
                     return vless_uri
             except:
@@ -258,24 +270,21 @@ def main():
     archive_list = []
     alive_archive_list = []
 
-    # Загружаем общий архив (archive.txt)
     if os.path.exists(archive_path):
         with open(archive_path, "r", encoding="utf-8") as f:
             archive_list = [x.strip() for x in f if x.strip()]
 
-    # Загружаем архив только живых нод (alive_archive.txt)
     if os.path.exists(alive_archive_path):
         with open(alive_archive_path, "r", encoding="utf-8") as f:
             alive_archive_list = [x.strip() for x in f if x.strip()]
 
-    # Обновление archive.txt (новые уникальные ноды пушим в конец)
+    # Обновление общего склада archive.txt
     archive_seen = set(archive_list)
     for node in unique_nodes:
         if node not in archive_seen:
             archive_list.append(node)
             archive_seen.add(node)
 
-    # ЛИМИТ 10 000: Удаляем самое старое из начала списка
     if len(archive_list) > 10000:
         archive_list = archive_list[-10000:]
 
@@ -284,7 +293,7 @@ def main():
 
     print(f"Общий архив archive.txt обновлен. Всего: {len(archive_list)} нод (Лимит 10000)")
     
-    # ДИНАМИЧЕСКИЙ ПОРОГ: Добор резерва включается, только если источников не хватает на забивку файла подписки
+    # Резерв подключается строго в аварийном режиме
     if len(unique_nodes) < MAX_NODES:
         reserve_nodes = list(alive_archive_list)
         random.shuffle(reserve_nodes)
@@ -294,7 +303,7 @@ def main():
                 unique_nodes.append(node)
                 seen.add(node)
 
-        print(f"Внимание! Слишком мало уникальных данных из источников ({len(unique_nodes)} < {MAX_NODES}). Дозагрузили резерв из alive_archive.")
+        print(f"Внимание! Аварийный режим. Источников не хватает ({len(unique_nodes)} < {MAX_NODES}). Дозагрузили резерв из архива.")
     
     # Чтение текущего кэша подписки для приоритезации проверки
     old_nodes = []
@@ -327,6 +336,8 @@ def main():
     print(f"\n--- Шаг 3: Полный Live-Check ({len(unique_nodes)} нод, Потоков: {MAX_THREADS}) ---")
     alive_nodes = []
     
+    stop_event.clear()
+
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = [executor.submit(check_node_worker, node) for node in unique_nodes]
         
@@ -337,12 +348,12 @@ def main():
                     alive_nodes.append(res)
                     
                     if len(alive_nodes) >= MAX_NODES:
-                        print(f"Собрано {MAX_NODES} нод. Останавливаем остальные проверки.")
+                        print(f"Собрано {MAX_NODES} нод. Сигнализируем об экстренной остановке.")
+                        stop_event.set()
                         
                         for f in futures:
                             f.cancel()
-                            
-                        executor.shutdown(wait=False, cancel_futures=True)
+                        # Контекстный менеджерwith сам корректно закроет пул, убираем деструктивный shutdown
                         break
             except Exception as e:
                 print(f"Ошибка фьючерса: {e}")
@@ -352,7 +363,7 @@ def main():
     alive_nodes = list(dict.fromkeys(alive_nodes))
     print(f"После удаления полных дублей: {len(alive_nodes)}")
 
-    # --- LRU Ротация для alive_archive.txt (Лимит 5000) ---
+    # --- Честная LRU Ротация для alive_archive.txt (Лимит 5000) ---
     for node in alive_nodes:
         if node in alive_archive_list:
             alive_archive_list.remove(node)
