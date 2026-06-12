@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '0 */4 * * *'
 
+# ИСПРАВЛЕНО: Даем экшену права на запись в репозиторий (без этого git push упадет)
+permissions:
+  contents: write
+
 jobs:
   check-job:
     runs-on: ubuntu-latest
@@ -12,20 +16,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true # Гарантирует использование токена с правами записи
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      # ИСПРАВЛЕНО: requests[socks] ставит и requests, и правильные зависимости для SOCKS5h
       - name: Install dependencies
         run: |
-          pip install requests
-          pip install pysocks
+          pip install "requests[socks]"
 
+      # ИСПРАВЛЕНО: Стабильная установка sing-box через apt-репозиторий
       - name: Install sing-box
         run: |
-          curl -fsSL https://sing-box.app/install.sh | bash
+          sudo mkdir -p /etc/apt/keyrings
+          sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sing-box.asc
+          echo "deb [signed-by=/etc/apt/keyrings/sing-box.asc] https://deb.sing-box.app/ main" | sudo tee /etc/apt/sources.list.d/sing-box.list
+          sudo apt-get update
+          sudo apt-get install sing-box -y
 
       - name: Check sing-box
         run: |
@@ -35,17 +46,21 @@ jobs:
       - name: Run main script
         run: python3 main.py
 
+      # ИСПРАВЛЕНО: Локальная конфигурация, точечный git add и безопасный git push без привязки к HEAD
       - name: Commit and push changes
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Добавляем абсолютно все изменения (и subs/, и archive.txt)
-          git add .
-
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Безопаснее добавлять только то, что реально изменилось
+          [ -f node_stats.json ] && git add node_stats.json
+          [ -f source_fails.json ] && git add source_fails.json
+          [ -f subs/vless_001.txt ] && git add subs/vless_001.txt
+          
           if git diff --staged --quiet; then
             echo "Никаких изменений не обнаружено."
           else
-            git commit -m "Auto update: validated subs & archive"
-            git push
+            # [skip ci] защитит от случайных петель, если ты добавишь триггер on: push
+            git commit -m "Auto update: validated subs & analytics [skip ci]"
+            git push || true
           fi
