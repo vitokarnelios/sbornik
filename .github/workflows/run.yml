@@ -35,17 +35,17 @@ jobs:
       - name: Run main script
         run: python3 main.py
 
-      - name: Commit subs
+      - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          mkdir -p subs
-          git add subs/
+          # Добавляем абсолютно все изменения (и subs/, и archive.txt)
+          git add .
 
           if git diff --staged --quiet; then
-            echo "No changes"
+            echo "Никаких изменений не обнаружено."
           else
-            git commit -m "Auto update validated subs"
+            git commit -m "Auto update: validated subs & archive"
             git push
           fi
