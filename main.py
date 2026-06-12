@@ -72,47 +72,6 @@ def fetch_source(url):
         pass
     return []
 
-def load_repo_sources():
-    urls = []
-    repo_file = os.path.join(BASE_PATH, "repos.txt")
-
-    if not os.path.exists(repo_file):
-        return urls
-
-    with open(repo_file, "r", encoding="utf-8") as f:
-        repos = [x.strip() for x in f if x.strip() and not x.strip().startswith("#")]
-
-    for repo in repos:
-        try:
-            api = f"https://api.github.com/repos/{repo}/contents"
-            headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
-            r = requests.get(api, headers=headers, timeout=15)
-
-            if r.status_code != 200:
-                continue
-
-            files = r.json()
-            if not isinstance(files, list):
-                continue
-
-            for item in files:
-                if item.get("type") != "file":
-                    continue
-
-                name = item.get("name", "").lower()
-                if any(x in name for x in [
-                    "sub",
-                    "vless",
-                    "reality",
-                ]):
-                    download = item.get("download_url")
-                    if download:
-                        urls.append(download)
-        except:
-            pass
-
-    return list(set(urls))
-
 def is_valid_reality(line):
     if not line.lower().startswith("vless://"):
         return False
@@ -271,12 +230,10 @@ def main():
     print("--- Шаг 1: Сбор сырых данных ---")
     all_nodes = []
     
-    repo_sources = load_repo_sources()
-    print(f"Найдено файлов через repos.txt: {len(repo_sources)}")
-    for src in repo_sources:
-        SOURCES.append(src)
+    # Работаем строго по источникам из sources.txt
+    all_sources = SOURCES
 
-    for url in SOURCES:
+    for url in all_sources:
         nodes = fetch_source(url)
         print(f"Загружено {len(nodes)} строк из {url}")
         all_nodes.extend(nodes)
@@ -296,7 +253,7 @@ def main():
 
     print(f"Уникальных Reality-конфигов после дедупликации: {len(unique_nodes)}")
     
-    # Добавлено: Сохранение свежих уникальных нод в накопительный архив
+    # Сохранение свежих уникальных нод в накопительный архив
     archive_path = os.path.join(BASE_PATH, "archive.txt")
     archive_nodes = set()
 
