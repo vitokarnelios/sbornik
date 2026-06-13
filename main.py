@@ -40,8 +40,9 @@ for i in range(MAX_THREADS):
 TEST_URLS = [
     "https://vk.com",
     "https://yandex.ru",
+    "https://rutube.ru",
+    "https://ok.ru"
     "https://www.microsoft.com",
-    "https://google.com",
 ]
 
 def decode_base64_content(text):
