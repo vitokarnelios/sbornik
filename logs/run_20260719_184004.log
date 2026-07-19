@@ -1,0 +1,38 @@
+2026-07-19 18:40:04,987 | INFO | 📊 Использую дефолтный список SNI
+2026-07-19 18:40:04,987 | INFO | === SING-BOX STATUS ===
+2026-07-19 18:40:04,996 | INFO | sing-box version 1.13.14
+
+Environment: go1.25.11 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_naive_outbound,badlinkname,tfogo_checklinkname0,with_musl
+Revision: 25a600db24f7680ad9806ce5427bd0ab8afe1114
+CGO: enabled
+2026-07-19 18:40:04,996 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-07-19 18:40:05,162 | INFO | Loaded 60 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:05,297 | INFO | Loaded 0 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:05,468 | INFO | Loaded 14 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:05,644 | INFO | Loaded 28 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:05,798 | INFO | Loaded 65 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:05,850 | INFO | Loaded 942 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:06,147 | INFO | Loaded 153 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-07-19 18:40:06,479 | INFO | Loaded 387 lines from https://raw.githubusercontent.com/FLAT447/v2ray-li...
+2026-07-19 18:40:06,480 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-07-19 18:40:06,482 | INFO | Unique VLESS configs: 1377
+2026-07-19 18:40:06,508 | INFO | Archive updated: 10000 nodes (limit 10000)
+2026-07-19 18:40:06,520 | INFO | 
+--- STEP 3: LIVE CHECK (1377 nodes, threads: 40) ---
+2026-07-19 18:40:24,049 | INFO | ✅ Собрано 100 нод, досрочно завершаем...
+2026-07-19 18:46:23,997 | INFO | 
+--- RESULT: Found 100 live nodes ---
+2026-07-19 18:46:23,998 | INFO | After dedup: 100
+2026-07-19 18:46:24,011 | INFO | alive_archive.txt updated: 5000 nodes (limit 5000)
+2026-07-19 18:46:24,012 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt
+2026-07-19 18:46:24,012 | INFO | 
+--- STATS BY PROTOCOL ---
+2026-07-19 18:46:24,012 | INFO | reality: 3
+2026-07-19 18:46:24,012 | INFO | ws: 96
+2026-07-19 18:46:24,012 | INFO | other: 1
+2026-07-19 18:46:24,012 | INFO | 
+--- TOP SNI STATS ---
+2026-07-19 18:46:24,012 | INFO | 💾 Статистика SNI сохранена
