@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-SNI MUTATOR + STATS + LOGS + QUEUE
+SNI MUTATOR + STATS + LOGS + QUEUE + MUTATION STATS
 - Проверяет ноды с оригинальным SNI
 - Если нода мертва — мутирует SNI из рейтинга
-- Ведёт статистику успешных SNI (только локально)
+- Ведёт статистику успешных SNI
+- Ведёт статистику мутаций (сколько нод ожило, сколько нет)
 - TOP15 (shuffled) + RANDOM5 (shuffled)
 - Сохраняет статистику один раз в конце
 - Без старения
-- ПОТОКИ БЕРУТ ЗАДАЧИ ИЗ ОЧЕРЕДИ (нет массовой отправки)
+- ПОТОКИ БЕРУТ ЗАДАЧИ ИЗ ОЧЕРЕДИ
 """
 
 import os
@@ -308,7 +309,7 @@ def check_single_uri(vless_uri, local_port):
             stdout=log_file,
             stderr=log_file
         )
-        for _ in range(15):  # 1.5 секунды с проверкой каждые 0.1 сек
+        for _ in range(15):  # 1.5 секунды
             if stop_event.is_set():
                 return False
             time.sleep(0.1)
@@ -353,8 +354,8 @@ def check_single_uri(vless_uri, local_port):
                     pass
     return False
 
-def worker(task_queue, result_list, stats, lock):
-    """Воркер берёт задачи из очереди, пока есть работа"""
+def worker(task_queue, result_list, stats, lock, mutation_stats, mutation_lock):
+    """Воркер берёт задачи из очереди, собирает статистику мутаций"""
     while not stop_event.is_set():
         try:
             vless_uri = task_queue.get(timeout=0.5)
@@ -366,14 +367,26 @@ def worker(task_queue, result_list, stats, lock):
         
         local_port = port_queue.get()
         result_uri = None
+        is_reality = ("security=reality" in vless_uri.lower() or "pbk=" in vless_uri.lower())
+        
+        if is_reality:
+            with mutation_lock:
+                mutation_stats["total_reality"] += 1
         
         try:
             is_alive = check_single_uri(vless_uri, local_port)
             if is_alive:
                 logger.debug(f"[LIVE] Исходная нода рабочая (порт {local_port})")
+                if is_reality:
+                    with mutation_lock:
+                        mutation_stats["alive_original"] += 1
                 result_uri = vless_uri
-            elif ("security=reality" in vless_uri.lower() or "pbk=" in vless_uri.lower()) and stats:
+            elif is_reality and stats:
+                with mutation_lock:
+                    mutation_stats["mutations_attempted"] += 1
+                
                 sni_list = get_sni_list(stats, TOP_SNI_COUNT, RANDOM_SNI_COUNT)
+                mutation_success = False
                 for sni in sni_list:
                     if stop_event.is_set():
                         break
@@ -382,8 +395,15 @@ def worker(task_queue, result_list, stats, lock):
                         logger.info(f"[🎉 SNI WORKED] Нода ожила с SNI: {sni} (порт {local_port})")
                         with lock:
                             stats[sni] = stats.get(sni, 0) + SNI_SUCCESS_WEIGHT
+                        with mutation_lock:
+                            mutation_stats["mutations_success"] += 1
                         result_uri = mutated_uri
+                        mutation_success = True
                         break
+                
+                if not mutation_success:
+                    with mutation_lock:
+                        mutation_stats["mutations_failed"] += 1
             else:
                 logger.debug(f"[SKIP] Не Reality, мутация не поддерживается")
         except Exception as e:
@@ -468,14 +488,35 @@ def main():
     stop_event.clear()
     lock = threading.Lock()
     
+    # Статистика мутаций
+    mutation_stats = {
+        "total_reality": 0,
+        "alive_original": 0,
+        "mutations_attempted": 0,
+        "mutations_success": 0,
+        "mutations_failed": 0
+    }
+    mutation_lock = threading.Lock()
+    
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(
-            lambda _: worker(task_queue, result_list, SNI_STATS, lock),
+            lambda _: worker(task_queue, result_list, SNI_STATS, lock, mutation_stats, mutation_lock),
             range(MAX_THREADS)
         )
     
     elapsed = time.time() - start_time
     logger.info(f"⏱️ Время проверки: {elapsed:.1f} сек")
+    
+    # ========== ВЫВОД СТАТИСТИКИ МУТАЦИЙ ==========
+    logger.info(f"\n--- MUTATION STATS ---")
+    logger.info(f"  Reality нод всего: {mutation_stats['total_reality']}")
+    logger.info(f"  Живы с оригинальным SNI: {mutation_stats['alive_original']}")
+    logger.info(f"  Запущено мутаций: {mutation_stats['mutations_attempted']}")
+    logger.info(f"  Успешных мутаций: {mutation_stats['mutations_success']}")
+    logger.info(f"  Не удалось оживить: {mutation_stats['mutations_failed']}")
+    if mutation_stats['mutations_attempted'] > 0:
+        success_rate = mutation_stats['mutations_success'] / mutation_stats['mutations_attempted'] * 100
+        logger.info(f"  Эффективность мутации: {success_rate:.1f}%")
     
     alive_nodes = result_list
     logger.info(f"\n--- RESULT: Found {len(alive_nodes)} live nodes ---")
