@@ -1,0 +1,82 @@
+2026-08-10 09:23:50,953 | INFO | 📊 Загружена статистика SNI: 26 доменов
+2026-08-10 09:23:50,953 | INFO | === SING-BOX STATUS ===
+2026-08-10 09:23:50,962 | INFO | sing-box version 1.13.18
+
+Environment: go1.25.12 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_naive_outbound,badlinkname,tfogo_checklinkname0,with_musl
+Revision: 45ca32dcb966f07f97fc888fe8586e359dbe8405
+CGO: enabled
+2026-08-10 09:23:50,962 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-08-10 09:23:51,027 | INFO | Loaded 153 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,108 | INFO | Loaded 0 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,150 | INFO | Loaded 6 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,192 | INFO | Loaded 10 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,234 | INFO | Loaded 229 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,301 | INFO | Loaded 750 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,345 | INFO | Loaded 153 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-10 09:23:51,455 | INFO | Loaded 378 lines from https://raw.githubusercontent.com/FLAT447/v2ray-li...
+2026-08-10 09:23:51,455 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-08-10 09:23:51,457 | INFO | Unique VLESS configs: 1334
+2026-08-10 09:23:51,487 | INFO | Archive updated: 10000 nodes (limit 10000)
+2026-08-10 09:23:51,495 | INFO | 
+--- STEP 3: LIVE CHECK (1334 nodes, threads: 40) ---
+2026-08-10 09:23:58,379 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ozon.ru (порт 11024)
+2026-08-10 09:23:58,969 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11026)
+2026-08-10 09:23:59,093 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11021)
+2026-08-10 09:24:01,584 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: api-maps.yandex.ru (порт 11023)
+2026-08-10 09:24:01,663 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11019)
+2026-08-10 09:24:01,857 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11015)
+2026-08-10 09:24:03,868 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ok.ru (порт 11012)
+2026-08-10 09:24:03,916 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: api-maps.yandex.ru (порт 11018)
+2026-08-10 09:24:05,210 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11017)
+2026-08-10 09:24:05,238 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: mail.ru (порт 11028)
+2026-08-10 09:24:05,430 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: wildberries.ru (порт 11014)
+2026-08-10 09:24:08,437 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11037)
+2026-08-10 09:24:09,451 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: wildberries.ru (порт 11020)
+2026-08-10 09:24:11,384 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11027)
+2026-08-10 09:24:12,246 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ozon.ru (порт 11017)
+2026-08-10 09:24:13,833 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11001)
+2026-08-10 09:24:18,232 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11026)
+2026-08-10 09:24:19,422 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: wildberries.ru (порт 11012)
+2026-08-10 09:24:20,096 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: wildberries.ru (порт 11024)
+2026-08-10 09:24:23,016 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11003)
+2026-08-10 09:24:24,325 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11004)
+2026-08-10 09:24:24,666 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: mail.ru (порт 11000)
+2026-08-10 09:24:28,844 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ok.ru (порт 11001)
+2026-08-10 09:24:29,447 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ok.ru (порт 11020)
+2026-08-10 09:24:29,460 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11032)
+2026-08-10 09:24:30,417 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ok.ru (порт 11017)
+2026-08-10 09:24:31,774 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: vk.com (порт 11024)
+2026-08-10 09:24:32,399 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ok.ru (порт 11006)
+2026-08-10 09:24:32,908 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: ozon.ru (порт 11038)
+2026-08-10 09:24:34,409 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: api-maps.yandex.ru (порт 11019)
+2026-08-10 09:24:36,062 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: wildberries.ru (порт 11003)
+2026-08-10 09:24:37,468 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: yandex.ru (порт 11016)
+2026-08-10 09:24:40,626 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: api-maps.yandex.ru (порт 11018)
+2026-08-10 09:24:40,855 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: api-maps.yandex.ru (порт 11005)
+2026-08-10 09:24:47,494 | INFO | ⏱️ Время проверки: 56.0 сек
+2026-08-10 09:24:47,494 | INFO | 
+--- RESULT: Found 101 live nodes ---
+2026-08-10 09:24:47,494 | INFO | After dedup: 101
+2026-08-10 09:24:47,506 | INFO | alive_archive.txt updated: 5000 nodes (limit 5000)
+2026-08-10 09:24:47,507 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt
+2026-08-10 09:24:47,507 | INFO | 
+--- STATS BY PROTOCOL ---
+2026-08-10 09:24:47,507 | INFO | reality: 96
+2026-08-10 09:24:47,507 | INFO | ws: 3
+2026-08-10 09:24:47,507 | INFO | other: 2
+2026-08-10 09:24:47,507 | INFO | 
+--- TOP SNI STATS ---
+2026-08-10 09:24:47,507 | INFO | api-maps.yandex.ru: 229 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | yandex.ru: 75 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | mail.ru: 74 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | ozon.ru: 71 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | wildberries.ru: 65 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | vk.com: 63 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | ok.ru: 55 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | dzen.ru: 7 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | rutube.ru: 5 успешных мутаций
+2026-08-10 09:24:47,507 | INFO | cdn.x5.ru: 1 успешных мутаций
+2026-08-10 09:24:47,508 | INFO | 💾 Статистика SNI сохранена
