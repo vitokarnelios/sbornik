@@ -1,0 +1,49 @@
+2026-08-14 09:08:52,401 | INFO | 📊 Загружена статистика SNI: 26 доменов
+2026-08-14 09:08:52,401 | INFO | === SING-BOX STATUS ===
+2026-08-14 09:08:52,410 | INFO | sing-box version 1.13.18
+
+Environment: go1.25.12 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_naive_outbound,badlinkname,tfogo_checklinkname0,with_musl
+Revision: 45ca32dcb966f07f97fc888fe8586e359dbe8405
+CGO: enabled
+2026-08-14 09:08:52,410 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-08-14 09:08:52,481 | INFO | Loaded 79 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:52,589 | INFO | Loaded 0 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:52,722 | INFO | Loaded 7 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:52,848 | INFO | Loaded 3 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:52,898 | INFO | Loaded 79 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:53,030 | INFO | Loaded 120 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:53,153 | INFO | Loaded 153 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-14 09:08:53,300 | INFO | Loaded 504 lines from https://raw.githubusercontent.com/FLAT447/v2ray-li...
+2026-08-14 09:08:53,300 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-08-14 09:08:53,300 | INFO | Unique VLESS configs: 469
+2026-08-14 09:08:53,330 | INFO | Archive updated: 10000 nodes (limit 10000)
+2026-08-14 09:08:53,333 | INFO | 
+--- STEP 3: LIVE CHECK (469 nodes, threads: 40) ---
+2026-08-14 09:11:25,599 | INFO | ⏱️ Время проверки: 152.3 сек
+2026-08-14 09:11:25,600 | INFO | 
+--- RESULT: Found 103 live nodes ---
+2026-08-14 09:11:25,600 | INFO | After dedup: 103
+2026-08-14 09:11:25,611 | INFO | alive_archive.txt updated: 5000 nodes (limit 5000)
+2026-08-14 09:11:25,611 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt
+2026-08-14 09:11:25,611 | INFO | 
+--- STATS BY PROTOCOL ---
+2026-08-14 09:11:25,611 | INFO | reality: 46
+2026-08-14 09:11:25,611 | INFO | tls: 31
+2026-08-14 09:11:25,611 | INFO | ws: 24
+2026-08-14 09:11:25,611 | INFO | other: 2
+2026-08-14 09:11:25,611 | INFO | 
+--- TOP SNI STATS ---
+2026-08-14 09:11:25,611 | INFO | api-maps.yandex.ru: 253 успешных мутаций
+2026-08-14 09:11:25,611 | INFO | yandex.ru: 96 успешных мутаций
+2026-08-14 09:11:25,611 | INFO | ozon.ru: 93 успешных мутаций
+2026-08-14 09:11:25,611 | INFO | vk.com: 90 успешных мутаций
+2026-08-14 09:11:25,611 | INFO | mail.ru: 90 успешных мутаций
+2026-08-14 09:11:25,612 | INFO | wildberries.ru: 84 успешных мутаций
+2026-08-14 09:11:25,612 | INFO | ok.ru: 71 успешных мутаций
+2026-08-14 09:11:25,612 | INFO | storage.yandex.net: 14 успешных мутаций
+2026-08-14 09:11:25,612 | INFO | dzen.ru: 7 успешных мутаций
+2026-08-14 09:11:25,612 | INFO | rutube.ru: 6 успешных мутаций
+2026-08-14 09:11:25,612 | INFO | 💾 Статистика SNI сохранена
