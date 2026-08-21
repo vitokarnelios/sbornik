@@ -1,0 +1,54 @@
+2026-08-21 20:27:05,700 | INFO | 📊 Загружена статистика SNI: 26 доменов
+2026-08-21 20:27:05,700 | INFO | === SING-BOX STATUS ===
+2026-08-21 20:27:05,709 | INFO | sing-box version 1.13.19
+
+Environment: go1.25.12 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_naive_outbound,badlinkname,tfogo_checklinkname0,with_musl
+Revision: b5ebaa1fc0f2b94256180b95468e73ef53caa27d
+CGO: enabled
+2026-08-21 20:27:05,709 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-08-21 20:27:05,826 | INFO | Loaded 15 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:05,945 | INFO | Loaded 0 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:06,064 | INFO | Loaded 3 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:06,162 | INFO | Loaded 38 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:06,262 | INFO | Loaded 15 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:06,302 | INFO | Loaded 188 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:06,397 | INFO | Loaded 153 lines from https://raw.githubusercontent.com/igareck/vpn-conf...
+2026-08-21 20:27:06,558 | INFO | Loaded 432 lines from https://raw.githubusercontent.com/FLAT447/v2ray-li...
+2026-08-21 20:27:06,559 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-08-21 20:27:06,560 | INFO | Unique VLESS configs: 624
+2026-08-21 20:27:06,587 | INFO | Archive updated: 10000 nodes (limit 10000)
+2026-08-21 20:27:06,590 | INFO | 
+--- STEP 3: LIVE CHECK (624 nodes, threads: 40) ---
+2026-08-21 20:27:36,528 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: kinopoisk.ru (порт 11039)
+2026-08-21 20:29:08,263 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: kinopoisk.ru (порт 11022)
+2026-08-21 20:29:43,708 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: kinopoisk.ru (порт 11038)
+2026-08-21 20:29:49,979 | INFO | [🎉 SNI WORKED] Нода ожила с SNI: kinopoisk.ru (порт 11027)
+2026-08-21 20:54:40,578 | INFO | ⏱️ Время проверки: 1654.0 сек
+2026-08-21 20:54:40,578 | INFO | 
+--- RESULT: Found 48 live nodes ---
+2026-08-21 20:54:40,578 | INFO | After dedup: 48
+2026-08-21 20:54:40,578 | INFO | Filled from archive (+52), total: 100
+2026-08-21 20:54:40,592 | INFO | alive_archive.txt updated: 5000 nodes (limit 5000)
+2026-08-21 20:54:40,592 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt
+2026-08-21 20:54:40,592 | INFO | 
+--- STATS BY PROTOCOL ---
+2026-08-21 20:54:40,592 | INFO | reality: 49
+2026-08-21 20:54:40,592 | INFO | tls: 36
+2026-08-21 20:54:40,592 | INFO | ws: 14
+2026-08-21 20:54:40,592 | INFO | other: 1
+2026-08-21 20:54:40,592 | INFO | 
+--- TOP SNI STATS ---
+2026-08-21 20:54:40,592 | INFO | api-maps.yandex.ru: 258 успешных мутаций
+2026-08-21 20:54:40,592 | INFO | yandex.ru: 96 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | ozon.ru: 93 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | vk.com: 90 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | mail.ru: 90 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | wildberries.ru: 84 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | ok.ru: 72 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | storage.yandex.net: 15 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | dzen.ru: 8 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | rutube.ru: 7 успешных мутаций
+2026-08-21 20:54:40,593 | INFO | 💾 Статистика SNI сохранена
