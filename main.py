@@ -1,1999 +1,543 @@
+#!/usr/bin/env python3
+"""
+SNI MUTATOR + STATS + LOGS + QUEUE
+- Проверяет ноды с оригинальным SNI
+- Если нода мертва — мутирует SNI из рейтинга
+- Ведёт статистику успешных SNI (только локально)
+- TOP15 (shuffled) + RANDOM5 (shuffled)
+- Сохраняет статистику один раз в конце
+- Без старения
+- ПОТОКИ БЕРУТ ЗАДАЧИ ИЗ ОЧЕРЕДИ (нет массовой отправки)
+"""
+
 import os
-import re
-import json
-import time
+import requests
 import base64
 import random
-import queue
-import socket
-import shutil
-import tempfile
-import threading
+import json
 import subprocess
+import time
+import queue
+import threading
+import logging
 from datetime import datetime
-from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
-
-import requests
+from urllib.parse import urlparse, parse_qs, unquote, urlencode, urlunparse
 from concurrent.futures import ThreadPoolExecutor
 
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+FINAL_DIR = os.path.join(BASE_PATH, "subs")
+LOG_DIR = os.path.join(BASE_PATH, "logs")
 
-# ============================================================
-# CONFIG
-# ============================================================
+os.makedirs(FINAL_DIR, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
 
-SOURCES_FILE = "sources.txt"
+# ========== ЛОГИРОВАНИЕ ==========
+log_file = os.path.join(LOG_DIR, f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
 
-ARCHIVE_FILE = "archive.txt"
-ALIVE_ARCHIVE_FILE = "alive_archive.txt"
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s | %(levelname)s | %(message)s',
+    handlers=[
+        logging.FileHandler(log_file, encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
-OUTPUT_DIR = "subs"
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "vless_001.txt")
+# ========== КОНФИГ ==========
+SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
+SNI_STATS_FILE = os.path.join(BASE_PATH, "sni_stats.json")
 
-SNI_STATS_FILE = "sni_stats.json"
+if not os.path.exists(SOURCES_FILE):
+    logger.error("Файл sources.txt не найден")
+    exit(1)
 
-MAX_NODES = 100
-MAX_THREADS = 20
+with open(SOURCES_FILE, "r", encoding="utf-8") as f:
+    SOURCES = [
+        line.strip()
+        for line in f
+        if line.strip() and not line.strip().startswith("#")
+    ]
 
-BASE_PORT = 11000
-
-ARCHIVE_LIMIT = 10000
-ALIVE_ARCHIVE_LIMIT = 5000
-
-# Для первого теста не даём старому архиву разогнать проверку
-# до десятков тысяч узлов.
-#
-# 0 = проверять всё.
-MAX_CANDIDATES = 1000
-
-HTTP_TIMEOUT = 4.0
-
-SOCKS_START_TIMEOUT = 3.0
-SOCKS_POLL_INTERVAL = 0.1
-
-SOURCE_TIMEOUT = 15.0
-
-SNI_WARMUP_ATTEMPTS = 100
-
-TOP_SNI_COUNT = 8
-RANDOM_SNI_COUNT = 5
-
-SNI_DISABLE_AFTER = 50
-
-
-# ============================================================
-# SNI
-# ============================================================
-
-DEFAULT_SNI = [
-    "web.max.ru",
-    "vk.com",
-    "rutube.ru",
-    "mail.ru",
-    "ok.ru",
-    "yandex.ru",
-    "dzen.ru",
-    "gosuslugi.ru",
-    "ozon.ru",
-    "wildberries.ru",
-    "kinopoisk.ru",
-    "yandex.by",
-    "yandex.kz",
-    "telegram.org",
-    "cdn.x5.ru",
-    "storage.yandex.net",
-    "api-maps.yandex.ru",
-    "avatars.mds.yandex.net",
-    "sberbank.ru",
-    "tbank.ru",
-    "avito.ru",
-    "hh.ru",
-    "rambler.ru",
-    "lenta.ru",
-    "ria.ru",
-    "tass.ru",
-]
-
-
-# ============================================================
-# TEST TARGETS
-# ============================================================
-
-QUICK_TEST_URL = "https://www.youtube.com/generate_204"
-
-VALIDATION_TARGETS = [
-    {
-        "name": "YouTube",
-        "url": "https://www.youtube.com/generate_204",
-        "expected_codes": {200, 204, 301, 302},
-    },
-    {
-        "name": "Instagram",
-        "url": "https://www.instagram.com/",
-        "expected_codes": {200, 301, 302},
-    },
-    {
-        "name": "Telegram",
-        "url": "https://api.telegram.org",
-        "expected_codes": {200, 400, 401, 404},
-    },
-]
-
-
-# ============================================================
-# GLOBAL STATE
-# ============================================================
-
-stats_lock = threading.Lock()
-results_lock = threading.Lock()
-
-stop_event = threading.Event()
-
-SNI_STATS = {}
-
-ALIVE_RESULTS = []
-
-CHECKED_COUNT = 0
-LIVE_COUNT = 0
-
-PROTOCOL_STATS = {
-    "total": 0,
-    "reality": 0,
-    "tcp": 0,
-    "ws": 0,
-    "grpc": 0,
-    "xhttp": 0,
-    "other": 0,
+# ========== СТАТИСТИКА SNI ==========
+DEFAULT_SNI = {
+    "web.max.ru": 0,
+    "vk.com": 0,
+    "rutube.ru": 0,
+    "mail.ru": 0,
+    "ok.ru": 0,
+    "yandex.ru": 0,
+    "dzen.ru": 0,
+    "gosuslugi.ru": 0,
+    "ozon.ru": 0,
+    "wildberries.ru": 0,
+    "kinopoisk.ru": 0,
+    "yandex.by": 0,
+    "yandex.kz": 0,
+    "telegram.org": 0,
+    "cdn.x5.ru": 0,
+    "storage.yandex.net": 0,
+    "api-maps.yandex.ru": 0,
+    "avatars.mds.yandex.net": 0,
+    "sberbank.ru": 0,
+    "tbank.ru": 0,
+    "avito.ru": 0,
+    "hh.ru": 0,
+    "rambler.ru": 0,
+    "lenta.ru": 0,
+    "ria.ru": 0,
+    "tass.ru": 0
 }
 
-
-# ============================================================
-# UTILS
-# ============================================================
-
-def now_string():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-
-def safe_print(message):
-    print(message, flush=True)
-
-
-def ensure_dir(path):
-    os.makedirs(path, exist_ok=True)
-
-
-def is_vless(line):
-    return line.strip().lower().startswith("vless://")
-
-
-def normalize_line(line):
-    return line.strip().replace("\r", "").replace("\n", "")
-
-
-# ============================================================
-# FILE IO
-# ============================================================
-
-def read_node_file(path):
-    if not os.path.exists(path):
-        return []
-
-    result = []
-
-    try:
-        with open(path, "r", encoding="utf-8", errors="ignore") as f:
-            for line in f:
-                line = normalize_line(line)
-
-                if not line:
-                    continue
-
-                if is_vless(line):
-                    result.append(line)
-
-    except Exception as e:
-        safe_print(f"[WARN] Не удалось прочитать {path}: {e}")
-
-    return result
-
-
-def write_node_file(path, nodes):
-    directory = os.path.dirname(path)
-
-    if directory:
-        ensure_dir(directory)
-
-    with open(path, "w", encoding="utf-8") as f:
-        for node in nodes:
-            f.write(node + "\n")
-
-
-# ============================================================
-# BASE64
-# ============================================================
-
-def decode_base64_content(content):
-    """
-    Поддерживает:
-    - обычные vless:// строки;
-    - base64;
-    - base64url;
-    - несколько строк.
-    """
-
-    if not content:
-        return []
-
-    content = content.strip()
-
-    # Сначала проверяем обычный текст
-    direct = []
-
-    for line in content.splitlines():
-        line = normalize_line(line)
-
-        if is_vless(line):
-            direct.append(line)
-
-    if direct:
-        return direct
-
-    # Убираем пробелы/переносы
-    compact = re.sub(r"\s+", "", content)
-
-    # padding
-    compact += "=" * (-len(compact) % 4)
-
-    decoded = None
-
-    try:
-        decoded = base64.b64decode(compact, validate=False).decode(
-            "utf-8",
-            errors="ignore"
-        )
-    except Exception:
-        pass
-
-    if not decoded:
-        try:
-            decoded = base64.urlsafe_b64decode(compact).decode(
-                "utf-8",
-                errors="ignore"
-            )
-        except Exception:
-            pass
-
-    if not decoded:
-        return []
-
-    result = []
-
-    for line in decoded.splitlines():
-        line = normalize_line(line)
-
-        if is_vless(line):
-            result.append(line)
-
-    return result
-
-
-# ============================================================
-# SOURCES
-# ============================================================
-
-def fetch_source(source):
-    source = source.strip()
-
-    if not source:
-        return []
-
-    if is_vless(source):
-        return [source]
-
-    if not source.startswith(("http://", "https://")):
-        return []
-
-    try:
-        response = requests.get(
-            source,
-            timeout=SOURCE_TIMEOUT,
-            headers={
-                "User-Agent": (
-                    "Mozilla/5.0 "
-                    "(Windows NT 10.0; Win64; x64) "
-                    "AppleWebKit/537.36 "
-                    "Chrome/154 Safari/537.36"
-                )
-            },
-        )
-
-        response.raise_for_status()
-
-        nodes = decode_base64_content(response.text)
-
-        safe_print(
-            f"[SOURCE] {source} -> {len(nodes)} VLESS"
-        )
-
-        return nodes
-
-    except Exception as e:
-        safe_print(
-            f"[SOURCE-ERROR] {source} -> {e}"
-        )
-
-        return []
-
-
-def load_sources():
-    if not os.path.exists(SOURCES_FILE):
-        safe_print(
-            f"[ERROR] Нет файла {SOURCES_FILE}"
-        )
-        return []
-
-    sources = []
-
-    with open(
-        SOURCES_FILE,
-        "r",
-        encoding="utf-8",
-        errors="ignore"
-    ) as f:
-        for line in f:
-            line = line.strip()
-
-            if line and not line.startswith("#"):
-                sources.append(line)
-
-    safe_print(
-        f"[SOURCE] Источников найдено: {len(sources)}"
-    )
-
-    all_nodes = []
-
-    for source in sources:
-        nodes = fetch_source(source)
-        all_nodes.extend(nodes)
-
-    return deduplicate_nodes(all_nodes)
-
-
-# ============================================================
-# VLESS PARSER
-# ============================================================
-
-def parse_vless_uri(uri):
-    try:
-        parsed = urlsplit(uri)
-
-        if parsed.scheme.lower() != "vless":
-            return None
-
-        uuid = parsed.username
-
-        if not uuid:
-            return None
-
-        server = parsed.hostname
-
-        if not server:
-            return None
-
-        port = parsed.port
-
-        if not port:
-            return None
-
-        params = dict(parse_qsl(
-            parsed.query,
-            keep_blank_values=True
-        ))
-
-        fragment = parsed.fragment
-
-        return {
-            "uuid": uuid,
-            "server": server,
-            "port": port,
-            "params": params,
-            "fragment": fragment,
-        }
-
-    except Exception:
-        return None
-
-
-def canonical_vless_key(uri):
-    parsed = parse_vless_uri(uri)
-
-    if not parsed:
-        return None
-
-    params = parsed["params"]
-
-    normalized_params = urlencode(
-        sorted(params.items()),
-        doseq=True
-    )
-
-    return (
-        f"{parsed['uuid']}@"
-        f"{parsed['server']}:{parsed['port']}?"
-        f"{normalized_params}"
-    )
-
-
-def deduplicate_nodes(nodes):
-    result = []
-    seen = set()
-
-    for node in nodes:
-        node = normalize_line(node)
-
-        if not is_vless(node):
-            continue
-
-        key = canonical_vless_key(node)
-
-        if not key:
-            continue
-
-        if key in seen:
-            continue
-
-        seen.add(key)
-        result.append(node)
-
-    return result
-
-
-# ============================================================
-# SNI STATS
-# ============================================================
-
-def default_sni_record():
-    return {
-        "success": 0,
-        "attempts": 0,
-        "last_success": None,
-    }
-
-
 def load_sni_stats():
-    stats = {}
-
     if os.path.exists(SNI_STATS_FILE):
         try:
-            with open(
-                SNI_STATS_FILE,
-                "r",
-                encoding="utf-8"
-            ) as f:
-                raw = json.load(f)
-
-            if isinstance(raw, dict):
-                for sni, value in raw.items():
-
-                    # Старый формат:
-                    # "vk.com": 15
-                    if isinstance(value, int):
-                        stats[sni] = {
-                            "success": value,
-                            "attempts": value,
-                            "last_success": None,
-                        }
-
-                    # Новый формат
-                    elif isinstance(value, dict):
-                        stats[sni] = {
-                            "success": int(
-                                value.get("success", 0)
-                            ),
-                            "attempts": int(
-                                value.get("attempts", 0)
-                            ),
-                            "last_success": value.get(
-                                "last_success"
-                            ),
-                        }
-
+            with open(SNI_STATS_FILE, "r", encoding="utf-8") as f:
+                loaded = json.load(f)
+                logger.info(f"📊 Загружена статистика SNI: {len(loaded)} доменов")
+                return loaded
         except Exception as e:
-            safe_print(
-                f"[SNI] Ошибка загрузки статистики: {e}"
-            )
-
-    # Добавляем отсутствующие SNI
-    for sni in DEFAULT_SNI:
-        if sni not in stats:
-            stats[sni] = default_sni_record()
-
-    return stats
-
+            logger.warning(f"Ошибка загрузки статистики: {e}")
+    logger.info("📊 Использую дефолтный список SNI")
+    return DEFAULT_SNI.copy()
 
 def save_sni_stats(stats):
     try:
-        with open(
-            SNI_STATS_FILE,
-            "w",
-            encoding="utf-8"
-        ) as f:
-            json.dump(
-                stats,
-                f,
-                ensure_ascii=False,
-                indent=2
-            )
-
+        with open(SNI_STATS_FILE, "w", encoding="utf-8") as f:
+            json.dump(stats, f, indent=2, ensure_ascii=False)
+        logger.info("💾 Статистика SNI сохранена")
     except Exception as e:
-        safe_print(
-            f"[SNI] Ошибка сохранения статистики: {e}"
-        )
-
-
-def total_sni_attempts(stats):
-    total = 0
-
-    for value in stats.values():
-        try:
-            total += int(value.get("attempts", 0))
-        except Exception:
-            pass
-
-    return total
-
-
-def get_sni_list(stats):
-    """
-    Пока статистики мало — используем ВСЕ SNI.
-
-    После накопления статистики:
-      TOP 8
-      + до 5 неисследованных
-      + случайные из оставшихся.
-
-    SNI с >=50 попытками и 0 успехов временно отключаются.
-    """
-
-    attempts_total = total_sni_attempts(stats)
-
-    # ========================================================
-    # WARMUP
-    # ========================================================
-
-    if attempts_total < SNI_WARMUP_ATTEMPTS:
-        result = DEFAULT_SNI.copy()
-        random.shuffle(result)
-
-        return result
-
-    # ========================================================
-    # ADAPTIVE MODE
-    # ========================================================
-
-    usable = []
-
-    for sni in DEFAULT_SNI:
-
-        item = stats.get(
-            sni,
-            default_sni_record()
-        )
-
-        attempts = int(
-            item.get("attempts", 0)
-        )
-
-        success = int(
-            item.get("success", 0)
-        )
-
-        # Пока SNI исследован недостаточно — оставляем.
-        # Полностью неудачные после 50 попыток временно убираем.
-        if (
-            attempts >= SNI_DISABLE_AFTER
-            and success == 0
-        ):
-            continue
-
-        rate = (
-            success / attempts
-            if attempts > 0
-            else 0
-        )
-
-        usable.append(
-            (
-                sni,
-                rate,
-                success,
-                attempts
-            )
-        )
-
-    # TOP
-    usable.sort(
-        key=lambda x: (
-            x[1],
-            x[2],
-            x[3],
-        ),
-        reverse=True
-    )
-
-    selected = []
-
-    for item in usable:
-        sni = item[0]
-
-        if sni not in selected:
-            selected.append(sni)
-
-        if len(selected) >= TOP_SNI_COUNT:
-            break
-
-    # Неисследованные
-    unexplored = [
-        item[0]
-        for item in usable
-        if item[3] == 0
-        and item[0] not in selected
-    ]
-
-    random.shuffle(unexplored)
-
-    for sni in unexplored[:RANDOM_SNI_COUNT]:
-        selected.append(sni)
-
-    # Заполняем случайными
-    remaining = [
-        item[0]
-        for item in usable
-        if item[0] not in selected
-    ]
-
-    random.shuffle(remaining)
-
-    needed = TOP_SNI_COUNT + RANDOM_SNI_COUNT
-
-    if len(selected) < needed:
-        selected.extend(
-            remaining[:needed - len(selected)]
-        )
-
-    return selected
-
-
-def record_sni_attempt(
-    stats,
-    sni,
-    success
-):
-    with stats_lock:
-
-        if sni not in stats:
-            stats[sni] = default_sni_record()
-
-        stats[sni]["attempts"] = (
-            int(stats[sni].get("attempts", 0)) + 1
-        )
-
-        if success:
-            stats[sni]["success"] = (
-                int(stats[sni].get("success", 0)) + 1
-            )
-
-            stats[sni]["last_success"] = now_string()
-
-
-# ============================================================
-# SNI MUTATION
-# ============================================================
-
-def mutate_node_sni(uri, new_sni):
-    parsed = parse_vless_uri(uri)
-
-    if not parsed:
-        return None
-
-    params = parsed["params"].copy()
-
-    params["sni"] = new_sni
-
-    query = urlencode(
-        params,
-        doseq=True
-    )
-
-    username = parsed["uuid"]
-
-    server = parsed["server"]
-
-    port = parsed["port"]
-
-    fragment = parsed["fragment"]
-
-    result = urlunsplit(
-        (
-            "vless",
-            f"{username}@{server}:{port}",
-            "",
-            query,
-            fragment,
-        )
-    )
-
-    return result
-
-
-# ============================================================
-# SING-BOX CONFIG
-# ============================================================
-
-def parse_vless_to_json(uri, socks_port):
-    parsed = parse_vless_uri(uri)
-
-    if not parsed:
-        return None
-
-    params = parsed["params"]
-
-    server = parsed["server"]
-    server_port = parsed["port"]
-    uuid = parsed["uuid"]
-
-    network = (
-        params.get("type")
-        or params.get("network")
-        or "tcp"
-    ).lower()
-
-    security = (
-        params.get("security")
-        or ""
-    ).lower()
-
-    outbound = {
-        "type": "vless",
-        "tag": "proxy",
-
-        "server": server,
-        "server_port": server_port,
-        "uuid": uuid,
-
-        "network": "tcp",
-    }
-
-    # ========================================================
-    # FLOW
-    # ========================================================
-
-    flow = params.get("flow")
-
-    if flow:
-        outbound["flow"] = flow
-
-    # ========================================================
-    # PACKET ENCODING
-    # ========================================================
-
-    packet_encoding = params.get(
-        "packetEncoding"
-    )
-
-    if packet_encoding:
-        outbound["packet_encoding"] = packet_encoding
-
-    # ========================================================
-    # TLS
-    # ========================================================
-
-    if security in ("tls", "reality"):
-
-        tls = {
-            "enabled": True
-        }
-
-        sni = (
-            params.get("sni")
-            or params.get("host")
-        )
-
-        if sni:
-            tls["server_name"] = sni
-
-        fp = params.get("fp")
-
-        if fp:
-            tls["utls"] = {
-                "enabled": True,
-                "fingerprint": fp,
-            }
-
-        alpn = params.get("alpn")
-
-        if alpn:
-            tls["alpn"] = [
-                x.strip()
-                for x in alpn.split(",")
-                if x.strip()
-            ]
-
-        if security == "reality":
-
-            pbk = (
-                params.get("pbk")
-                or params.get("publicKey")
-            )
-
-            sid = (
-                params.get("sid")
-                or params.get("shortId")
-            )
-
-            if not pbk:
-                return None
-
-            reality = {
-                "enabled": True,
-                "public_key": pbk,
-            }
-
-            if sid:
-                reality["short_id"] = sid
-
-            tls["reality"] = reality
-
-        outbound["tls"] = tls
-
-    # ========================================================
-    # TRANSPORT
-    # ========================================================
-
-    path = params.get("path", "")
-    host = params.get("host", "")
-
-    if network == "ws":
-
-        transport = {
-            "type": "ws"
-        }
-
-        if path:
-            transport["path"] = path
-
-        if host:
-            transport["headers"] = {
-                "Host": host
-            }
-
-        outbound["transport"] = transport
-
-    elif network == "grpc":
-
-        service_name = (
-            params.get("serviceName")
-            or params.get("service_name")
-            or ""
-        )
-
-        transport = {
-            "type": "grpc"
-        }
-
-        if service_name:
-            transport["service_name"] = service_name
-
-        outbound["transport"] = transport
-
-    elif network == "httpupgrade":
-
-        transport = {
-            "type": "httpupgrade"
-        }
-
-        if path:
-            transport["path"] = path
-
-        if host:
-            transport["host"] = host
-
-        outbound["transport"] = transport
-
-    elif network in ("http", "h2", "xhttp", "splithttp"):
-
-        # ВАЖНО:
-        # sing-box 1.14.2 документирует V2Ray HTTP transport.
-        # Отдельного XHTTP transport в документации sing-box
-        # нет. Поэтому xhttp/splithttp здесь НЕ объявляется
-        # как несуществующий type "xhttp".
-        #
-        # Такой узел будет проверяться через HTTP transport.
-        # Это лучше, чем отправлять sing-box заведомо
-        # невалидный конфиг.
-
-        transport = {
-            "type": "http"
-        }
-
-        if path:
-            transport["path"] = path
-
-        if host:
-            transport["host"] = [host]
-
-        outbound["transport"] = transport
-
-    # ========================================================
-    # SOCKS
-    # ========================================================
-
-    config = {
-        "log": {
-            "level": "error"
-        },
-
-        "inbounds": [
-            {
-                "type": "socks",
-                "tag": "socks-in",
-                "listen": "127.0.0.1",
-                "listen_port": socks_port,
-            }
-        ],
-
-        "outbounds": [
-            outbound
-        ]
-    }
-
-    return config
-
-
-# ============================================================
-# SOCKS READY
-# ============================================================
-
-def wait_for_socks(port):
-    deadline = (
-        time.time()
-        + SOCKS_START_TIMEOUT
-    )
-
-    while time.time() < deadline:
-
-        try:
-            with socket.create_connection(
-                ("127.0.0.1", port),
-                timeout=0.3
-            ):
-                return True
-
-        except Exception:
-            time.sleep(
-                SOCKS_POLL_INTERVAL
-            )
-
-    return False
-
-
-# ============================================================
-# REQUEST SESSION
-# ============================================================
-
-def create_socks_session(port):
-    session = requests.Session()
-
-    proxy = (
-        f"socks5h://127.0.0.1:{port}"
-    )
-
-    session.proxies.update({
-        "http": proxy,
-        "https": proxy,
-    })
-
-    session.headers.update({
-        "User-Agent": (
-            "Mozilla/5.0 "
-            "(Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 "
-            "(KHTML, like Gecko) "
-            "Chrome/154.0.0.0 "
-            "Safari/537.36"
-        )
-    })
-
-    return session
-
-
-# ============================================================
-# QUICK TEST
-# ============================================================
-
-def quick_test(session):
+        logger.warning(f"Ошибка сохранения статистики: {e}")
+
+def get_sni_list(stats, top_count=15, random_count=5):
+    sorted_sni = sorted(stats.items(), key=lambda x: x[1], reverse=True)
+    top = [sni for sni, _ in sorted_sni[:top_count]]
+    random.shuffle(top)
+    remaining = [sni for sni, _ in sorted_sni[top_count:]]
+    if len(top) < top_count:
+        needed = top_count - len(top)
+        if remaining:
+            extra = random.sample(remaining, min(needed, len(remaining)))
+            top.extend(extra)
+    zero_remaining = [sni for sni in remaining if sni not in top]
+    if zero_remaining and random_count > 0:
+        random_ones = random.sample(zero_remaining, min(random_count, len(zero_remaining)))
+        random.shuffle(random_ones)
+    else:
+        random_ones = []
+    return top + random_ones
+
+SNI_STATS = load_sni_stats()
+
+MAX_NODES = 100       
+MAX_THREADS = 40      
+TOP_SNI_COUNT = 15
+RANDOM_SNI_COUNT = 5
+SNI_SUCCESS_WEIGHT = 1
+
+stop_event = threading.Event()
+port_queue = queue.Queue()
+for i in range(MAX_THREADS):
+    port_queue.put(11000 + i)
+
+TEST_URLS = [
+    "https://vk.com",
+    "https://yandex.ru",
+    "https://rutube.ru",
+    "https://ok.ru",
+    "https://www.microsoft.com",
+]
+
+def decode_base64_content(text):
     try:
+        text = text.strip()
+        if "://" in text:
+            return [text]
+        padding = len(text) % 4
+        if padding:
+            text += "=" * (4 - padding)
+        decoded = base64.b64decode(text).decode("utf-8", errors="ignore")
+        return decoded.splitlines()
+    except:
+        return []
 
-        response = session.get(
-            QUICK_TEST_URL,
-            timeout=HTTP_TIMEOUT,
-            allow_redirects=False,
-        )
-
-        return response.status_code in {
-            200,
-            204,
-            301,
-            302,
-        }
-
-    except Exception:
-        return False
-
-
-# ============================================================
-# DEEP TEST
-# ============================================================
-
-def deep_test(session):
-    statuses = {}
-
-    all_ok = True
-
-    for target in VALIDATION_TARGETS:
-
-        name = target["name"]
-
-        try:
-
-            response = session.get(
-                target["url"],
-                timeout=HTTP_TIMEOUT,
-                allow_redirects=False,
-            )
-
-            code = response.status_code
-
-            ok = (
-                code in target["expected_codes"]
-            )
-
-            statuses[name] = code
-
-            if not ok:
-                all_ok = False
-
-        except Exception as e:
-
-            statuses[name] = str(e)
-
-            all_ok = False
-
-    return all_ok, statuses
-
-
-# ============================================================
-# SINGLE NODE CHECK
-# ============================================================
-
-def check_single_uri(
-    uri,
-    socks_port,
-    deep=False
-):
-    config = parse_vless_to_json(
-        uri,
-        socks_port
-    )
-
-    if not config:
-        return False, {}
-
-    temp_path = None
-    process = None
-
+def fetch_source(url):
     try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        r = requests.get(url, timeout=15, headers=headers)
+        if r.status_code == 200:
+            final_lines = []
+            for line in r.text.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                if "://" not in line and len(line) > 50:
+                    final_lines.extend(decode_base64_content(line))
+                else:
+                    final_lines.append(line)
+            return final_lines
+    except Exception as e:
+        logger.debug(f"Ошибка загрузки {url}: {e}")
+    return []
 
-        fd, temp_path = tempfile.mkstemp(
-            suffix=".json"
-        )
+def is_valid_vless(line):
+    return line.lower().startswith("vless://")
 
-        os.close(fd)
+def mutate_node_sni(vless_uri, target_sni):
+    try:
+        parsed = urlparse(vless_uri)
+        query_params = parse_qs(parsed.query)
+        mutated_params = {k: v[:] for k, v in query_params.items()}
+        mutated_params['sni'] = [target_sni]
+        new_query = urlencode(mutated_params, doseq=True)
+        orig_fragment = unquote(parsed.fragment) if parsed.fragment else "node"
+        new_fragment = f"{orig_fragment}-fixed-{target_sni}"
+        return urlunparse((
+            parsed.scheme, parsed.netloc, parsed.path,
+            parsed.params, new_query, new_fragment
+        ))
+    except:
+        return vless_uri
 
-        with open(
-            temp_path,
-            "w",
-            encoding="utf-8"
-        ) as f:
-            json.dump(
-                config,
-                f,
-                ensure_ascii=False
-            )
-
-        process = subprocess.Popen(
-            [
-                "sing-box",
-                "run",
-                "-c",
-                temp_path,
-            ],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-
-        if not wait_for_socks(socks_port):
-            return False, {}
-
-        session = create_socks_session(
-            socks_port
-        )
-
-        # ====================================================
-        # QUICK
-        # ====================================================
-
-        if not quick_test(session):
-            return False, {}
-
-        # ====================================================
-        # QUICK ONLY
-        # ====================================================
-
-        if not deep:
-            return True, {}
-
-        # ====================================================
-        # DEEP
-        # ====================================================
-
-        ok, statuses = deep_test(session)
-
-        return ok, statuses
-
-    except Exception:
-        return False, {}
-
-    finally:
-
-        if process:
-
-            try:
-                process.terminate()
-
-                try:
-                    process.wait(
-                        timeout=1.5
-                    )
-                except subprocess.TimeoutExpired:
-
-                    process.kill()
-
-                    try:
-                        process.wait(
-                            timeout=1
-                        )
-                    except Exception:
-                        pass
-
-            except Exception:
-                pass
-
-        if temp_path:
-
-            try:
-                os.remove(temp_path)
-            except Exception:
-                pass
-
-
-# ============================================================
-# REALITY DETECTION
-# ============================================================
-
-def is_reality_node(uri):
-    parsed = parse_vless_uri(uri)
-
-    if not parsed:
-        return False
-
-    params = parsed["params"]
-
-    security = (
-        params.get("security")
-        or ""
-    ).lower()
-
-    if security == "reality":
-        return True
-
-    if params.get("pbk"):
-        return True
-
-    if params.get("publicKey"):
-        return True
-
-    return False
-
-
-# ============================================================
-# PROTOCOL STATS
-# ============================================================
-
-def register_protocol(uri):
-    parsed = parse_vless_uri(uri)
-
-    if not parsed:
-        return
-
-    params = parsed["params"]
-
-    network = (
-        params.get("type")
-        or params.get("network")
-        or "tcp"
-    ).lower()
-
-    security = (
-        params.get("security")
-        or ""
-    ).lower()
-
-    with results_lock:
-
-        PROTOCOL_STATS["total"] += 1
-
-        if security == "reality" or params.get("pbk"):
-            PROTOCOL_STATS["reality"] += 1
-
-        if network == "tcp":
-            PROTOCOL_STATS["tcp"] += 1
-
-        elif network == "ws":
-            PROTOCOL_STATS["ws"] += 1
-
-        elif network == "grpc":
-            PROTOCOL_STATS["grpc"] += 1
-
-        elif network in (
-            "xhttp",
-            "splithttp",
-        ):
-            PROTOCOL_STATS["xhttp"] += 1
-
+def parse_vless_to_json(vless_uri, listen_port):
+    try:
+        parsed = urlparse(vless_uri)
+        netloc = parsed.netloc
+        if '@' not in netloc:
+            return None
+        uuid, server_part = netloc.split('@', 1)
+        if ':' in server_part:
+            server_address, server_port_str = server_part.split(':', 1)
+            server_port = int(server_port_str)
         else:
-            PROTOCOL_STATS["other"] += 1
+            server_address = server_part
+            server_port = 443
+        query_params = parse_qs(parsed.query)
+        params = {k.lower(): v[0] for k, v in query_params.items() if v}
+        node_name = unquote(parsed.fragment) if parsed.fragment else "vless-node"
+        outbound = {
+            "type": "vless",
+            "tag": node_name,
+            "server": server_address,
+            "server_port": server_port,
+            "uuid": uuid,
+        }
+        flow = params.get("flow", "")
+        if flow:
+            outbound["flow"] = flow
+        security = params.get("security", "")
+        transport_type = params.get("type", "tcp")
+        if "pbk" in params or params.get("security") == "reality" or security == "reality":
+            outbound["tls"] = {
+                "enabled": True,
+                "server_name": params.get("sni", server_address),
+                "utls": {
+                    "enabled": True,
+                    "fingerprint": params.get("fp", "chrome")
+                },
+                "reality": {
+                    "enabled": True,
+                    "public_key": params.get("pbk", ""),
+                    "short_id": params.get("sid", "")
+                }
+            }
+        elif security == "tls" or params.get("security") == "tls":
+            outbound["tls"] = {
+                "enabled": True,
+                "server_name": params.get("sni", server_address),
+                "utls": {
+                    "enabled": True,
+                    "fingerprint": params.get("fp", "chrome")
+                }
+            }
+            if "alpn" in params:
+                outbound["tls"]["alpn"] = params["alpn"].split(',')
+        if transport_type == "grpc":
+            outbound["transport"] = {
+                "type": "grpc",
+                "service_name": params.get("serviceName", "")
+            }
+        elif transport_type == "xhttp":
+            outbound["transport"] = {
+                "type": "xhttp",
+                "path": params.get("path", "/"),
+                "host": [params["host"]] if params.get("host") else [],
+                "mode": params.get("mode", "auto")
+            }
+        elif transport_type == "ws":
+            outbound["transport"] = {
+                "type": "ws",
+                "path": params.get("path", "/"),
+                "headers": {
+                    "Host": params.get("host", server_address)
+                }
+            }
+        config = {
+            "log": {"level": "error"},
+            "inbounds": [
+                {
+                    "type": "socks",
+                    "tag": "socks-in",
+                    "listen": "127.0.0.1",
+                    "listen_port": listen_port
+                }
+            ],
+            "outbounds": [outbound]
+        }
+        return config
+    except Exception as e:
+        return None
 
-
-# ============================================================
-# WORKER
-# ============================================================
-
-def worker(
-    task_queue,
-    worker_id,
-    total_candidates
-):
-    global CHECKED_COUNT
-    global LIVE_COUNT
-
-    socks_port = (
-        BASE_PORT + worker_id
-    )
-
-    while not stop_event.is_set():
-
-        try:
-            node = task_queue.get(
-                timeout=0.5
-            )
-
-        except queue.Empty:
-            return
-
-        try:
-
+def check_single_uri(vless_uri, local_port):
+    if stop_event.is_set():
+        return False
+    temp_config_path = os.path.join(BASE_PATH, f"temp_{local_port}.json")
+    temp_log_path = os.path.join(BASE_PATH, f"singbox_{local_port}.log")
+    config = parse_vless_to_json(vless_uri, local_port)
+    if not config:
+        return False
+    with open(temp_config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f)
+    proc = None
+    try:
+        log_file = open(temp_log_path, "w", encoding="utf-8")
+        proc = subprocess.Popen(
+            ["sing-box", "run", "-c", temp_config_path],
+            stdout=log_file,
+            stderr=log_file
+        )
+        for _ in range(15):  # 1.5 секунды с проверкой каждые 0.1 сек
             if stop_event.is_set():
+                return False
+            time.sleep(0.1)
+        if proc.poll() is not None:
+            return False
+        proxies = {
+            "http": f"socks5h://127.0.0.1:{local_port}",
+            "https": f"socks5h://127.0.0.1:{local_port}"
+        }
+        for url in TEST_URLS:
+            if stop_event.is_set():
+                return False
+            try:
+                response = requests.get(
+                    url,
+                    proxies=proxies,
+                    timeout=2,
+                    headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+                )
+                if response.status_code in [200, 204, 301, 302]:
+                    return True
+            except:
                 continue
+    except:
+        pass
+    finally:
+        try:
+            log_file.close()
+        except:
+            pass
+        if proc:
+            proc.terminate()
+            try:
+                proc.wait(timeout=1)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+        for f in [temp_config_path, temp_log_path]:
+            if os.path.exists(f):
+                try:
+                    os.remove(f)
+                except:
+                    pass
+    return False
 
-            # =================================================
-            # ORIGINAL NODE
-            # =================================================
-
-            ok, statuses = check_single_uri(
-                node,
-                socks_port,
-                deep=True
-            )
-
-            if ok:
-
-                with results_lock:
-
-                    if len(ALIVE_RESULTS) < MAX_NODES:
-
-                        ALIVE_RESULTS.append(node)
-
-                        LIVE_COUNT = len(
-                            ALIVE_RESULTS
-                        )
-
-                        CHECKED_COUNT += 1
-
-                        current_checked = (
-                            CHECKED_COUNT
-                        )
-
-                        current_live = (
-                            LIVE_COUNT
-                        )
-
-                        register_protocol(node)
-
-                        safe_print(
-                            f"[LIVE] "
-                            f"{current_checked}/{total_candidates} "
-                            f"| LIVE "
-                            f"{current_live}/{MAX_NODES} "
-                            f"| original"
-                        )
-
-                        if current_live >= MAX_NODES:
-                            stop_event.set()
-
-                continue
-
-            # =================================================
-            # REALITY SNI FALLBACK
-            # =================================================
-
-            if is_reality_node(node):
-
-                with stats_lock:
-                    sni_list = get_sni_list(
-                        SNI_STATS
-                    )
-
+def worker(task_queue, result_list, stats, lock):
+    """Воркер берёт задачи из очереди, пока есть работа"""
+    while not stop_event.is_set():
+        try:
+            vless_uri = task_queue.get(timeout=0.5)
+        except queue.Empty:
+            break
+        
+        if stop_event.is_set():
+            break
+        
+        local_port = port_queue.get()
+        result_uri = None
+        
+        try:
+            is_alive = check_single_uri(vless_uri, local_port)
+            if is_alive:
+                logger.debug(f"[LIVE] Исходная нода рабочая (порт {local_port})")
+                result_uri = vless_uri
+            elif ("security=reality" in vless_uri.lower() or "pbk=" in vless_uri.lower()) and stats:
+                sni_list = get_sni_list(stats, TOP_SNI_COUNT, RANDOM_SNI_COUNT)
                 for sni in sni_list:
-
                     if stop_event.is_set():
                         break
-
-                    mutated = mutate_node_sni(
-                        node,
-                        sni
-                    )
-
-                    if not mutated:
-                        continue
-
-                    # -----------------------------------------
-                    # QUICK SNI TEST
-                    # -----------------------------------------
-
-                    quick_ok, _ = check_single_uri(
-                        mutated,
-                        socks_port,
-                        deep=False
-                    )
-
-                    record_sni_attempt(
-                        SNI_STATS,
-                        sni,
-                        quick_ok
-                    )
-
-                    if not quick_ok:
-                        continue
-
-                    # -----------------------------------------
-                    # DEEP TEST
-                    # -----------------------------------------
-
-                    deep_ok, deep_statuses = (
-                        check_single_uri(
-                            mutated,
-                            socks_port,
-                            deep=True
-                        )
-                    )
-
-                    if not deep_ok:
-                        continue
-
-                    with results_lock:
-
-                        if len(ALIVE_RESULTS) < MAX_NODES:
-
-                            ALIVE_RESULTS.append(
-                                mutated
-                            )
-
-                            LIVE_COUNT = len(
-                                ALIVE_RESULTS
-                            )
-
-                            CHECKED_COUNT += 1
-
-                            current_checked = (
-                                CHECKED_COUNT
-                            )
-
-                            current_live = (
-                                LIVE_COUNT
-                            )
-
-                            register_protocol(
-                                mutated
-                            )
-
-                            safe_print(
-                                f"[LIVE] "
-                                f"{current_checked}/"
-                                f"{total_candidates} "
-                                f"| LIVE "
-                                f"{current_live}/"
-                                f"{MAX_NODES} "
-                                f"| SNI={sni} "
-                                f"| "
-                                f"YT={deep_statuses.get('YouTube')} "
-                                f"IG={deep_statuses.get('Instagram')} "
-                                f"TG={deep_statuses.get('Telegram')}"
-                            )
-
-                            if current_live >= MAX_NODES:
-                                stop_event.set()
-
-                    break
-
-            # =================================================
-            # DEAD
-            # =================================================
-
-            with results_lock:
-
-                CHECKED_COUNT += 1
-
-                current_checked = (
-                    CHECKED_COUNT
-                )
-
-                current_live = len(
-                    ALIVE_RESULTS
-                )
-
-                LIVE_COUNT = current_live
-
-                # Не спамим логом абсолютно каждой проверки,
-                # если узел мёртвый.
-                if (
-                    current_checked <= 20
-                    or current_checked % 10 == 0
-                ):
-                    safe_print(
-                        f"[CHECK] "
-                        f"{current_checked}/"
-                        f"{total_candidates} "
-                        f"| LIVE "
-                        f"{current_live}/"
-                        f"{MAX_NODES}"
-                    )
-
+                    mutated_uri = mutate_node_sni(vless_uri, sni)
+                    if check_single_uri(mutated_uri, local_port):
+                        logger.info(f"[🎉 SNI WORKED] Нода ожила с SNI: {sni} (порт {local_port})")
+                        with lock:
+                            stats[sni] = stats.get(sni, 0) + SNI_SUCCESS_WEIGHT
+                        result_uri = mutated_uri
+                        break
+            else:
+                logger.debug(f"[SKIP] Не Reality, мутация не поддерживается")
         except Exception as e:
-
-            with results_lock:
-
-                CHECKED_COUNT += 1
-
-                current_checked = (
-                    CHECKED_COUNT
-                )
-
-                current_live = len(
-                    ALIVE_RESULTS
-                )
-
-                LIVE_COUNT = current_live
-
-                safe_print(
-                    f"[ERROR] "
-                    f"{current_checked}/"
-                    f"{total_candidates} "
-                    f"| {type(e).__name__}: {e}"
-                )
-
+            logger.error(f"Ошибка в воркере: {e}")
         finally:
-
-            task_queue.task_done()
-
-
-# ============================================================
-# ARCHIVE
-# ============================================================
-
-def update_archive(current_nodes):
-    old_archive = read_node_file(
-        ARCHIVE_FILE
-    )
-
-    combined = (
-        current_nodes
-        + old_archive
-    )
-
-    combined = deduplicate_nodes(
-        combined
-    )
-
-    combined = combined[:ARCHIVE_LIMIT]
-
-    write_node_file(
-        ARCHIVE_FILE,
-        combined
-    )
-
-    safe_print(
-        f"[ARCHIVE] "
-        f"archive.txt: {len(combined)}"
-    )
-
-
-def update_alive_archive(validated_nodes):
-    old_alive = read_node_file(
-        ALIVE_ARCHIVE_FILE
-    )
-
-    combined = (
-        validated_nodes
-        + old_alive
-    )
-
-    combined = deduplicate_nodes(
-        combined
-    )
-
-    combined = combined[
-        :ALIVE_ARCHIVE_LIMIT
-    ]
-
-    write_node_file(
-        ALIVE_ARCHIVE_FILE,
-        combined
-    )
-
-    safe_print(
-        f"[ALIVE-ARCHIVE] "
-        f"alive_archive.txt: {len(combined)}"
-    )
-
-
-def build_candidates(current_nodes):
-    alive_archive = read_node_file(
-        ALIVE_ARCHIVE_FILE
-    )
-
-    archive = read_node_file(
-        ARCHIVE_FILE
-    )
-
-    # Сначала свежие источники,
-    # затем ранее подтверждённые,
-    # затем старый архив.
-    combined = (
-        current_nodes
-        + alive_archive
-        + archive
-    )
-
-    combined = deduplicate_nodes(
-        combined
-    )
-
-    if MAX_CANDIDATES > 0:
-        combined = combined[
-            :MAX_CANDIDATES
-        ]
-
-    return combined
-
-
-# ============================================================
-# WRITE RESULTS
-# ============================================================
-
-def write_results():
-    ensure_dir(OUTPUT_DIR)
-
-    nodes = deduplicate_nodes(
-        ALIVE_RESULTS
-    )
-
-    nodes = nodes[:MAX_NODES]
-
-    write_node_file(
-        OUTPUT_FILE,
-        nodes
-    )
-
-    safe_print(
-        f"[OUTPUT] "
-        f"{OUTPUT_FILE}: {len(nodes)}"
-    )
-
-
-# ============================================================
-# PRINT STATS
-# ============================================================
-
-def print_final_stats():
-    safe_print("")
-    safe_print("=" * 60)
-    safe_print("FINAL STATS")
-    safe_print("=" * 60)
-
-    safe_print(
-        f"Проверено: {CHECKED_COUNT}"
-    )
-
-    safe_print(
-        f"Рабочих: {len(ALIVE_RESULTS)}"
-    )
-
-    safe_print(
-        f"Цель: {MAX_NODES}"
-    )
-
-    safe_print("")
-
-    safe_print(
-        f"Всего VLESS: "
-        f"{PROTOCOL_STATS['total']}"
-    )
-
-    safe_print(
-        f"Reality: "
-        f"{PROTOCOL_STATS['reality']}"
-    )
-
-    safe_print(
-        f"TCP: "
-        f"{PROTOCOL_STATS['tcp']}"
-    )
-
-    safe_print(
-        f"WS: "
-        f"{PROTOCOL_STATS['ws']}"
-    )
-
-    safe_print(
-        f"gRPC: "
-        f"{PROTOCOL_STATS['grpc']}"
-    )
-
-    safe_print(
-        f"XHTTP/splithttp: "
-        f"{PROTOCOL_STATS['xhttp']}"
-    )
-
-    safe_print(
-        f"Other: "
-        f"{PROTOCOL_STATS['other']}"
-    )
-
-    safe_print("")
-
-    total_attempts = total_sni_attempts(
-        SNI_STATS
-    )
-
-    safe_print(
-        f"SNI attempts: {total_attempts}"
-    )
-
-    if total_attempts > 0:
-
-        sorted_sni = []
-
-        for sni, item in SNI_STATS.items():
-
-            attempts = int(
-                item.get("attempts", 0)
-            )
-
-            success = int(
-                item.get("success", 0)
-            )
-
-            if attempts > 0:
-
-                rate = (
-                    success / attempts
-                )
-
-                sorted_sni.append(
-                    (
-                        sni,
-                        success,
-                        attempts,
-                        rate
-                    )
-                )
-
-        sorted_sni.sort(
-            key=lambda x: (
-                x[3],
-                x[1],
-                x[2]
-            ),
-            reverse=True
-        )
-
-        safe_print(
-            "TOP SNI:"
-        )
-
-        for (
-            sni,
-            success,
-            attempts,
-            rate
-        ) in sorted_sni[:10]:
-
-            safe_print(
-                f"  {sni}: "
-                f"{success}/{attempts} "
-                f"({rate * 100:.1f}%)"
-            )
-
-    safe_print("=" * 60)
-
-
-# ============================================================
-# MAIN
-# ============================================================
+            port_queue.put(local_port)
+        
+        if result_uri:
+            with lock:
+                result_list.append(result_uri)
+                if len(result_list) >= MAX_NODES:
+                    stop_event.set()
+        
+        task_queue.task_done()
 
 def main():
-
-    global SNI_STATS
-
-    start_time = time.time()
-
-    safe_print("")
-    safe_print("=" * 60)
-    safe_print("SBORNIK START")
-    safe_print("=" * 60)
-
-    safe_print(
-        f"[TIME] {now_string()}"
-    )
-
-    safe_print(
-        f"[CONFIG] "
-        f"threads={MAX_THREADS}, "
-        f"target={MAX_NODES}, "
-        f"candidate_limit={MAX_CANDIDATES}"
-    )
-
-    # ========================================================
-    # CHECK SING-BOX
-    # ========================================================
-
-    if not shutil.which("sing-box"):
-
-        safe_print(
-            "[ERROR] sing-box не найден"
-        )
-
-        return 1
-
+    logger.info("=== SING-BOX STATUS ===")
     try:
-
-        version_result = subprocess.run(
-            [
-                "sing-box",
-                "version"
-            ],
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
-
-        safe_print(
-            version_result.stdout.strip()
-        )
-
+        sb_v = subprocess.run(["sing-box", "version"], capture_output=True, text=True)
+        logger.info(sb_v.stdout.strip())
     except Exception as e:
+        logger.error(f"sing-box не найден! {e}")
+        return
 
-        safe_print(
-            f"[ERROR] sing-box version: {e}"
-        )
+    logger.info("\n--- STEP 1: FETCHING SOURCES ---")
+    all_nodes = []
+    for url in SOURCES:
+        nodes = fetch_source(url)
+        logger.info(f"Loaded {len(nodes)} lines from {url[:50]}...")
+        all_nodes.extend(nodes)
 
-        return 1
-
-    # ========================================================
-    # LOAD SNI STATS
-    # ========================================================
-
-    SNI_STATS = load_sni_stats()
-
-    safe_print(
-        f"[SNI] "
-        f"Всего SNI: {len(DEFAULT_SNI)}"
-    )
-
-    safe_print(
-        f"[SNI] "
-        f"Всего попыток в статистике: "
-        f"{total_sni_attempts(SNI_STATS)}"
-    )
-
-    if (
-        total_sni_attempts(SNI_STATS)
-        < SNI_WARMUP_ATTEMPTS
-    ):
-
-        safe_print(
-            "[SNI] Статистики пока мало -> "
-            "используем ВСЕ 26 SNI"
-        )
-
-    else:
-
-        safe_print(
-            "[SNI] Статистика накоплена -> "
-            "используем adaptive TOP/RANDOM"
-        )
-
-    # ========================================================
-    # LOAD SOURCES
-    # ========================================================
-
-    current_nodes = load_sources()
-
-    safe_print(
-        f"[SOURCE] "
-        f"Уникальных свежих VLESS: "
-        f"{len(current_nodes)}"
-    )
-
-    # ========================================================
-    # ARCHIVE
-    # ========================================================
-
-    update_archive(
-        current_nodes
-    )
-
-    # ========================================================
-    # BUILD CANDIDATES
-    # ========================================================
-
-    candidates = build_candidates(
-        current_nodes
-    )
-
-    safe_print(
-        f"[QUEUE] "
-        f"Кандидатов на проверку: "
-        f"{len(candidates)}"
-    )
-
-    if not candidates:
-
-        safe_print(
-            "[ERROR] Нет кандидатов"
-        )
-
-        save_sni_stats(
-            SNI_STATS
-        )
-
-        return 1
-
-    # ========================================================
-    # TASK QUEUE
-    # ========================================================
-
+    logger.info(f"\n--- STEP 2: VALIDATION ---")
+    unique_nodes = []
+    seen = set()
+    for line in all_nodes:
+        line = line.strip()
+        if not is_valid_vless(line):
+            continue
+        if line in seen:
+            continue
+        seen.add(line)
+        unique_nodes.append(line)
+    logger.info(f"Unique VLESS configs: {len(unique_nodes)}")
+    
+    archive_path = os.path.join(BASE_PATH, "archive.txt")
+    alive_archive_path = os.path.join(BASE_PATH, "alive_archive.txt")
+    archive_list = []
+    alive_archive_list = []
+    if os.path.exists(archive_path):
+        with open(archive_path, "r", encoding="utf-8") as f:
+            archive_list = [x.strip() for x in f if x.strip()]
+    if os.path.exists(alive_archive_path):
+        with open(alive_archive_path, "r", encoding="utf-8") as f:
+            alive_archive_list = [x.strip() for x in f if x.strip()]
+    archive_seen = set(archive_list)
+    for node in unique_nodes:
+        if node not in archive_seen:
+            archive_list.append(node)
+            archive_seen.add(node)
+    if len(archive_list) > 10000:
+        archive_list = archive_list[-10000:]
+    with open(archive_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(archive_list))
+    logger.info(f"Archive updated: {len(archive_list)} nodes (limit 10000)")
+    
+    priority_order = []
+    for node in reversed(alive_archive_list):
+        if node in seen and node not in priority_order:
+            priority_order.append(node)
+    for node in unique_nodes:
+        if node not in priority_order:
+            priority_order.append(node)
+    
+    logger.info(f"\n--- STEP 3: LIVE CHECK ({len(priority_order)} nodes, threads: {MAX_THREADS}) ---")
+    start_time = time.time()
+    
     task_queue = queue.Queue()
-
-    for node in candidates:
+    for node in priority_order:
         task_queue.put(node)
-
-    total_candidates = len(
-        candidates
-    )
-
-    # ========================================================
-    # WORKERS
-    # ========================================================
-
-    safe_print(
-        f"[WORKERS] "
-        f"Запускаем {MAX_THREADS} workers"
-    )
-
-    with ThreadPoolExecutor(
-        max_workers=MAX_THREADS
-    ) as executor:
-
-        futures = []
-
-        for worker_id in range(
-            MAX_THREADS
-        ):
-
-            future = executor.submit(
-                worker,
-                task_queue,
-                worker_id,
-                total_candidates
-            )
-
-            futures.append(future)
-
-        # Ждём завершения worker'ов.
-        for future in futures:
-
-            try:
-                future.result()
-
-            except Exception as e:
-
-                safe_print(
-                    f"[WORKER-ERROR] {e}"
-                )
-
-    # ========================================================
-    # SAVE
-    # ========================================================
-
-    save_sni_stats(
-        SNI_STATS
-    )
-
-    if ALIVE_RESULTS:
-
-        update_alive_archive(
-            ALIVE_RESULTS
+    
+    result_list = []
+    stop_event.clear()
+    lock = threading.Lock()
+    
+    with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
+        executor.map(
+            lambda _: worker(task_queue, result_list, SNI_STATS, lock),
+            range(MAX_THREADS)
         )
-
-        write_results()
-
-    else:
-
-        safe_print(
-            "[OUTPUT] Рабочих узлов не найдено"
-        )
-
-    # ========================================================
-    # FINAL
-    # ========================================================
-
-    elapsed = (
-        time.time()
-        - start_time
-    )
-
-    print_final_stats()
-
-    safe_print(
-        f"[TIME] "
-        f"Время выполнения: "
-        f"{elapsed:.1f} сек."
-    )
-
-    safe_print(
-        "[DONE]"
-    )
-
-    return 0
-
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
+    
+    elapsed = time.time() - start_time
+    logger.info(f"⏱️ Время проверки: {elapsed:.1f} сек")
+    
+    alive_nodes = result_list
+    logger.info(f"\n--- RESULT: Found {len(alive_nodes)} live nodes ---")
+    alive_nodes = list(dict.fromkeys(alive_nodes))
+    logger.info(f"After dedup: {len(alive_nodes)}")
+    
+    if len(alive_nodes) < MAX_NODES:
+        added = 0
+        for node in reversed(alive_archive_list):
+            if node not in alive_nodes:
+                alive_nodes.append(node)
+                added += 1
+                if len(alive_nodes) >= MAX_NODES:
+                    break
+        logger.info(f"Filled from archive (+{added}), total: {len(alive_nodes)}")
+    
+    for node in alive_nodes:
+        if node in alive_archive_list:
+            alive_archive_list.remove(node)
+        alive_archive_list.append(node)
+    if len(alive_archive_list) > 5000:
+        alive_archive_list = alive_archive_list[-5000:]
+    with open(alive_archive_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(alive_archive_list))
+    logger.info(f"alive_archive.txt updated: {len(alive_archive_list)} nodes (limit 5000)")
+    
+    if len(alive_nodes) == 0:
+        logger.warning("0 live nodes, skipping update")
+        save_sni_stats(SNI_STATS)
+        return
+    
+    out_path = os.path.join(FINAL_DIR, "vless_001.txt")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(alive_nodes[:MAX_NODES]))
+    logger.info(f"Subscription updated: {out_path}")
+    
+    types_count = {"reality": 0, "tls": 0, "grpc": 0, "xhttp": 0, "ws": 0, "other": 0}
+    for node in alive_nodes:
+        if "security=reality" in node or "pbk=" in node:
+            types_count["reality"] += 1
+        elif "type=grpc" in node:
+            types_count["grpc"] += 1
+        elif "type=xhttp" in node:
+            types_count["xhttp"] += 1
+        elif "type=ws" in node:
+            types_count["ws"] += 1
+        elif "security=tls" in node:
+            types_count["tls"] += 1
+        else:
+            types_count["other"] += 1
+    logger.info(f"\n--- STATS BY PROTOCOL ---")
+    for proto, count in types_count.items():
+        if count > 0:
+            logger.info(f"{proto}: {count}")
+    
+    logger.info(f"\n--- TOP SNI STATS ---")
+    sorted_sni = sorted(SNI_STATS.items(), key=lambda x: x[1], reverse=True)
+    for sni, count in sorted_sni[:10]:
+        if count > 0:
+            logger.info(f"{sni}: {count} успешных мутаций")
+    
+    save_sni_stats(SNI_STATS)
 
 if __name__ == "__main__":
-    raise SystemExit(
-        main()
-    )
+    main()
