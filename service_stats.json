@@ -1,0 +1,26 @@
+{
+  "https://telegram.org": {
+    "attempts": 1897,
+    "success": 90
+  },
+  "https://www.instagram.com": {
+    "attempts": 1896,
+    "success": 92
+  },
+  "https://www.youtube.com": {
+    "attempts": 1890,
+    "success": 95
+  },
+  "https://chatgpt.com": {
+    "attempts": 1876,
+    "success": 91
+  },
+  "https://gemini.google.com": {
+    "attempts": 1870,
+    "success": 81
+  },
+  "https://www.google.com": {
+    "attempts": 1865,
+    "success": 93
+  }
+}
