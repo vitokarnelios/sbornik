@@ -13,7 +13,9 @@ SNI MUTATOR + SNI STATS + SERVICE CHECKS + LOGS + QUEUE
 - Пока нода считается живой, если отвечает хотя бы один тестовый сайт
 - Каждый тестовый сайт проверяется полностью, чтобы собирать статистику по сервисам
 - TOP15 + RANDOM5 сохраняются как общий лимит 20 SNI
-- Сохраняет статистику SNI и сервисов один раз в конце
+- Сохраняет статистику SNI, сервисов, нод, источников и SNI→сервисы
+- Отдельно пишет агрегат текущего запуска
+- Связь SNI→сервисы пока НЕ влияет на выбор SNI — только накапливается
 - Без старения
 - Потоки берут задачи из очереди
 """
@@ -28,6 +30,8 @@ import time
 import queue
 import threading
 import logging
+import hashlib
+from collections import defaultdict
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs, unquote, urlencode, urlunparse
 from concurrent.futures import ThreadPoolExecutor
@@ -65,6 +69,12 @@ logger = logging.getLogger(__name__)
 SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
 SNI_STATS_FILE = os.path.join(BASE_PATH, "sni_stats.json")
 SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
+NODE_STATS_FILE = os.path.join(BASE_PATH, "node_stats.json")
+SOURCE_STATS_FILE = os.path.join(BASE_PATH, "source_stats.json")
+SNI_SERVICE_STATS_FILE = os.path.join(BASE_PATH, "sni_service_stats.json")
+RUN_STATS_FILE = os.path.join(BASE_PATH, "run_stats.json")
+MAX_NODE_STATS = 30000
+MAX_SOURCE_NODE_LIST = 5000
 
 
 if not os.path.exists(SOURCES_FILE):
@@ -310,6 +320,125 @@ def get_sni_list(
 
 
 SNI_STATS = load_sni_stats()
+
+
+def load_json_stats(path, default_factory):
+    if not os.path.exists(path):
+        return default_factory()
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else default_factory()
+    except Exception as e:
+        logger.warning(f"Ошибка загрузки {os.path.basename(path)}: {e}")
+        return default_factory()
+
+
+def save_json_stats(path, data, label):
+    tmp = path + ".tmp"
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        os.replace(tmp, path)
+        logger.info(f"💾 {label} сохранена: {os.path.basename(path)}")
+    except Exception as e:
+        logger.warning(f"Ошибка сохранения {label}: {e}")
+        try:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        except Exception:
+            pass
+
+
+def empty_source_stats():
+    return {}
+
+
+def empty_node_stats():
+    return {}
+
+
+def empty_sni_service_stats():
+    return {}
+
+
+SOURCE_STATS = load_json_stats(SOURCE_STATS_FILE, empty_source_stats)
+NODE_STATS = load_json_stats(NODE_STATS_FILE, empty_node_stats)
+SNI_SERVICE_STATS = load_json_stats(SNI_SERVICE_STATS_FILE, empty_sni_service_stats)
+
+
+def node_id(vless_uri):
+    """Стабильный ID ноды без хранения UUID/полной строки как ключа."""
+    return hashlib.sha256(vless_uri.encode("utf-8", errors="ignore")).hexdigest()[:24]
+
+
+def extract_sni(vless_uri):
+    try:
+        q = parse_qs(urlparse(vless_uri).query)
+        return q.get("sni", [""])[0].strip().lower()
+    except Exception:
+        return ""
+
+
+def ensure_source_bucket(source):
+    bucket = SOURCE_STATS.setdefault(source, {
+        "runs": 0, "fetch_attempts": 0, "fetch_success": 0,
+        "lines_total": 0, "vless_total": 0, "unique_nodes": 0,
+        "nodes_tested": 0, "original_live": 0, "mutated_live": 0,
+        "dead": 0, "mutation_attempts": 0, "mutation_success": 0,
+        "last_run": "", "recent_node_ids": []
+    })
+    return bucket
+
+
+def ensure_node_record(vless_uri):
+    nid = node_id(vless_uri)
+    rec = NODE_STATS.setdefault(nid, {
+        "attempts": 0, "live": 0, "original_live": 0,
+        "mutated_live": 0, "dead": 0, "mutation_attempts": 0,
+        "mutation_success": 0, "last_status": "unknown",
+        "last_sni": "", "original_sni": extract_sni(vless_uri),
+        "sources": [], "first_seen": "", "last_seen": ""
+    })
+    return nid, rec
+
+
+def record_node_source(vless_uri, source_names):
+    nid, rec = ensure_node_record(vless_uri)
+    now = datetime.now().isoformat(timespec="seconds")
+    if not rec.get("first_seen"):
+        rec["first_seen"] = now
+    rec["last_seen"] = now
+    sources = rec.setdefault("sources", [])
+    for src in source_names:
+        if src not in sources:
+            sources.append(src)
+    if len(sources) > 30:
+        del sources[:-30]
+    return nid, rec
+
+
+def record_sni_service(sni, service_url, success, lock):
+    if not sni:
+        sni = "<empty>"
+    with lock:
+        sni_bucket = SNI_SERVICE_STATS.setdefault(sni, {})
+        item = sni_bucket.setdefault(service_url, {"attempts": 0, "success": 0})
+        item["attempts"] += 1
+        if success:
+            item["success"] += 1
+
+
+def prune_node_stats():
+    if len(NODE_STATS) <= MAX_NODE_STATS:
+        return
+    ranked = sorted(
+        NODE_STATS.items(),
+        key=lambda kv: kv[1].get("last_seen", ""),
+        reverse=True
+    )[:MAX_NODE_STATS]
+    NODE_STATS.clear()
+    NODE_STATS.update(dict(ranked))
 
 
 # ========== ОСНОВНЫЕ НАСТРОЙКИ ==========
@@ -837,7 +966,9 @@ def check_single_uri(
     vless_uri,
     local_port,
     service_stats=None,
-    stats_lock=None
+    stats_lock=None,
+    tested_sni=None,
+    node_id_value=None
 ):
 
     if stop_event.is_set():
@@ -961,6 +1092,9 @@ def check_single_uri(
                         if success:
                             service_stats[url]["success"] += 1
 
+                if tested_sni is not None and stats_lock is not None:
+                    record_sni_service(tested_sni, url, success, stats_lock)
+
                 if success:
                     is_alive = True
 
@@ -1030,7 +1164,9 @@ def worker(
     task_queue,
     result_list,
     stats,
-    lock
+    lock,
+    node_sources_map,
+    run_stats
 ):
 
     """
@@ -1064,6 +1200,13 @@ def worker(
         local_port = port_queue.get()
 
         result_uri = None
+        nid, node_rec = record_node_source(vless_uri, node_sources_map.get(vless_uri, []))
+        original_sni = extract_sni(vless_uri)
+
+        with lock:
+            node_rec["attempts"] = node_rec.get("attempts", 0) + 1
+            node_rec["last_status"] = "testing"
+            run_stats["nodes_tested"] += 1
 
         try:
 
@@ -1073,7 +1216,9 @@ def worker(
                 vless_uri,
                 local_port,
                 SERVICE_STATS,
-                lock
+                lock,
+                tested_sni=original_sni,
+                node_id_value=nid
             )
 
             if is_alive:
@@ -1084,6 +1229,16 @@ def worker(
                 )
 
                 result_uri = vless_uri
+                with lock:
+                    node_rec["live"] += 1
+                    node_rec["original_live"] += 1
+                    node_rec["last_status"] = "original_live"
+                    node_rec["last_sni"] = original_sni
+                    run_stats["original_live"] += 1
+                    for src in node_sources_map.get(vless_uri, []):
+                        b = ensure_source_bucket(src)
+                        b["nodes_tested"] += 1
+                        b["original_live"] += 1
 
             # ===== ЕСЛИ МЕРТВАЯ REALITY =====
 
@@ -1118,13 +1273,13 @@ def worker(
                     with lock:
 
                         if sni not in stats:
-
-                            stats[sni] = {
-                                "attempts": 0,
-                                "success": 0
-                            }
-
+                            stats[sni] = {"attempts": 0, "success": 0}
                         stats[sni]["attempts"] += 1
+                        node_rec["mutation_attempts"] += 1
+                        run_stats["mutation_attempts"] += 1
+                        for src in node_sources_map.get(vless_uri, []):
+                            b = ensure_source_bucket(src)
+                            b["mutation_attempts"] += 1
 
                     # ===== ПРОВЕРЯЕМ SNI =====
 
@@ -1132,7 +1287,9 @@ def worker(
                         mutated_uri,
                         local_port,
                         SERVICE_STATS,
-                        lock
+                        lock,
+                        tested_sni=sni,
+                        node_id_value=nid
                     ):
 
                         logger.info(
@@ -1143,9 +1300,18 @@ def worker(
 
                         with lock:
 
-                            stats[sni]["success"] += (
-                                SNI_SUCCESS_WEIGHT
-                            )
+                            stats[sni]["success"] += SNI_SUCCESS_WEIGHT
+                            node_rec["live"] += 1
+                            node_rec["mutated_live"] += 1
+                            node_rec["mutation_success"] += 1
+                            node_rec["last_status"] = "mutated_live"
+                            node_rec["last_sni"] = sni
+                            run_stats["mutated_live"] += 1
+                            run_stats["mutation_success"] += 1
+                            for src in node_sources_map.get(vless_uri, []):
+                                b = ensure_source_bucket(src)
+                                b["mutated_live"] += 1
+                                b["mutation_success"] += 1
 
                         result_uri = mutated_uri
 
@@ -1165,6 +1331,14 @@ def worker(
             )
 
         finally:
+
+            if result_uri is None:
+                with lock:
+                    node_rec["dead"] = node_rec.get("dead", 0) + 1
+                    node_rec["last_status"] = "dead"
+                    run_stats["dead"] += 1
+                    for src in node_sources_map.get(vless_uri, []):
+                        ensure_source_bucket(src)["dead"] += 1
 
             port_queue.put(
                 local_port
@@ -1225,17 +1399,31 @@ def main():
     )
 
     all_nodes = []
+    source_nodes = defaultdict(list)
+    run_stats = {
+        "started_at": datetime.now().isoformat(timespec="seconds"),
+        "sources": len(SOURCES), "source_fetch_success": 0,
+        "lines_total": 0, "vless_total": 0, "unique_nodes": 0,
+        "nodes_tested": 0, "original_live": 0, "mutated_live": 0,
+        "dead": 0, "mutation_attempts": 0, "mutation_success": 0
+    }
 
     for url in SOURCES:
-
+        bucket = ensure_source_bucket(url)
+        bucket["runs"] += 1
+        bucket["fetch_attempts"] += 1
+        bucket["last_run"] = run_stats["started_at"]
         nodes = fetch_source(url)
-
-        logger.info(
-            f"Loaded {len(nodes)} lines "
-            f"from {url[:50]}..."
-        )
-
+        if nodes:
+            bucket["fetch_success"] += 1
+            run_stats["source_fetch_success"] += 1
+        bucket["lines_total"] += len(nodes)
+        logger.info(f"Loaded {len(nodes)} lines from {url[:80]}...")
         all_nodes.extend(nodes)
+        for line in nodes:
+            if is_valid_vless(line):
+                source_nodes[url].append(line.strip())
+                bucket["vless_total"] += 1
 
 
     # =========================================
@@ -1264,10 +1452,26 @@ def main():
 
         unique_nodes.append(line)
 
-    logger.info(
-        f"Unique VLESS configs: "
-        f"{len(unique_nodes)}"
-    )
+    logger.info(f"Unique VLESS configs: {len(unique_nodes)}")
+    run_stats["unique_nodes"] = len(unique_nodes)
+
+    node_sources_map = defaultdict(list)
+    for src, nodes in source_nodes.items():
+        for node in set(nodes):
+            node_sources_map[node].append(src)
+            ensure_source_bucket(src)["unique_nodes"] += 1
+            nid = node_id(node)
+            rec = NODE_STATS.setdefault(nid, {
+                "attempts": 0, "live": 0, "original_live": 0,
+                "mutated_live": 0, "dead": 0, "mutation_attempts": 0,
+                "mutation_success": 0, "last_status": "discovered",
+                "last_sni": "", "original_sni": extract_sni(node),
+                "sources": [], "first_seen": "", "last_seen": ""
+            })
+            if src not in rec.setdefault("sources", []):
+                rec["sources"].append(src)
+            if len(rec["sources"]) > 30:
+                del rec["sources"][:-30]
 
 
     # =========================================
@@ -1418,7 +1622,9 @@ def main():
                     task_queue,
                     result_list,
                     SNI_STATS,
-                    lock
+                    lock,
+                    node_sources_map,
+                    run_stats
                 ),
             range(MAX_THREADS)
         )
@@ -1548,10 +1754,12 @@ def main():
             SNI_STATS
         )
 
-        save_service_stats(
-            SERVICE_STATS
-        )
-
+        save_service_stats(SERVICE_STATS)
+        save_json_stats(SOURCE_STATS_FILE, SOURCE_STATS, "Статистика источников")
+        save_json_stats(NODE_STATS_FILE, NODE_STATS, "Статистика нод")
+        save_json_stats(SNI_SERVICE_STATS_FILE, SNI_SERVICE_STATS, "Связь SNI→сервисы")
+        run_stats["finished_at"] = datetime.now().isoformat(timespec="seconds")
+        save_json_stats(RUN_STATS_FILE, run_stats, "Статистика запуска")
         return
 
 
@@ -1667,9 +1875,12 @@ def main():
             f"успешных ({rate:.1f}%)"
         )
 
-    save_service_stats(
-        SERVICE_STATS
-    )
+    save_service_stats(SERVICE_STATS)
+
+    prune_node_stats()
+    save_json_stats(SOURCE_STATS_FILE, SOURCE_STATS, "Статистика источников")
+    save_json_stats(NODE_STATS_FILE, NODE_STATS, "Статистика нод")
+    save_json_stats(SNI_SERVICE_STATS_FILE, SNI_SERVICE_STATS, "Связь SNI→сервисы")
 
 
     # =========================================
@@ -1728,9 +1939,9 @@ def main():
     # SAVE SNI STATS
     # =========================================
 
-    save_sni_stats(
-        SNI_STATS
-    )
+    save_sni_stats(SNI_STATS)
+    run_stats["finished_at"] = datetime.now().isoformat(timespec="seconds")
+    save_json_stats(RUN_STATS_FILE, run_stats, "Статистика запуска")
 
 
 # =========================================
