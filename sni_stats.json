@@ -1,106 +1,106 @@
 {
   "web.max.ru": {
-    "attempts": 284,
+    "attempts": 336,
     "success": 0
   },
   "vk.com": {
-    "attempts": 671,
+    "attempts": 755,
     "success": 94
   },
   "rutube.ru": {
-    "attempts": 591,
+    "attempts": 674,
     "success": 8
   },
   "mail.ru": {
-    "attempts": 670,
+    "attempts": 752,
     "success": 90
   },
   "ok.ru": {
-    "attempts": 648,
+    "attempts": 731,
     "success": 73
   },
   "yandex.ru": {
-    "attempts": 677,
+    "attempts": 762,
     "success": 99
   },
   "dzen.ru": {
-    "attempts": 590,
+    "attempts": 677,
     "success": 9
   },
   "gosuslugi.ru": {
-    "attempts": 547,
+    "attempts": 633,
     "success": 2
   },
   "ozon.ru": {
-    "attempts": 685,
+    "attempts": 768,
     "success": 108
   },
   "wildberries.ru": {
-    "attempts": 662,
+    "attempts": 745,
     "success": 86
   },
   "kinopoisk.ru": {
-    "attempts": 580,
+    "attempts": 660,
     "success": 5
   },
   "yandex.by": {
-    "attempts": 290,
+    "attempts": 324,
     "success": 0
   },
   "yandex.kz": {
-    "attempts": 287,
+    "attempts": 329,
     "success": 0
   },
   "telegram.org": {
-    "attempts": 293,
+    "attempts": 327,
     "success": 0
   },
   "cdn.x5.ru": {
-    "attempts": 439,
+    "attempts": 494,
     "success": 1
   },
   "storage.yandex.net": {
-    "attempts": 592,
+    "attempts": 675,
     "success": 16
   },
   "api-maps.yandex.ru": {
-    "attempts": 844,
+    "attempts": 928,
     "success": 268
   },
   "avatars.mds.yandex.net": {
-    "attempts": 286,
+    "attempts": 326,
     "success": 0
   },
   "sberbank.ru": {
-    "attempts": 293,
+    "attempts": 329,
     "success": 0
   },
   "tbank.ru": {
-    "attempts": 429,
+    "attempts": 487,
     "success": 1
   },
   "avito.ru": {
-    "attempts": 436,
+    "attempts": 496,
     "success": 1
   },
   "hh.ru": {
-    "attempts": 391,
+    "attempts": 472,
     "success": 1
   },
   "rambler.ru": {
-    "attempts": 285,
+    "attempts": 343,
     "success": 0
   },
   "lenta.ru": {
-    "attempts": 291,
+    "attempts": 321,
     "success": 0
   },
   "ria.ru": {
-    "attempts": 294,
+    "attempts": 335,
     "success": 0
   },
   "tass.ru": {
-    "attempts": 287,
+    "attempts": 330,
     "success": 0
   }
 }
