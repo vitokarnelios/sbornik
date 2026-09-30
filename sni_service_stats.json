@@ -101,28 +101,28 @@
   },
   "<empty>": {
     "https://telegram.org": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 14,
+      "success": 14
     },
     "https://www.instagram.com": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 14,
+      "success": 14
     },
     "https://www.youtube.com": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 14,
+      "success": 14
     },
     "https://chatgpt.com": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 14,
+      "success": 14
     },
     "https://gemini.google.com": {
-      "attempts": 2,
-      "success": 2
+      "attempts": 12,
+      "success": 12
     },
     "https://www.google.com": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 14,
+      "success": 14
     }
   },
   "katering.coteite.pro": {
@@ -405,6 +405,206 @@
     "https://www.youtube.com": {
       "attempts": 1,
       "success": 1
+    },
+    "https://www.google.com": {
+      "attempts": 1,
+      "success": 1
+    }
+  },
+  "fi.aksay.pro": {
+    "https://telegram.org": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://www.instagram.com": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://www.youtube.com": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://chatgpt.com": {
+      "attempts": 6,
+      "success": 6
+    }
+  },
+  "www.large-files.info": {
+    "https://telegram.org": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://www.instagram.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://www.youtube.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://chatgpt.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://gemini.google.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://www.google.com": {
+      "attempts": 7,
+      "success": 7
+    }
+  },
+  "platform101.golnamakcert.top": {
+    "https://telegram.org": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.instagram.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.youtube.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://chatgpt.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://gemini.google.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.google.com": {
+      "attempts": 1,
+      "success": 1
+    }
+  },
+  "platform102.golnamakcert.top": {
+    "https://telegram.org": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.instagram.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.youtube.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://chatgpt.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://gemini.google.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.google.com": {
+      "attempts": 1,
+      "success": 1
+    }
+  },
+  "platform101.halalkhor.info": {
+    "https://telegram.org": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.instagram.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.youtube.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://chatgpt.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://gemini.google.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.google.com": {
+      "attempts": 1,
+      "success": 1
+    }
+  },
+  "platform102.halalkhor.info": {
+    "https://telegram.org": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.instagram.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.youtube.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://chatgpt.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://gemini.google.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.google.com": {
+      "attempts": 1,
+      "success": 1
+    }
+  },
+  "ch.aksay.pro": {
+    "https://telegram.org": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://www.instagram.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://www.youtube.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://chatgpt.com": {
+      "attempts": 7,
+      "success": 7
+    },
+    "https://gemini.google.com": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://www.google.com": {
+      "attempts": 6,
+      "success": 6
+    }
+  },
+  "www.apple.com": {
+    "https://telegram.org": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.instagram.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.youtube.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://chatgpt.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://gemini.google.com": {
+      "attempts": 1,
+      "success": 0
     },
     "https://www.google.com": {
       "attempts": 1,
