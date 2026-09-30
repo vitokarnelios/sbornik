@@ -8,11 +8,12 @@ SNI MUTATOR + SNI STATS + SERVICE CHECKS + LOGS + QUEUE
     attempts = сколько раз SNI проверялся
     success  = сколько раз SNI оживил ноду
 - Показывает процент успешности SNI
-- Проверяет VK, Yandex, Rutube, OK, Microsoft,
-  Telegram, Instagram, YouTube
+- Выбирает SNI с учётом процента, объёма статистики и исследования новых SNI
+- Проверяет Telegram, Instagram, YouTube
 - Пока нода считается живой, если отвечает хотя бы один тестовый сайт
-- TOP15 + RANDOM5
-- Сохраняет статистику один раз в конце
+- Каждый тестовый сайт проверяется полностью, чтобы собирать статистику по сервисам
+- TOP15 + RANDOM5 сохраняются как общий лимит 20 SNI
+- Сохраняет статистику SNI и сервисов один раз в конце
 - Без старения
 - Потоки берут задачи из очереди
 """
@@ -63,6 +64,7 @@ logger = logging.getLogger(__name__)
 
 SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
 SNI_STATS_FILE = os.path.join(BASE_PATH, "sni_stats.json")
+SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
 
 
 if not os.path.exists(SOURCES_FILE):
@@ -235,67 +237,76 @@ def get_sni_list(
     top_count=15,
     random_count=5
 ):
+    """
+    Формирует максимум 20 SNI.
 
-    # Пока ранжируем по количеству успешных мутаций.
-    # Процент пока только собираем.
-    #
-    # В следующем этапе можно будет перейти
-    # на более умный рейтинг success / attempts.
+    Логика:
+    1. SNI с attempts < MIN_SNI_ATTEMPTS считаются
+       недостаточно исследованными и имеют приоритет.
+    2. Из них и из уже исследованных формируем TOP15.
+       Недостаточно исследованные выбираются случайно,
+       чтобы один новый SNI не получал постоянный приоритет.
+    3. Ещё RANDOM5 берутся случайно из остальных SNI.
+       Это постоянное исследование менее проверенных вариантов.
+    4. Для уже исследованных SNI используется сглаженная
+       успешность (success + 2) / (attempts + 10), поэтому
+       1/1 не обгоняет 268/589.
+    """
+    underexplored = [
+        (sni, data)
+        for sni, data in stats.items()
+        if data.get("attempts", 0) < MIN_SNI_ATTEMPTS
+    ]
 
-    sorted_sni = sorted(
-        stats.items(),
-        key=lambda x: x[1].get("success", 0),
-        reverse=True
+    explored = [
+        (sni, data)
+        for sni, data in stats.items()
+        if data.get("attempts", 0) >= MIN_SNI_ATTEMPTS
+    ]
+
+    random.shuffle(underexplored)
+
+    def score(item):
+        _, data = item
+        attempts = data.get("attempts", 0)
+        success = data.get("success", 0)
+
+        # Сглаживание: маленькая выборка не может сразу стать №1.
+        return (success + 2.0) / (attempts + 10.0)
+
+    explored.sort(key=score, reverse=True)
+
+    # Сначала недостаточно исследованные SNI.
+    priority_pool = [sni for sni, _ in underexplored]
+
+    # Затем лучшие уже исследованные SNI.
+    priority_pool.extend(
+        sni for sni, _ in explored
+        if sni not in priority_pool
     )
 
-    top = [
-        sni
-        for sni, _ in sorted_sni[:top_count]
-    ]
+    top = priority_pool[:top_count]
 
-    random.shuffle(top)
-
+    # Остальные 5 — случайная разведка.
     remaining = [
-        sni
-        for sni, _ in sorted_sni[top_count:]
-    ]
-
-    if len(top) < top_count:
-
-        needed = top_count - len(top)
-
-        if remaining:
-
-            extra = random.sample(
-                remaining,
-                min(needed, len(remaining))
-            )
-
-            top.extend(extra)
-
-    zero_remaining = [
-        sni
-        for sni in remaining
+        sni for sni in stats
         if sni not in top
     ]
 
-    if zero_remaining and random_count > 0:
-
-        random_ones = random.sample(
-            zero_remaining,
-            min(
-                random_count,
-                len(zero_remaining)
-            )
+    if remaining and random_count > 0:
+        random_part = random.sample(
+            remaining,
+            min(random_count, len(remaining))
         )
-
-        random.shuffle(random_ones)
-
     else:
+        random_part = []
 
-        random_ones = []
+    selected = top + random_part
 
-    return top + random_ones
+    random.shuffle(selected)
+
+    return selected
+
 
 
 SNI_STATS = load_sni_stats()
@@ -311,6 +322,10 @@ RANDOM_SNI_COUNT = 5
 
 SNI_SUCCESS_WEIGHT = 1
 
+# SNI считается ещё недостаточно исследованным, пока не было
+# MIN_SNI_ATTEMPTS реальных проверок.
+MIN_SNI_ATTEMPTS = 10
+
 
 stop_event = threading.Event()
 
@@ -323,18 +338,12 @@ for i in range(MAX_THREADS):
 # ========== САЙТЫ ДЛЯ ПРОВЕРКИ ==========
 
 TEST_URLS = [
-
-    # Старые проверки
-    "https://vk.com",
-    "https://yandex.ru",
-    "https://rutube.ru",
-    "https://ok.ru",
-    "https://www.microsoft.com",
-
-    # Новые проверки
     "https://telegram.org",
     "https://www.instagram.com",
     "https://www.youtube.com",
+    "https://chatgpt.com",
+    "https://gemini.google.com",
+    "https://www.google.com",
 ]
 
 
@@ -747,11 +756,88 @@ def parse_vless_to_json(
         return None
 
 
+# ========== СТАТИСТИКА СЕРВИСОВ ==========
+
+def empty_service_stats():
+    return {
+        url: {
+            "attempts": 0,
+            "success": 0
+        }
+        for url in TEST_URLS
+    }
+
+
+def load_service_stats():
+    if not os.path.exists(SERVICE_STATS_FILE):
+        logger.info("📊 Файл статистики сервисов не найден")
+        return empty_service_stats()
+
+    try:
+        with open(SERVICE_STATS_FILE, "r", encoding="utf-8") as f:
+            loaded = json.load(f)
+
+        stats = {}
+
+        for url, value in loaded.items():
+            if isinstance(value, dict):
+                stats[url] = {
+                    "attempts": int(value.get("attempts", 0)),
+                    "success": int(value.get("success", 0))
+                }
+
+        for url in TEST_URLS:
+            if url not in stats:
+                stats[url] = {
+                    "attempts": 0,
+                    "success": 0
+                }
+
+        logger.info(
+            f"📊 Загружена статистика сервисов: {len(stats)} сайтов"
+        )
+
+        return stats
+
+    except Exception as e:
+        logger.warning(
+            f"Ошибка загрузки статистики сервисов: {e}"
+        )
+        return empty_service_stats()
+
+
+def save_service_stats(stats):
+    try:
+        with open(
+            SERVICE_STATS_FILE,
+            "w",
+            encoding="utf-8"
+        ) as f:
+            json.dump(
+                stats,
+                f,
+                indent=2,
+                ensure_ascii=False
+            )
+
+        logger.info("💾 Статистика сервисов сохранена")
+
+    except Exception as e:
+        logger.warning(
+            f"Ошибка сохранения статистики сервисов: {e}"
+        )
+
+
+SERVICE_STATS = load_service_stats()
+
+
 # ========== ПРОВЕРКА ОДНОЙ НОДЫ ==========
 
 def check_single_uri(
     vless_uri,
-    local_port
+    local_port,
+    service_stats=None,
+    stats_lock=None
 ):
 
     if stop_event.is_set():
@@ -836,8 +922,11 @@ def check_single_uri(
                 "Chrome/154.0.0.0 Safari/537.36"
         }
 
-        # Пока логика прежняя:
-        # достаточно успешного ответа хотя бы от одного сайта.
+        # Проверяем все сервисы, чтобы одновременно собирать
+        # статистику по каждому из них.
+        # Нода считается живой, если хотя бы один сервис успешен.
+
+        is_alive = False
 
         for url in TEST_URLS:
 
@@ -854,18 +943,39 @@ def check_single_uri(
                     allow_redirects=True
                 )
 
-                if response.status_code in [
+                success = response.status_code in [
                     200,
                     204,
                     301,
                     302
-                ]:
+                ]
 
-                    return True
+                if service_stats is not None:
+                    if stats_lock:
+                        with stats_lock:
+                            service_stats[url]["attempts"] += 1
+                            if success:
+                                service_stats[url]["success"] += 1
+                    else:
+                        service_stats[url]["attempts"] += 1
+                        if success:
+                            service_stats[url]["success"] += 1
+
+                if success:
+                    is_alive = True
 
             except:
 
+                if service_stats is not None:
+                    if stats_lock:
+                        with stats_lock:
+                            service_stats[url]["attempts"] += 1
+                    else:
+                        service_stats[url]["attempts"] += 1
+
                 continue
+
+        return is_alive
 
     except:
 
@@ -961,7 +1071,9 @@ def worker(
 
             is_alive = check_single_uri(
                 vless_uri,
-                local_port
+                local_port,
+                SERVICE_STATS,
+                lock
             )
 
             if is_alive:
@@ -1018,7 +1130,9 @@ def worker(
 
                     if check_single_uri(
                         mutated_uri,
-                        local_port
+                        local_port,
+                        SERVICE_STATS,
+                        lock
                     ):
 
                         logger.info(
@@ -1434,6 +1548,10 @@ def main():
             SNI_STATS
         )
 
+        save_service_stats(
+            SERVICE_STATS
+        )
+
         return
 
 
@@ -1524,6 +1642,34 @@ def main():
             logger.info(
                 f"{proto}: {count}"
             )
+
+
+    # =========================================
+    # SERVICE STATS
+    # =========================================
+
+    logger.info(
+        "\n--- TEST SITE STATS ---"
+    )
+
+    for url, data in SERVICE_STATS.items():
+
+        attempts = data.get("attempts", 0)
+        success = data.get("success", 0)
+
+        if attempts > 0:
+            rate = success / attempts * 100
+        else:
+            rate = 0
+
+        logger.info(
+            f"{url}: {success}/{attempts} "
+            f"успешных ({rate:.1f}%)"
+        )
+
+    save_service_stats(
+        SERVICE_STATS
+    )
 
 
     # =========================================
