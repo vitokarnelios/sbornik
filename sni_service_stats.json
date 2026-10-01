@@ -101,28 +101,28 @@
   },
   "<empty>": {
     "https://telegram.org": {
-      "attempts": 48,
-      "success": 47
+      "attempts": 55,
+      "success": 54
     },
     "https://www.instagram.com": {
-      "attempts": 47,
-      "success": 47
+      "attempts": 55,
+      "success": 55
     },
     "https://www.youtube.com": {
-      "attempts": 49,
-      "success": 49
+      "attempts": 58,
+      "success": 58
     },
     "https://chatgpt.com": {
-      "attempts": 50,
-      "success": 50
+      "attempts": 59,
+      "success": 59
     },
     "https://gemini.google.com": {
-      "attempts": 48,
-      "success": 44
+      "attempts": 54,
+      "success": 50
     },
     "https://www.google.com": {
-      "attempts": 47,
-      "success": 47
+      "attempts": 56,
+      "success": 56
     }
   },
   "katering.coteite.pro": {
@@ -1465,28 +1465,28 @@
   },
   "pl.srv.vbuste-bot.com": {
     "https://telegram.org": {
-      "attempts": 9,
-      "success": 9
+      "attempts": 10,
+      "success": 10
     },
     "https://www.instagram.com": {
       "attempts": 9,
       "success": 9
     },
     "https://chatgpt.com": {
-      "attempts": 9,
-      "success": 9
+      "attempts": 10,
+      "success": 10
     },
     "https://gemini.google.com": {
+      "attempts": 10,
+      "success": 10
+    },
+    "https://www.google.com": {
       "attempts": 9,
       "success": 9
     },
-    "https://www.google.com": {
-      "attempts": 8,
-      "success": 8
-    },
     "https://www.youtube.com": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 4,
+      "success": 4
     }
   },
   "smotret.tv": {
@@ -1951,6 +1951,20 @@
     "https://gemini.google.com": {
       "attempts": 1,
       "success": 0
+    }
+  },
+  "platform103.halalkhor.info": {
+    "https://www.youtube.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://gemini.google.com": {
+      "attempts": 1,
+      "success": 1
+    },
+    "https://www.google.com": {
+      "attempts": 1,
+      "success": 1
     }
   }
 }
