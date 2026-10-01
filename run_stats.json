@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-10-01T05:43:28",
+  "started_at": "2026-10-01T07:24:06",
   "sources": 8,
   "source_fetch_success": 7,
   "lines_total": 0,
   "vless_total": 0,
-  "unique_nodes": 362,
-  "nodes_tested": 289,
-  "original_live": 101,
+  "unique_nodes": 368,
+  "nodes_tested": 251,
+  "original_live": 102,
   "mutated_live": 0,
-  "dead": 188,
-  "mutation_attempts": 2147,
+  "dead": 149,
+  "mutation_attempts": 2097,
   "mutation_success": 0,
-  "finished_at": "2026-10-01T05:54:08"
+  "finished_at": "2026-10-01T07:33:56"
 }
