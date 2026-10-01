@@ -75,8 +75,6 @@ SNI_SERVICE_STATS_FILE = os.path.join(BASE_PATH, "sni_service_stats.json")
 RUN_STATS_FILE = os.path.join(BASE_PATH, "run_stats.json")
 MAX_NODE_STATS = 30000
 MAX_SOURCE_NODE_LIST = 5000
-# Ограничиваем только LIVE-CHECK: весь источник скачиваем и разбираем,
-# но из каждого источника в конкретном запуске проверяем не более этого числа.
 
 
 if not os.path.exists(SOURCES_FILE):
@@ -364,62 +362,9 @@ def empty_sni_service_stats():
     return {}
 
 
-def source_bucket_template():
-    return {
-        "runs": 0,
-        "fetch_success": 0,
-        "fetch_errors": 0,
-        "empty_responses": 0,
-        "lines_total": 0,
-        "vless_total": 0,
-        "nodes_tested": 0,
-        "live": 0,
-        "dead": 0,
-        "last_run": "",
-        "last_http_status": 0,
-        "last_error": "",
-        "last_lines": 0,
-        "last_vless": 0,
-        "last_tested": 0,
-        "last_live": 0,
-        "last_dead": 0
-    }
-
-
-def ensure_all_source_buckets():
-    for src in SOURCES:
-        if src not in SOURCE_STATS:
-            SOURCE_STATS[src] = source_bucket_template()
-        else:
-            base = source_bucket_template()
-            base.update(SOURCE_STATS[src])
-            SOURCE_STATS[src] = base
-
-
-def ensure_service_bucket(stats, url):
-    bucket = stats.setdefault(url, {
-        "attempts": 0,
-        "success": 0,
-        "timeouts": 0,
-        "connection_errors": 0,
-        "http_errors": 0,
-        "other_errors": 0,
-        "status_codes": {}
-    })
-    bucket.setdefault("attempts", 0)
-    bucket.setdefault("success", 0)
-    bucket.setdefault("timeouts", 0)
-    bucket.setdefault("connection_errors", 0)
-    bucket.setdefault("http_errors", 0)
-    bucket.setdefault("other_errors", 0)
-    bucket.setdefault("status_codes", {})
-    return bucket
-
-
 SOURCE_STATS = load_json_stats(SOURCE_STATS_FILE, empty_source_stats)
 NODE_STATS = load_json_stats(NODE_STATS_FILE, empty_node_stats)
 SNI_SERVICE_STATS = load_json_stats(SNI_SERVICE_STATS_FILE, empty_sni_service_stats)
-ensure_all_source_buckets()
 
 
 def node_id(vless_uri):
@@ -436,11 +381,14 @@ def extract_sni(vless_uri):
 
 
 def ensure_source_bucket(source):
-    bucket = SOURCE_STATS.setdefault(source, source_bucket_template())
-    base = source_bucket_template()
-    base.update(bucket)
-    SOURCE_STATS[source] = base
-    return base
+    bucket = SOURCE_STATS.setdefault(source, {
+        "runs": 0, "fetch_attempts": 0, "fetch_success": 0,
+        "lines_total": 0, "vless_total": 0, "unique_nodes": 0,
+        "nodes_tested": 0, "original_live": 0, "mutated_live": 0,
+        "dead": 0, "mutation_attempts": 0, "mutation_success": 0,
+        "last_run": "", "recent_node_ids": []
+    })
+    return bucket
 
 
 def ensure_node_record(vless_uri):
@@ -450,9 +398,7 @@ def ensure_node_record(vless_uri):
         "mutated_live": 0, "dead": 0, "mutation_attempts": 0,
         "mutation_success": 0, "last_status": "unknown",
         "last_sni": "", "original_sni": extract_sni(vless_uri),
-        "sources": [], "first_seen": "", "last_seen": "",
-        "server": "", "server_port": 0, "transport": "", "protocol": "vless",
-        "service_stats": {}
+        "sources": [], "first_seen": "", "last_seen": ""
     })
     return nid, rec
 
@@ -472,39 +418,15 @@ def record_node_source(vless_uri, source_names):
     return nid, rec
 
 
-def record_sni_service(sni, service_url, result, lock):
+def record_sni_service(sni, service_url, success, lock):
     if not sni:
         sni = "<empty>"
     with lock:
         sni_bucket = SNI_SERVICE_STATS.setdefault(sni, {})
-        item = sni_bucket.setdefault(service_url, {
-            "attempts": 0,
-            "success": 0,
-            "timeouts": 0,
-            "connection_errors": 0,
-            "http_errors": 0,
-            "other_errors": 0,
-            "status_codes": {}
-        })
-        for key in ("attempts", "success", "timeouts", "connection_errors", "http_errors", "other_errors"):
-            item.setdefault(key, 0)
-        item.setdefault("status_codes", {})
+        item = sni_bucket.setdefault(service_url, {"attempts": 0, "success": 0})
         item["attempts"] += 1
-        kind = result.get("kind", "other_error")
-        if result.get("success"):
+        if success:
             item["success"] += 1
-        elif kind == "timeout":
-            item["timeouts"] += 1
-        elif kind == "connection_error":
-            item["connection_errors"] += 1
-        elif kind == "http_error":
-            item["http_errors"] += 1
-        else:
-            item["other_errors"] += 1
-        status = result.get("status_code")
-        if status is not None:
-            key = str(status)
-            item["status_codes"][key] = item["status_codes"].get(key, 0) + 1
 
 
 def prune_node_stats():
@@ -587,51 +509,54 @@ def decode_base64_content(text):
 # ========== ЗАГРУЗКА SOURCE ==========
 
 def fetch_source(url):
-    """Fetch one source and return (lines, metadata)."""
-    meta = {
-        "http_status": 0,
-        "fetch_success": False,
-        "empty": False,
-        "error_type": "",
-        "error": ""
-    }
+
     try:
+
         headers = {
-            "User-Agent":
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36"
+            'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                'AppleWebKit/537.36'
         }
-        r = requests.get(url, timeout=15, headers=headers)
-        meta["http_status"] = r.status_code
-        if r.status_code != 200:
-            meta["error_type"] = "http_error"
-            meta["error"] = f"HTTP {r.status_code}"
-            return [], meta
 
-        final_lines = []
-        for line in r.text.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            if "://" not in line and len(line) > 50:
-                final_lines.extend(decode_base64_content(line))
-            else:
-                final_lines.append(line)
+        r = requests.get(
+            url,
+            timeout=15,
+            headers=headers
+        )
 
-        meta["fetch_success"] = True
-        meta["empty"] = len(final_lines) == 0
-        return final_lines, meta
+        if r.status_code == 200:
 
-    except requests.exceptions.Timeout as e:
-        meta["error_type"] = "timeout"
-        meta["error"] = str(e)[:300]
-    except requests.exceptions.RequestException as e:
-        meta["error_type"] = "request_error"
-        meta["error"] = str(e)[:300]
+            final_lines = []
+
+            for line in r.text.splitlines():
+
+                line = line.strip()
+
+                if not line:
+                    continue
+
+                if (
+                    "://" not in line
+                    and len(line) > 50
+                ):
+
+                    final_lines.extend(
+                        decode_base64_content(line)
+                    )
+
+                else:
+
+                    final_lines.append(line)
+
+            return final_lines
+
     except Exception as e:
-        meta["error_type"] = "fetch_error"
-        meta["error"] = str(e)[:300]
-    return [], meta
+
+        logger.debug(
+            f"Ошибка загрузки {url}: {e}"
+        )
+
+    return []
 
 
 # ========== VLESS ==========
@@ -966,12 +891,7 @@ def empty_service_stats():
     return {
         url: {
             "attempts": 0,
-            "success": 0,
-            "timeouts": 0,
-            "connection_errors": 0,
-            "http_errors": 0,
-            "other_errors": 0,
-            "status_codes": {}
+            "success": 0
         }
         for url in TEST_URLS
     }
@@ -981,32 +901,60 @@ def load_service_stats():
     if not os.path.exists(SERVICE_STATS_FILE):
         logger.info("📊 Файл статистики сервисов не найден")
         return empty_service_stats()
+
     try:
         with open(SERVICE_STATS_FILE, "r", encoding="utf-8") as f:
             loaded = json.load(f)
+
         stats = {}
+
         for url, value in loaded.items():
             if isinstance(value, dict):
-                stats[url] = dict(value)
-                ensure_service_bucket(stats, url)
+                stats[url] = {
+                    "attempts": int(value.get("attempts", 0)),
+                    "success": int(value.get("success", 0))
+                }
+
         for url in TEST_URLS:
-            ensure_service_bucket(stats, url)
-        logger.info(f"📊 Загружена статистика сервисов: {len(stats)} сайтов")
+            if url not in stats:
+                stats[url] = {
+                    "attempts": 0,
+                    "success": 0
+                }
+
+        logger.info(
+            f"📊 Загружена статистика сервисов: {len(stats)} сайтов"
+        )
+
         return stats
+
     except Exception as e:
-        logger.warning(f"Ошибка загрузки статистики сервисов: {e}")
+        logger.warning(
+            f"Ошибка загрузки статистики сервисов: {e}"
+        )
         return empty_service_stats()
 
 
 def save_service_stats(stats):
     try:
-        for url in TEST_URLS:
-            ensure_service_bucket(stats, url)
-        with open(SERVICE_STATS_FILE, "w", encoding="utf-8") as f:
-            json.dump(stats, f, indent=2, ensure_ascii=False)
+        with open(
+            SERVICE_STATS_FILE,
+            "w",
+            encoding="utf-8"
+        ) as f:
+            json.dump(
+                stats,
+                f,
+                indent=2,
+                ensure_ascii=False
+            )
+
         logger.info("💾 Статистика сервисов сохранена")
+
     except Exception as e:
-        logger.warning(f"Ошибка сохранения статистики сервисов: {e}")
+        logger.warning(
+            f"Ошибка сохранения статистики сервисов: {e}"
+        )
 
 
 SERVICE_STATS = load_service_stats()
@@ -1112,64 +1060,54 @@ def check_single_uri(
         is_alive = False
 
         for url in TEST_URLS:
+
             if stop_event.is_set():
                 return False
 
-            result = {"success": False, "kind": "other_error", "status_code": None}
             try:
+
                 response = requests.get(
-                    url, proxies=proxies, timeout=2, headers=headers, allow_redirects=True
+                    url,
+                    proxies=proxies,
+                    timeout=2,
+                    headers=headers,
+                    allow_redirects=True
                 )
-                result["status_code"] = response.status_code
-                result["success"] = response.status_code in [200, 204, 301, 302]
-                result["kind"] = "success" if result["success"] else "http_error"
-            except requests.exceptions.Timeout:
-                result["kind"] = "timeout"
-            except requests.exceptions.ConnectionError:
-                result["kind"] = "connection_error"
-            except requests.exceptions.RequestException:
-                result["kind"] = "other_error"
 
-            if service_stats is not None:
-                if stats_lock:
-                    with stats_lock:
-                        bucket = ensure_service_bucket(service_stats, url)
-                        bucket["attempts"] += 1
-                        if result["success"]:
-                            bucket["success"] += 1
-                        elif result["kind"] == "timeout":
-                            bucket["timeouts"] += 1
-                        elif result["kind"] == "connection_error":
-                            bucket["connection_errors"] += 1
-                        elif result["kind"] == "http_error":
-                            bucket["http_errors"] += 1
-                        else:
-                            bucket["other_errors"] += 1
-                        if result["status_code"] is not None:
-                            code = str(result["status_code"])
-                            bucket["status_codes"][code] = bucket["status_codes"].get(code, 0) + 1
-                else:
-                    bucket = ensure_service_bucket(service_stats, url)
-                    bucket["attempts"] += 1
-                    if result["success"]:
-                        bucket["success"] += 1
+                success = response.status_code in [
+                    200,
+                    204,
+                    301,
+                    302
+                ]
 
-            if tested_sni is not None and stats_lock is not None:
-                record_sni_service(tested_sni, url, result, stats_lock)
+                if service_stats is not None:
+                    if stats_lock:
+                        with stats_lock:
+                            service_stats[url]["attempts"] += 1
+                            if success:
+                                service_stats[url]["success"] += 1
+                    else:
+                        service_stats[url]["attempts"] += 1
+                        if success:
+                            service_stats[url]["success"] += 1
 
-            if node_id_value is not None:
-                with (stats_lock if stats_lock is not None else threading.Lock()):
-                    node_rec = NODE_STATS.get(node_id_value)
-                    if node_rec is not None:
-                        service_bucket = node_rec.setdefault("service_stats", {}).setdefault(
-                            url, {"attempts": 0, "success": 0}
-                        )
-                        service_bucket["attempts"] += 1
-                        if result["success"]:
-                            service_bucket["success"] += 1
+                if tested_sni is not None and stats_lock is not None:
+                    record_sni_service(tested_sni, url, success, stats_lock)
 
-            if result["success"]:
-                is_alive = True
+                if success:
+                    is_alive = True
+
+            except:
+
+                if service_stats is not None:
+                    if stats_lock:
+                        with stats_lock:
+                            service_stats[url]["attempts"] += 1
+                    else:
+                        service_stats[url]["attempts"] += 1
+
+                continue
 
         return is_alive
 
@@ -1300,7 +1238,7 @@ def worker(
                     for src in node_sources_map.get(vless_uri, []):
                         b = ensure_source_bucket(src)
                         b["nodes_tested"] += 1
-                        b["live"] += 1
+                        b["original_live"] += 1
 
             # ===== ЕСЛИ МЕРТВАЯ REALITY =====
 
@@ -1341,6 +1279,7 @@ def worker(
                         run_stats["mutation_attempts"] += 1
                         for src in node_sources_map.get(vless_uri, []):
                             b = ensure_source_bucket(src)
+                            b["mutation_attempts"] += 1
 
                     # ===== ПРОВЕРЯЕМ SNI =====
 
@@ -1371,7 +1310,8 @@ def worker(
                             run_stats["mutation_success"] += 1
                             for src in node_sources_map.get(vless_uri, []):
                                 b = ensure_source_bucket(src)
-                                b["live"] += 1
+                                b["mutated_live"] += 1
+                                b["mutation_success"] += 1
 
                         result_uri = mutated_uri
 
@@ -1465,8 +1405,7 @@ def main():
         "sources": len(SOURCES), "source_fetch_success": 0,
         "lines_total": 0, "vless_total": 0, "unique_nodes": 0,
         "nodes_tested": 0, "original_live": 0, "mutated_live": 0,
-        "dead": 0, "mutation_attempts": 0, "mutation_success": 0,
-        "candidates_after_source_sampling": 0
+        "dead": 0, "mutation_attempts": 0, "mutation_success": 0
     }
 
     for url in SOURCES:
@@ -1474,41 +1413,22 @@ def main():
         bucket["runs"] += 1
         bucket["fetch_attempts"] += 1
         bucket["last_run"] = run_stats["started_at"]
-        bucket["last_error"] = ""
-        nodes, meta = fetch_source(url)
-        bucket["last_http_status"] = meta.get("http_status", 0)
-        if meta.get("fetch_success"):
+        nodes = fetch_source(url)
+        if nodes:
             bucket["fetch_success"] += 1
             run_stats["source_fetch_success"] += 1
-        elif meta.get("error_type") == "http_error":
-            bucket["http_errors"] += 1
-            bucket["last_error"] = meta.get("error", "")
-        elif meta.get("error_type"):
-            bucket["fetch_errors"] += 1
-            bucket["last_error"] = meta.get("error", "")
-        if meta.get("empty"):
-            bucket["empty_responses"] += 1
         bucket["lines_total"] += len(nodes)
-        bucket["last_lines"] = len(nodes)
-        run_stats["lines_total"] += len(nodes)
-        logger.info(f"Loaded {len(nodes)} lines from {url[:80]}... [HTTP {meta.get('http_status', 0)}]")
+        logger.info(f"Loaded {len(nodes)} lines from {url[:80]}...")
         all_nodes.extend(nodes)
-        source_unique = set()
         for line in nodes:
             if is_valid_vless(line):
-                clean = line.strip()
-                source_nodes[url].append(clean)
-                source_unique.add(clean)
+                source_nodes[url].append(line.strip())
                 bucket["vless_total"] += 1
-                run_stats["vless_total"] += 1
-        bucket["last_vless"] = len(source_unique)
 
 
     # =========================================
     # STEP 2
     # =========================================
-
-    ensure_all_source_buckets()
 
     logger.info(
         "\n--- STEP 2: VALIDATION ---"
@@ -1539,6 +1459,19 @@ def main():
     for src, nodes in source_nodes.items():
         for node in set(nodes):
             node_sources_map[node].append(src)
+            ensure_source_bucket(src)["unique_nodes"] += 1
+            nid = node_id(node)
+            rec = NODE_STATS.setdefault(nid, {
+                "attempts": 0, "live": 0, "original_live": 0,
+                "mutated_live": 0, "dead": 0, "mutation_attempts": 0,
+                "mutation_success": 0, "last_status": "discovered",
+                "last_sni": "", "original_sni": extract_sni(node),
+                "sources": [], "first_seen": "", "last_seen": ""
+            })
+            if src not in rec.setdefault("sources", []):
+                rec["sources"].append(src)
+            if len(rec["sources"]) > 30:
+                del rec["sources"][:-30]
 
 
     # =========================================
@@ -1629,33 +1562,28 @@ def main():
 
 
     # =========================================
-    # PRIORITY ORDER / SOURCE SAMPLING
+    # PRIORITY ORDER
     # =========================================
 
-    # Все уникальные ноды из всех загруженных источников идут в LIVE-CHECK.
-    # Ограничений 30 нод/источник и 350 нод суммарно больше нет.
-    # Дедупликация выполняется выше, поэтому одна и та же нода проверяется один раз,
-    # но сохраняется связь ноды со всеми источниками через node_sources_map.
     priority_order = []
-    priority_seen = set()
 
-    # Сначала недавно живые ноды, если они есть среди текущих уникальных нод.
-    for node in reversed(alive_archive_list):
-        if node in seen and node not in priority_seen:
+    for node in reversed(
+        alive_archive_list
+    ):
+
+        if (
+            node in seen
+            and node not in priority_order
+        ):
+
             priority_order.append(node)
-            priority_seen.add(node)
 
-    # Затем все остальные уникальные ноды текущего запуска.
+
     for node in unique_nodes:
-        if node not in priority_seen:
+
+        if node not in priority_order:
+
             priority_order.append(node)
-            priority_seen.add(node)
-
-    run_stats["candidates_after_source_sampling"] = len(priority_order)
-
-    logger.info(
-        f"Source sampling disabled: checking all {len(priority_order)} unique VLESS nodes"
-    )
 
 
     # =========================================
@@ -1711,24 +1639,6 @@ def main():
         f"{elapsed:.1f} сек"
     )
 
-
-    # =========================================
-    # SOURCE LAST-RUN STATS
-    # =========================================
-
-    for src in SOURCES:
-        b = ensure_source_bucket(src)
-        tested = b.get("nodes_tested", 0)
-        # Cumulative counters above remain useful, while these last-run
-        # fields make it immediately visible which source gave a result.
-        # The current run contribution is calculated from nodes selected
-        # for this source below.
-        source_pool = set(source_nodes.get(src, []))
-        tested_here = len(source_pool & set(priority_order))
-        live_here = len(source_pool & set(result_list))
-        b["last_tested"] = tested_here
-        b["last_live"] = live_here
-        b["last_dead"] = max(0, tested_here - live_here)
 
     # =========================================
     # RESULTS
@@ -1961,11 +1871,8 @@ def main():
             rate = 0
 
         logger.info(
-            f"{url}: {success}/{attempts} успешных ({rate:.1f}%) | "
-            f"timeout={data.get('timeouts', 0)} "
-            f"conn={data.get('connection_errors', 0)} "
-            f"http={data.get('http_errors', 0)} "
-            f"other={data.get('other_errors', 0)}"
+            f"{url}: {success}/{attempts} "
+            f"успешных ({rate:.1f}%)"
         )
 
     save_service_stats(SERVICE_STATS)
@@ -1975,8 +1882,6 @@ def main():
     save_json_stats(NODE_STATS_FILE, NODE_STATS, "Статистика нод")
     save_json_stats(SNI_SERVICE_STATS_FILE, SNI_SERVICE_STATS, "Связь SNI→сервисы")
 
-
-    ensure_all_source_buckets()
 
     # =========================================
     # SNI STATS
@@ -1990,7 +1895,7 @@ def main():
     sorted_sni = sorted(
         SNI_STATS.items(),
         key=lambda x: (
-            (x[1].get("success", 0) / x[1].get("attempts", 1)) if x[1].get("attempts", 0) else 0,
+            x[1].get("success", 0),
             x[1].get("attempts", 0)
         ),
         reverse=True
