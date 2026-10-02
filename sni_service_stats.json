@@ -101,28 +101,28 @@
   },
   "<empty>": {
     "https://telegram.org": {
-      "attempts": 103,
-      "success": 102
-    },
-    "https://www.instagram.com": {
-      "attempts": 105,
-      "success": 105
-    },
-    "https://www.youtube.com": {
-      "attempts": 110,
+      "attempts": 111,
       "success": 110
     },
-    "https://chatgpt.com": {
+    "https://www.instagram.com": {
+      "attempts": 113,
+      "success": 113
+    },
+    "https://www.youtube.com": {
       "attempts": 119,
       "success": 119
     },
+    "https://chatgpt.com": {
+      "attempts": 127,
+      "success": 126
+    },
     "https://gemini.google.com": {
-      "attempts": 102,
-      "success": 97
+      "attempts": 111,
+      "success": 106
     },
     "https://www.google.com": {
-      "attempts": 101,
-      "success": 99
+      "attempts": 110,
+      "success": 107
     }
   },
   "katering.coteite.pro": {
@@ -411,8 +411,8 @@
   },
   "buylite.music.apple.com": {
     "https://telegram.org": {
-      "attempts": 2,
-      "success": 2
+      "attempts": 3,
+      "success": 3
     },
     "https://www.instagram.com": {
       "attempts": 3,
@@ -423,8 +423,8 @@
       "success": 3
     },
     "https://www.google.com": {
-      "attempts": 2,
-      "success": 2
+      "attempts": 4,
+      "success": 4
     },
     "https://chatgpt.com": {
       "attempts": 2,
@@ -611,28 +611,28 @@
   },
   "www.apple.com": {
     "https://telegram.org": {
-      "attempts": 4,
-      "success": 4
+      "attempts": 6,
+      "success": 6
     },
     "https://www.instagram.com": {
-      "attempts": 4,
-      "success": 4
+      "attempts": 6,
+      "success": 6
     },
     "https://www.youtube.com": {
-      "attempts": 3,
-      "success": 3
+      "attempts": 5,
+      "success": 5
     },
     "https://chatgpt.com": {
-      "attempts": 4,
-      "success": 4
+      "attempts": 6,
+      "success": 6
     },
     "https://gemini.google.com": {
-      "attempts": 3,
-      "success": 2
+      "attempts": 5,
+      "success": 4
     },
     "https://www.google.com": {
-      "attempts": 4,
-      "success": 4
+      "attempts": 6,
+      "success": 6
     }
   },
   "cdn-pl-exit.extazy.net": {
@@ -751,28 +751,28 @@
   },
   "www.cloudflare.com": {
     "https://telegram.org": {
-      "attempts": 124,
-      "success": 124
+      "attempts": 131,
+      "success": 131
     },
     "https://www.instagram.com": {
-      "attempts": 124,
-      "success": 124
+      "attempts": 132,
+      "success": 132
     },
     "https://www.youtube.com": {
-      "attempts": 124,
-      "success": 124
+      "attempts": 134,
+      "success": 134
     },
     "https://chatgpt.com": {
-      "attempts": 101,
+      "attempts": 105,
       "success": 5
     },
     "https://gemini.google.com": {
-      "attempts": 106,
-      "success": 106
+      "attempts": 109,
+      "success": 109
     },
     "https://www.google.com": {
-      "attempts": 121,
-      "success": 121
+      "attempts": 128,
+      "success": 128
     }
   },
   "dlcdn.apache.org": {
@@ -1135,28 +1135,28 @@
   },
   "eh.vk.ru": {
     "https://www.instagram.com": {
-      "attempts": 5,
-      "success": 5
+      "attempts": 10,
+      "success": 10
     },
     "https://www.youtube.com": {
       "attempts": 8,
       "success": 8
     },
     "https://chatgpt.com": {
-      "attempts": 7,
-      "success": 7
+      "attempts": 9,
+      "success": 9
     },
     "https://gemini.google.com": {
-      "attempts": 7,
-      "success": 6
+      "attempts": 11,
+      "success": 10
     },
     "https://www.google.com": {
       "attempts": 8,
       "success": 8
     },
     "https://telegram.org": {
-      "attempts": 5,
-      "success": 5
+      "attempts": 7,
+      "success": 7
     }
   },
   "mail.ru": {
@@ -1955,28 +1955,28 @@
   },
   "platform103.halalkhor.info": {
     "https://www.youtube.com": {
-      "attempts": 2,
-      "success": 2
+      "attempts": 3,
+      "success": 3
     },
     "https://gemini.google.com": {
-      "attempts": 2,
-      "success": 2
+      "attempts": 3,
+      "success": 3
     },
     "https://www.google.com": {
+      "attempts": 3,
+      "success": 3
+    },
+    "https://telegram.org": {
       "attempts": 2,
       "success": 2
     },
-    "https://telegram.org": {
-      "attempts": 1,
-      "success": 1
-    },
     "https://www.instagram.com": {
-      "attempts": 1,
-      "success": 1
+      "attempts": 2,
+      "success": 2
     },
     "https://chatgpt.com": {
-      "attempts": 1,
-      "success": 1
+      "attempts": 2,
+      "success": 2
     }
   },
   "nvidia.com": {
@@ -2787,6 +2787,32 @@
     "https://www.google.com": {
       "attempts": 1,
       "success": 1
+    }
+  },
+  "www.samsung.com": {
+    "https://telegram.org": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://www.instagram.com": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://www.youtube.com": {
+      "attempts": 6,
+      "success": 6
+    },
+    "https://chatgpt.com": {
+      "attempts": 5,
+      "success": 5
+    },
+    "https://gemini.google.com": {
+      "attempts": 6,
+      "success": 0
+    },
+    "https://www.google.com": {
+      "attempts": 3,
+      "success": 3
     }
   }
 }
