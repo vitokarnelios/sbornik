@@ -5931,12 +5931,12 @@
     "last_seen": "2026-09-30T08:11:28"
   },
   "9b1017fdd96293ecdb293319": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 40,
+    "dead": 3,
+    "mutation_attempts": 60,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -5946,7 +5946,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-09-30T08:11:17",
-    "last_seen": "2026-10-01T20:56:57"
+    "last_seen": "2026-10-02T14:36:38"
   },
   "983e9cc889e62f8d78266971": {
     "attempts": 1,
@@ -7651,12 +7651,12 @@
     "last_seen": "2026-09-30T08:12:10"
   },
   "38cca2de595b22057b00d409": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 40,
+    "dead": 3,
+    "mutation_attempts": 60,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -7666,7 +7666,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-09-30T08:11:16",
-    "last_seen": "2026-10-01T20:56:57"
+    "last_seen": "2026-10-02T14:36:38"
   },
   "cc89c1ac305b1492347ad32a": {
     "attempts": 1,
@@ -7914,21 +7914,22 @@
     "last_seen": "2026-09-30T08:15:44"
   },
   "44894312830e0ae443200d2f": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "buylite.music.apple.com",
     "original_sni": "buylite.music.apple.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-09-30T08:13:14",
-    "last_seen": "2026-09-30T08:13:14"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "b58e67a3891e8b7bc737369f": {
     "attempts": 1,
@@ -8681,14 +8682,14 @@
     "last_seen": "2026-09-30T08:15:52"
   },
   "67befacd56171773d8a34364": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 2,
     "original_live": 2,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "buylite.music.apple.com",
     "original_sni": "buylite.music.apple.com",
     "sources": [
@@ -8696,7 +8697,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-09-30T08:13:14",
-    "last_seen": "2026-10-01T07:24:27"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "606c5a13a51ac462ad823c1d": {
     "attempts": 1,
@@ -8887,11 +8888,11 @@
     "last_seen": "2026-09-30T14:46:54"
   },
   "964ac89551e04cd621a6061b": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -8901,7 +8902,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-09-30T14:46:57",
-    "last_seen": "2026-09-30T14:46:57"
+    "last_seen": "2026-10-02T14:38:01"
   },
   "c0cadede7cf0f4c83d599000": {
     "attempts": 1,
@@ -11031,9 +11032,9 @@
     "last_seen": "2026-09-30T14:46:58"
   },
   "827a303c0ab383443fb60a5e": {
-    "attempts": 4,
-    "live": 3,
-    "original_live": 3,
+    "attempts": 5,
+    "live": 4,
+    "original_live": 4,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 0,
@@ -11045,7 +11046,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-09-30T14:42:16",
-    "last_seen": "2026-10-01T15:11:20"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "f3421fe55ff12f85f39b6b97": {
     "attempts": 1,
@@ -11359,12 +11360,12 @@
     "last_seen": "2026-09-30T20:37:31"
   },
   "3ba21b579b87154db8470eaa": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -11374,7 +11375,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-09-30T20:42:02",
-    "last_seen": "2026-09-30T20:42:02"
+    "last_seen": "2026-10-02T14:32:52"
   },
   "628b8e858ddb7406a868f9f8": {
     "attempts": 1,
@@ -15676,21 +15677,21 @@
     "last_seen": ""
   },
   "c620c7ac13446f3909e41ce5": {
-    "attempts": 0,
+    "attempts": 1,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "discovered",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "dl.google.com",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
-    "first_seen": "",
-    "last_seen": ""
+    "first_seen": "2026-10-02T14:38:09",
+    "last_seen": "2026-10-02T14:38:09"
   },
   "44a19b3a25dda5ada463fd16": {
     "attempts": 0,
@@ -15849,12 +15850,12 @@
     "last_seen": "2026-10-01T05:45:26"
   },
   "f1e8ab0cbf456cb58218ba84": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 40,
+    "dead": 3,
+    "mutation_attempts": 60,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -15864,7 +15865,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T04:49:26",
-    "last_seen": "2026-10-01T05:48:52"
+    "last_seen": "2026-10-02T14:32:00"
   },
   "7d16836b0b77b82f5f0c7cd6": {
     "attempts": 5,
@@ -16098,12 +16099,12 @@
     "last_seen": "2026-10-01T05:43:50"
   },
   "4b45862dcddbfbab9d9e1902": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 40,
+    "dead": 3,
+    "mutation_attempts": 60,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -16113,7 +16114,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T04:48:42",
-    "last_seen": "2026-10-01T05:48:32"
+    "last_seen": "2026-10-02T14:32:52"
   },
   "e1367039195384763e3418f1": {
     "attempts": 3,
@@ -17717,12 +17718,12 @@
     "last_seen": "2026-10-01T05:53:10"
   },
   "24f09a042849695fb64997e1": {
-    "attempts": 4,
+    "attempts": 5,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 4,
-    "mutation_attempts": 80,
+    "dead": 5,
+    "mutation_attempts": 100,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -17731,7 +17732,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T04:49:57",
-    "last_seen": "2026-10-01T20:56:20"
+    "last_seen": "2026-10-02T14:32:33"
   },
   "8140bda12282e6f03d6580d2": {
     "attempts": 2,
@@ -17854,12 +17855,12 @@
     "last_seen": "2026-10-01T07:30:03"
   },
   "57e69ceadbb5f0d03dc44415": {
-    "attempts": 4,
+    "attempts": 5,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 4,
-    "mutation_attempts": 80,
+    "dead": 5,
+    "mutation_attempts": 100,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -17868,7 +17869,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T04:49:57",
-    "last_seen": "2026-10-01T20:56:16"
+    "last_seen": "2026-10-02T14:32:32"
   },
   "82edbf4374b09753f74f6471": {
     "attempts": 2,
@@ -17888,12 +17889,12 @@
     "last_seen": "2026-10-01T05:50:07"
   },
   "157f95cde452a88a94794ed1": {
-    "attempts": 4,
+    "attempts": 5,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 4,
-    "mutation_attempts": 80,
+    "dead": 5,
+    "mutation_attempts": 100,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -17902,7 +17903,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T04:49:57",
-    "last_seen": "2026-10-01T20:56:20"
+    "last_seen": "2026-10-02T14:32:34"
   },
   "6897f636cfad6d727d371476": {
     "attempts": 4,
@@ -21274,21 +21275,21 @@
     "last_seen": "2026-10-01T15:24:37"
   },
   "0d246c4ff31561e402cc3d0e": {
-    "attempts": 0,
+    "attempts": 1,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "discovered",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "www.cloudflare.com",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
-    "first_seen": "",
-    "last_seen": ""
+    "first_seen": "2026-10-02T14:38:26",
+    "last_seen": "2026-10-02T14:38:26"
   },
   "923fd5dfeeb1b96d1437a943": {
     "attempts": 0,
@@ -21512,9 +21513,9 @@
     "last_seen": ""
   },
   "432950476fec0f5fde7a00a1": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -21526,7 +21527,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:44",
-    "last_seen": "2026-10-01T15:23:44"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "753484133c021c296b60e189": {
     "attempts": 0,
@@ -21546,12 +21547,12 @@
     "last_seen": ""
   },
   "d57a4d8477d865562daba539": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 22,
+    "dead": 3,
+    "mutation_attempts": 42,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -21560,7 +21561,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:22:08",
-    "last_seen": "2026-10-02T04:45:37"
+    "last_seen": "2026-10-02T14:36:58"
   },
   "ef1056ab722da60e7f559181": {
     "attempts": 0,
@@ -21614,12 +21615,12 @@
     "last_seen": ""
   },
   "b75e300e4c832a0858b65de2": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 23,
+    "dead": 3,
+    "mutation_attempts": 43,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -21628,7 +21629,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:22:23",
-    "last_seen": "2026-10-02T04:45:35"
+    "last_seen": "2026-10-02T14:36:48"
   },
   "4380e7e998d151e49df8fe39": {
     "attempts": 0,
@@ -21784,9 +21785,9 @@
     "last_seen": ""
   },
   "b37aeabbeb81e05130e2fbd2": {
-    "attempts": 3,
-    "live": 3,
-    "original_live": 3,
+    "attempts": 4,
+    "live": 4,
+    "original_live": 4,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -21798,7 +21799,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:50",
-    "last_seen": "2026-10-02T04:35:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "702e2895c23179df1e6d08f6": {
     "attempts": 0,
@@ -22738,12 +22739,12 @@
     "last_seen": "2026-10-01T07:24:06"
   },
   "553a617aabab061bab1910c6": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 24,
+    "dead": 3,
+    "mutation_attempts": 44,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -22752,7 +22753,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:58",
-    "last_seen": "2026-10-02T04:45:59"
+    "last_seen": "2026-10-02T14:37:27"
   },
   "168587bf5bfcf2f6c9903bbb": {
     "attempts": 2,
@@ -22857,12 +22858,12 @@
     "last_seen": "2026-10-02T04:35:41"
   },
   "4dc83fdb301de4feac727ff4": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
-    "mutation_attempts": 22,
+    "dead": 3,
+    "mutation_attempts": 42,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -22871,12 +22872,12 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:46",
-    "last_seen": "2026-10-02T04:45:37"
+    "last_seen": "2026-10-02T14:37:56"
   },
   "2354833753ef9413ff94d6eb": {
-    "attempts": 3,
-    "live": 3,
-    "original_live": 3,
+    "attempts": 4,
+    "live": 4,
+    "original_live": 4,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -22888,7 +22889,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:37",
-    "last_seen": "2026-10-02T04:35:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "5333c776b57705dbd0654de0": {
     "attempts": 0,
@@ -22976,12 +22977,12 @@
     "last_seen": "2026-10-01T15:22:10"
   },
   "b3850675922b03259a1018fc": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 3,
+    "dead": 2,
+    "mutation_attempts": 23,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -22990,7 +22991,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-02T04:45:34",
-    "last_seen": "2026-10-02T04:45:34"
+    "last_seen": "2026-10-02T14:37:30"
   },
   "82cf658ff07befcc06576fe0": {
     "attempts": 0,
@@ -23182,12 +23183,12 @@
     "last_seen": "2026-10-01T07:24:31"
   },
   "960b3b923397f14004779a6e": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -23197,15 +23198,15 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T07:24:39",
-    "last_seen": "2026-10-01T07:24:39"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "b971f521890fadec334e05e4": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -23215,7 +23216,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T07:24:35",
-    "last_seen": "2026-10-01T07:24:35"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "cc889834a722e8198ebf8e20": {
     "attempts": 2,
@@ -23341,12 +23342,12 @@
     "last_seen": "2026-10-01T07:24:31"
   },
   "e440bbc99eb524544467bb8a": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -23356,7 +23357,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T07:24:34",
-    "last_seen": "2026-10-01T07:24:34"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "4141d0475df3f9931f1fb26c": {
     "attempts": 1,
@@ -25869,12 +25870,12 @@
     "last_seen": ""
   },
   "889ea388c0c14aa9a97e5faf": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -25883,7 +25884,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:31",
-    "last_seen": "2026-10-01T15:24:31"
+    "last_seen": "2026-10-02T14:36:58"
   },
   "c39d7d12dce728179b441612": {
     "attempts": 1,
@@ -25988,12 +25989,12 @@
     "last_seen": "2026-10-01T15:15:57"
   },
   "4e2f8077cdf0a97784240b83": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -26003,7 +26004,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T15:16:03",
-    "last_seen": "2026-10-01T15:16:03"
+    "last_seen": "2026-10-02T14:32:12"
   },
   "f28b232783ab8db37967a68e": {
     "attempts": 2,
@@ -26416,12 +26417,12 @@
     "last_seen": "2026-10-01T15:11:54"
   },
   "12f91dc66702130acb3d5bb9": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -26431,7 +26432,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T15:16:03",
-    "last_seen": "2026-10-01T15:16:03"
+    "last_seen": "2026-10-02T14:32:01"
   },
   "56726c80aa729a51bf1b7176": {
     "attempts": 2,
@@ -26736,12 +26737,12 @@
     "last_seen": "2026-10-01T20:51:46"
   },
   "001b0e633e94484f3834d197": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -26751,7 +26752,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T15:11:53",
-    "last_seen": "2026-10-01T15:11:53"
+    "last_seen": "2026-10-02T14:33:03"
   },
   "229c197057e9e60a9aece728": {
     "attempts": 3,
@@ -26862,12 +26863,12 @@
     "last_seen": "2026-10-01T15:16:04"
   },
   "c87dbf54779e9e070a889f1f": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -26877,7 +26878,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T15:16:03",
-    "last_seen": "2026-10-01T15:16:03"
+    "last_seen": "2026-10-02T14:32:03"
   },
   "8f3d9b39754eba412462b3e6": {
     "attempts": 1,
@@ -28786,11 +28787,11 @@
     "last_seen": "2026-10-02T04:45:56"
   },
   "416ed711cc97b458625773d9": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -28800,9 +28801,26 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:41",
-    "last_seen": "2026-10-01T15:23:41"
+    "last_seen": "2026-10-02T14:38:33"
   },
   "261cbff473a5f9415e3707ae": {
+    "attempts": 4,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 3,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "square-waterfall-c1de.199-82d.workers.dev",
+    "original_sni": "square-waterfall-c1de.199-82d.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-01T15:11:20",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "99190400bd0c8ab68ead2a9a": {
     "attempts": 3,
     "live": 1,
     "original_live": 1,
@@ -28810,31 +28828,14 @@
     "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
-    "last_sni": "square-waterfall-c1de.199-82d.workers.dev",
-    "original_sni": "square-waterfall-c1de.199-82d.workers.dev",
-    "sources": [
-      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
-    ],
-    "first_seen": "2026-10-01T15:11:20",
-    "last_seen": "2026-10-02T04:35:41"
-  },
-  "99190400bd0c8ab68ead2a9a": {
-    "attempts": 2,
-    "live": 1,
-    "original_live": 1,
-    "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 0,
-    "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:17",
-    "last_seen": "2026-10-02T04:45:52"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "65996fca6335197ca2e0028a": {
     "attempts": 2,
@@ -28854,29 +28855,29 @@
     "last_seen": "2026-10-02T04:45:51"
   },
   "bc7b600635da7dee0cee930f": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:14",
-    "last_seen": "2026-10-02T04:45:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "c628db61dd1924d51ce11901": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -28885,7 +28886,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:57",
-    "last_seen": "2026-10-01T15:24:57"
+    "last_seen": "2026-10-02T14:39:52"
   },
   "37946525d3b090bae2663273": {
     "attempts": 1,
@@ -28973,12 +28974,12 @@
     "last_seen": "2026-10-02T04:35:41"
   },
   "517010a8275f36754d340b1c": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -28987,7 +28988,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:22:10",
-    "last_seen": "2026-10-01T15:22:10"
+    "last_seen": "2026-10-02T14:36:58"
   },
   "0d464226519a63d1754ee8e9": {
     "attempts": 1,
@@ -29007,21 +29008,21 @@
     "last_seen": "2026-10-01T15:24:34"
   },
   "131ce3791b7efc59b7cd7571": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:42",
-    "last_seen": "2026-10-02T04:45:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "b58c496ba51e9dd3a4ad4e0c": {
     "attempts": 1,
@@ -29058,21 +29059,21 @@
     "last_seen": "2026-10-01T15:24:56"
   },
   "9d641ffef7faa0edd2661be7": {
-    "attempts": 3,
+    "attempts": 4,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 2,
+    "dead": 3,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:11:20",
-    "last_seen": "2026-10-02T04:35:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "c2b6cf44e577da1a41323731": {
     "attempts": 2,
@@ -29092,12 +29093,12 @@
     "last_seen": "2026-10-02T04:45:38"
   },
   "92809789d3f30f24dc3194d9": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -29106,15 +29107,15 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:34",
-    "last_seen": "2026-10-01T15:24:34"
+    "last_seen": "2026-10-02T14:38:06"
   },
   "4066fb8d605dfccae1ac62b5": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -29123,7 +29124,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:46",
-    "last_seen": "2026-10-01T15:24:46"
+    "last_seen": "2026-10-02T14:37:51"
   },
   "598c443d90077bf435546b90": {
     "attempts": 1,
@@ -29143,11 +29144,11 @@
     "last_seen": "2026-10-01T15:24:48"
   },
   "ddff2b75766bcda869c57b33": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -29157,7 +29158,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:24",
-    "last_seen": "2026-10-01T15:23:24"
+    "last_seen": "2026-10-02T14:37:35"
   },
   "8cb165bf24fdce49f9742a5f": {
     "attempts": 1,
@@ -29228,11 +29229,11 @@
     "last_seen": "2026-10-02T04:45:44"
   },
   "50d2a85f3122fdcd7b941d81": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -29242,24 +29243,24 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:42",
-    "last_seen": "2026-10-01T15:24:42"
+    "last_seen": "2026-10-02T14:37:41"
   },
   "d2d4a86edcc22a9c8a30c869": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:27",
-    "last_seen": "2026-10-02T04:45:50"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "70ffd5e2197ca8a91a6bd533": {
     "attempts": 1,
@@ -29279,12 +29280,12 @@
     "last_seen": "2026-10-01T15:23:31"
   },
   "fff655df87b33330e022b84e": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -29293,14 +29294,14 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:36",
-    "last_seen": "2026-10-01T15:24:36"
+    "last_seen": "2026-10-02T14:38:05"
   },
   "57fbddadcb609f8e890f917b": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -29310,7 +29311,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:44",
-    "last_seen": "2026-10-01T15:24:44"
+    "last_seen": "2026-10-02T14:37:42"
   },
   "874b6dc1c3b00289f01b325f": {
     "attempts": 1,
@@ -29364,28 +29365,28 @@
     "last_seen": "2026-10-01T15:24:32"
   },
   "71cc75b4a2d31627265df040": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:25",
-    "last_seen": "2026-10-02T04:45:42"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "47d5a1c2d56b155c45011c21": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
+    "dead": 3,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -29395,24 +29396,24 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:23:25",
-    "last_seen": "2026-10-02T04:45:54"
+    "last_seen": "2026-10-02T14:37:07"
   },
   "a449a2cf56625581bf9f890c": {
-    "attempts": 3,
+    "attempts": 4,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 2,
+    "dead": 3,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:11:20",
-    "last_seen": "2026-10-02T04:35:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "3a740ff3018e2a5ffb863451": {
     "attempts": 1,
@@ -29432,11 +29433,11 @@
     "last_seen": "2026-10-01T15:23:54"
   },
   "dba8a600c85a2ff2e6278227": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -29446,7 +29447,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T15:24:53",
-    "last_seen": "2026-10-01T15:24:53"
+    "last_seen": "2026-10-02T14:38:18"
   },
   "7ac86f33294033463f9cfab1": {
     "attempts": 1,
@@ -29710,12 +29711,12 @@
     "last_seen": "2026-10-01T20:51:33"
   },
   "23d9c5563c09bc58f66211b1": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -29724,7 +29725,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-01T20:51:33",
-    "last_seen": "2026-10-01T20:51:33"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "11949deee3f9eaa68b164865": {
     "attempts": 1,
@@ -30086,12 +30087,12 @@
     "last_seen": "2026-10-01T20:52:08"
   },
   "902b78503f253080e5621f1b": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -30100,7 +30101,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-01T20:51:33",
-    "last_seen": "2026-10-01T20:51:33"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "18b2afc69b4220dbaa380074": {
     "attempts": 1,
@@ -30210,12 +30211,12 @@
     "last_seen": "2026-10-02T04:35:52"
   },
   "01b3afbcdee5f17d7f52b7b1": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -30224,7 +30225,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-01T20:51:33",
-    "last_seen": "2026-10-01T20:51:33"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "8550cbbfc5946ca5cb77b25c": {
     "attempts": 1,
@@ -30817,12 +30818,12 @@
     "last_seen": "2026-10-01T20:52:05"
   },
   "83b99534edf6bab9fa6a4dbb": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -30831,7 +30832,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T20:56:13",
-    "last_seen": "2026-10-01T20:56:13"
+    "last_seen": "2026-10-02T14:32:21"
   },
   "7203775f1881ef5f6a54f5ba": {
     "attempts": 1,
@@ -30868,12 +30869,12 @@
     "last_seen": "2026-10-01T20:56:23"
   },
   "e3efa67e3e366493ac349b7d": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -30882,7 +30883,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T20:56:14",
-    "last_seen": "2026-10-01T20:56:14"
+    "last_seen": "2026-10-02T14:32:21"
   },
   "9fac8fc6b995f7f5e492b915": {
     "attempts": 1,
@@ -30902,12 +30903,12 @@
     "last_seen": "2026-10-01T20:56:21"
   },
   "14cf5b487dcb870eeacfbb99": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -30916,43 +30917,9 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T20:56:12",
-    "last_seen": "2026-10-01T20:56:12"
+    "last_seen": "2026-10-02T14:32:21"
   },
   "06faaffc894013d1acf011e4": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
-    "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 11,
-    "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
-    "original_sni": "dl.google.com",
-    "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
-    ],
-    "first_seen": "2026-10-01T20:56:11",
-    "last_seen": "2026-10-01T20:56:11"
-  },
-  "6654ec3d9811106786d8b927": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
-    "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
-    "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
-    "original_sni": "rumulti.federal-usa.com",
-    "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
-    ],
-    "first_seen": "2026-10-01T20:56:14",
-    "last_seen": "2026-10-01T20:56:14"
-  },
-  "b02fdb1eb81ae9ef7169d12f": {
     "attempts": 2,
     "live": 0,
     "original_live": 0,
@@ -30964,10 +30931,46 @@
     "last_sni": "",
     "original_sni": "dl.google.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-01T20:56:11",
-    "last_seen": "2026-10-02T04:40:41"
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "6654ec3d9811106786d8b927": {
+    "attempts": 2,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 2,
+    "mutation_attempts": 40,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-01T20:56:14",
+    "last_seen": "2026-10-02T14:32:21"
+  },
+  "b02fdb1eb81ae9ef7169d12f": {
+    "attempts": 3,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 3,
+    "mutation_attempts": 51,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-01T20:56:11",
+    "last_seen": "2026-10-02T14:31:49"
   },
   "0e677180a11d0f2754c3a1bd": {
     "attempts": 1,
@@ -30987,12 +30990,12 @@
     "last_seen": "2026-10-01T20:56:23"
   },
   "abc6c37d1ca51ce6621e4708": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -31001,7 +31004,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T20:56:14",
-    "last_seen": "2026-10-01T20:56:14"
+    "last_seen": "2026-10-02T14:32:21"
   },
   "d0fb9e53a4f202958f045add": {
     "attempts": 1,
@@ -31021,12 +31024,12 @@
     "last_seen": "2026-10-01T20:56:25"
   },
   "ca49bec7141d8e5c6527a573": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -31035,7 +31038,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
     ],
     "first_seen": "2026-10-01T20:56:14",
-    "last_seen": "2026-10-01T20:56:14"
+    "last_seen": "2026-10-02T14:32:21"
   },
   "eae234e554d3e2d14290a487": {
     "attempts": 2,
@@ -33942,26 +33945,26 @@
     "last_seen": ""
   },
   "c3f54ded2b4c2a0ac64e6368": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "eh.vk.ru",
     "original_sni": "eh.vk.ru",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-02T04:45:41",
-    "last_seen": "2026-10-02T04:45:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "6884e34b03ae7689da4bfeae": {
-    "attempts": 2,
-    "live": 2,
-    "original_live": 2,
+    "attempts": 3,
+    "live": 3,
+    "original_live": 3,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -33973,7 +33976,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-01T20:51:33",
-    "last_seen": "2026-10-02T04:35:41"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "f1cb0aa4db7c513ba54ecf1a": {
     "attempts": 1,
@@ -34483,12 +34486,12 @@
     "last_seen": "2026-10-02T04:36:21"
   },
   "e8ce2caf6a0213b0d08360db": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -34497,7 +34500,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-02T04:40:18",
-    "last_seen": "2026-10-02T04:40:18"
+    "last_seen": "2026-10-02T14:31:51"
   },
   "3e905157eb87477558e0044c": {
     "attempts": 1,
@@ -34608,12 +34611,12 @@
     "last_seen": "2026-10-02T04:35:54"
   },
   "cde0de859033d3343432f9f6": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -34622,7 +34625,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-02T04:39:29",
-    "last_seen": "2026-10-02T04:39:29"
+    "last_seen": "2026-10-02T14:31:51"
   },
   "d460d6bacfacc0c4d4ca6c58": {
     "attempts": 1,
@@ -34643,12 +34646,12 @@
     "last_seen": "2026-10-02T04:40:20"
   },
   "788129bb778c07a268556a08": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -34657,7 +34660,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-02T04:39:18",
-    "last_seen": "2026-10-02T04:39:18"
+    "last_seen": "2026-10-02T14:31:51"
   },
   "815b655237e32e30ab604fad": {
     "attempts": 1,
@@ -34919,21 +34922,22 @@
     "last_seen": "2026-10-02T04:40:41"
   },
   "49aeb40e061374d791553328": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "dl.google.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-02T04:40:40",
-    "last_seen": "2026-10-02T04:40:40"
+    "last_seen": "2026-10-02T14:31:49"
   },
   "006eac5d895f3b3a4efa21cc": {
     "attempts": 1,
@@ -34953,21 +34957,22 @@
     "last_seen": "2026-10-02T04:40:46"
   },
   "66ec804f44ab8c611a776f36": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "dl.google.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-02T04:41:07",
-    "last_seen": "2026-10-02T04:41:07"
+    "last_seen": "2026-10-02T14:32:00"
   },
   "69df6f9a6215dd7283afd041": {
     "attempts": 1,
@@ -35021,21 +35026,22 @@
     "last_seen": "2026-10-02T04:41:02"
   },
   "ad9b8b8056ac9f2564a18e96": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "dl.google.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
     ],
     "first_seen": "2026-10-02T04:41:07",
-    "last_seen": "2026-10-02T04:41:07"
+    "last_seen": "2026-10-02T14:31:51"
   },
   "cba4d13f60d36d8f7c56117d": {
     "attempts": 1,
@@ -37461,5 +37467,2836 @@
     ],
     "first_seen": "2026-10-02T04:45:23",
     "last_seen": "2026-10-02T04:45:23"
+  },
+  "54bdeac3a6d804490e3e6895": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:59",
+    "last_seen": "2026-10-02T14:31:59"
+  },
+  "597a8d06a61ac1b04ab23fc7": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "11be889e3235f5fbb423142d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "00e47680f8e0d6fe4905c3b7": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "a29a5d31b5e0d7fed2c53e52": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "2a1bc1ae97a4523813ed0167": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:55",
+    "last_seen": "2026-10-02T14:31:55"
+  },
+  "6c6876c588605ce31770f0f6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "d40e2c0082532c66d8970d38": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "8c053f67814fa15ea27d05f4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "reels.frkn.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:21",
+    "last_seen": "2026-10-02T14:32:21"
+  },
+  "220b9bac9de409b9fb32aff5": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "reels.frkn.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:21",
+    "last_seen": "2026-10-02T14:32:21"
+  },
+  "b6a6db73e24992a9cac0004b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "6ff22f68fb67935bb5701ef6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "57039a7e2fbdbb6f75bbb0a1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "827b0bcf430438489593ce14": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "6588f6ef05bcbfe72e952acb": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "77aac7b47f382b0e80ebd28a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "da2bfc21ccbd9f3e3029bbb8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "527f7e08a5511312bb75522d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "reels.frkn.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:21",
+    "last_seen": "2026-10-02T14:32:21"
+  },
+  "4ae3c88546dea6ff5b0435e5": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "66fc28de1bad1750d2b92cc7": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "ee61f75fa38c4205e79f3891": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:51",
+    "last_seen": "2026-10-02T14:31:51"
+  },
+  "60e9401d2276447dc3580f60": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "reels.frkn.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:21",
+    "last_seen": "2026-10-02T14:32:21"
+  },
+  "2983a3c7fdb6d476fcb87484": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "reels.frkn.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:15",
+    "last_seen": "2026-10-02T14:32:15"
+  },
+  "4b6805f13870f9a232ffcb38": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:00",
+    "last_seen": "2026-10-02T14:32:00"
+  },
+  "f46e8154bc5bb389e564e4b8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "09dd6f7183218eed68fa5bb5": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:52",
+    "last_seen": "2026-10-02T14:32:52"
+  },
+  "38e69acb9b1cf5fa01e7a715": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:33:03",
+    "last_seen": "2026-10-02T14:33:03"
+  },
+  "4d695dd4d206a8237b997789": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:52",
+    "last_seen": "2026-10-02T14:32:52"
+  },
+  "4edf2a1daaa4dfecd19d3b68": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:33:04",
+    "last_seen": "2026-10-02T14:33:04"
+  },
+  "453431b0e908fc32e5f24ffe": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:33:06",
+    "last_seen": "2026-10-02T14:33:06"
+  },
+  "735e188df90d9180f7be6d9e": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "1c9211a4681134c4f42b9fa5": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "ad8d1de87a2ea64cef385868": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:44",
+    "last_seen": "2026-10-02T14:32:44"
+  },
+  "ba1f5bc0c0dd7ac86e8b2206": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:52",
+    "last_seen": "2026-10-02T14:32:52"
+  },
+  "849e8c03ec1bd30e8993f954": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:52",
+    "last_seen": "2026-10-02T14:32:52"
+  },
+  "497bd26f6d0a37036abe7b0d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:33:14",
+    "last_seen": "2026-10-02T14:33:14"
+  },
+  "9b0efc5e4b9c096433ab3253": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "0cdfd542605e8fd5797f33da": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:32",
+    "last_seen": "2026-10-02T14:32:32"
+  },
+  "2df08e6e6063e6c95989ea7d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:35:48",
+    "last_seen": "2026-10-02T14:35:48"
+  },
+  "27d103bd991bed9029120c39": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "7d602d7823ab7fe5a47fe1cd": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:33:04",
+    "last_seen": "2026-10-02T14:33:04"
+  },
+  "9ad426f1733a7f3b1540619d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:21",
+    "last_seen": "2026-10-02T14:32:21"
+  },
+  "df834f80b569bf1ed46024d2": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-02T14:32:52",
+    "last_seen": "2026-10-02T14:32:52"
+  },
+  "d50a601af703cd9915650385": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:38",
+    "last_seen": "2026-10-02T14:36:38"
+  },
+  "9fad19ac418b7e37b470d3b4": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "de1.meshbeat.online",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "2937ff6c28e2f856164148a1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:39",
+    "last_seen": "2026-10-02T14:36:39"
+  },
+  "a99751d58914f34fec9e5570": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "7ef27448c90ff2fd237a94a4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "buylite.music.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:37",
+    "last_seen": "2026-10-02T14:36:37"
+  },
+  "3f572bfac535dfd4db07921c": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "de1.meshbeat.online",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:29",
+    "last_seen": "2026-10-02T14:36:29"
+  },
+  "6edfb95a8a02ac8b9bc7f4a7": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:37",
+    "last_seen": "2026-10-02T14:36:37"
+  },
+  "3951595579c847f0e5c82849": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "de1.meshbeat.online",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:28",
+    "last_seen": "2026-10-02T14:36:28"
+  },
+  "5d81c858982d03d7b9ef1d99": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:39",
+    "last_seen": "2026-10-02T14:36:39"
+  },
+  "9cab4adac9eb4617254ffc6b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:37",
+    "last_seen": "2026-10-02T14:36:37"
+  },
+  "faf8a5d4120c7647b2edada6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:37",
+    "last_seen": "2026-10-02T14:36:37"
+  },
+  "083b053d175d8ca57141e1eb": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:36",
+    "last_seen": "2026-10-02T14:36:36"
+  },
+  "df2a999c272e4acde36dfd8a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:40",
+    "last_seen": "2026-10-02T14:36:40"
+  },
+  "7fc5186dc516b9997315bd9b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:40",
+    "last_seen": "2026-10-02T14:36:40"
+  },
+  "d706dbc08c6a8efec00d4dc1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:37",
+    "last_seen": "2026-10-02T14:36:37"
+  },
+  "d92f765853cacb51405dd704": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "de1.meshbeat.online",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:27",
+    "last_seen": "2026-10-02T14:36:27"
+  },
+  "c709b4f8e111c90f7617221a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "buylite.music.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:37",
+    "last_seen": "2026-10-02T14:36:37"
+  },
+  "a51472bc7e54a4c029bb3ef2": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "de1.meshbeat.online",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:28",
+    "last_seen": "2026-10-02T14:36:28"
+  },
+  "cda10ea925bb8afabce5c23f": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "buylite.music.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:45",
+    "last_seen": "2026-10-02T14:36:45"
+  },
+  "75dcb334a8fa1471cebd9cfc": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:46",
+    "last_seen": "2026-10-02T14:36:46"
+  },
+  "92f18d5426144edc260e92ba": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:42",
+    "last_seen": "2026-10-02T14:36:42"
+  },
+  "de8a29429f6ebddc5db9998e": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "mcde.67resserv67.info",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:41",
+    "last_seen": "2026-10-02T14:36:41"
+  },
+  "9b97a3b7e90e9b868e4e7df6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "taha2021.farshadsdrnz.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:45",
+    "last_seen": "2026-10-02T14:36:45"
+  },
+  "b688e832818c2f9ad62afd33": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:40",
+    "last_seen": "2026-10-02T14:36:40"
+  },
+  "2dbe609c87fb9f01c8aa455a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "de1.meshbeat.online",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:41",
+    "last_seen": "2026-10-02T14:36:41"
+  },
+  "1d668a58f0bad46139acf9a0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:02",
+    "last_seen": "2026-10-02T14:38:02"
+  },
+  "41611e8888c47e46bcf2d5ac": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:08",
+    "last_seen": "2026-10-02T14:37:08"
+  },
+  "573ec72753b0869a39009ef4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "still-pine-d15e.368-b2a.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:08",
+    "last_seen": "2026-10-02T14:37:08"
+  },
+  "df314c5eda0e7962528ba290": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:11",
+    "last_seen": "2026-10-02T14:37:11"
+  },
+  "176811a8ff8a13e1f6b49be8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "bg5.univesalsrv.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:49",
+    "last_seen": "2026-10-02T14:37:49"
+  },
+  "569dda473ec2ea7227c7ae4a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.ipget.net",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:09",
+    "last_seen": "2026-10-02T14:37:09"
+  },
+  "3faf42c8ae8463538c3b80f6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:32",
+    "last_seen": "2026-10-02T14:37:32"
+  },
+  "5c112fe57d4d267c6aae8c9b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "md3.univesalsrv.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:56",
+    "last_seen": "2026-10-02T14:37:56"
+  },
+  "d5f308b72d51db1f6e79e21b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "c97ec97891fa511cac96bc48": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:11",
+    "last_seen": "2026-10-02T14:37:11"
+  },
+  "5c56c2ccb6b4b2296967257d": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "sc-thenetherlands1.09vpn.com",
+    "original_sni": "sc-thenetherlands1.09vpn.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:39",
+    "last_seen": "2026-10-02T14:37:39"
+  },
+  "a54d3171a742312ba9b2df7d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:59",
+    "last_seen": "2026-10-02T14:36:59"
+  },
+  "9aac74d6ad2aa8ba3c78a37c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:22",
+    "last_seen": "2026-10-02T14:37:22"
+  },
+  "7c3b42d479769eeba903766f": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:07",
+    "last_seen": "2026-10-02T14:38:07"
+  },
+  "47433ffed3907f6fc3b964ec": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:24",
+    "last_seen": "2026-10-02T14:38:24"
+  },
+  "80fa91bd1f07a0c6bc3b8309": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "bg2.univesalsrv.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:07",
+    "last_seen": "2026-10-02T14:38:07"
+  },
+  "52780da581ff40f42cba21c0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "bobr.team",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:39:21",
+    "last_seen": "2026-10-02T14:39:21"
+  },
+  "911c82d085f04484677323bb": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ads.x5.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:39:06",
+    "last_seen": "2026-10-02T14:39:06"
+  },
+  "9d2ee5997c9425e81efb6a96": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:37",
+    "last_seen": "2026-10-02T14:37:37"
+  },
+  "d5de88b63b267602345271c1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:14",
+    "last_seen": "2026-10-02T14:37:14"
+  },
+  "01f47e0b1b119ee551b077b9": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:08",
+    "last_seen": "2026-10-02T14:38:08"
+  },
+  "635150fbb99f782b1f222612": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:12",
+    "last_seen": "2026-10-02T14:37:12"
+  },
+  "2582698b01bbd43efad7f6e4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:01",
+    "last_seen": "2026-10-02T14:37:01"
+  },
+  "5ff7e4678ceef7ccc3e417c4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:31",
+    "last_seen": "2026-10-02T14:37:31"
+  },
+  "86c5b902d4f5d6d3e4db6d75": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:55",
+    "last_seen": "2026-10-02T14:37:55"
+  },
+  "d0ec513df695f9fac2953365": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:20",
+    "last_seen": "2026-10-02T14:37:20"
+  },
+  "aa8c93edca57639ed15801ff": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "milo.rubinaz.xyz",
+    "original_sni": "milo.rubinaz.xyz",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:13",
+    "last_seen": "2026-10-02T14:37:13"
+  },
+  "854311be48c0bc40e494ffd6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "misty-hill-4b94.146-c18.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:16",
+    "last_seen": "2026-10-02T14:37:16"
+  },
+  "f8e5e4d7898b326b8aed2cef": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:22",
+    "last_seen": "2026-10-02T14:38:22"
+  },
+  "3de991a7842ff7fec250e407": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:51",
+    "last_seen": "2026-10-02T14:37:51"
+  },
+  "2a0223fa7501f73ca3eda489": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:08",
+    "last_seen": "2026-10-02T14:37:08"
+  },
+  "1f1696d26d7d9124ab2a70a6": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "uae.unixzone.us",
+    "original_sni": "uae.unixzone.us",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:46",
+    "last_seen": "2026-10-02T14:38:46"
+  },
+  "9bb8405920badd2e4ea1964e": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:07",
+    "last_seen": "2026-10-02T14:37:07"
+  },
+  "f2bd89769dfe5977ad255620": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:09",
+    "last_seen": "2026-10-02T14:37:09"
+  },
+  "ea4134c3a10ca40915d2fa0c": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "/?bia_telegram@marambashi_marambashi_marambashi_marambashi",
+    "original_sni": "/?bia_telegram@marambashi_marambashi_marambashi_marambashi",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "0ee7805d27785f988b789f0a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "bbca23edacd5a719c5bc39bd": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:12",
+    "last_seen": "2026-10-02T14:37:12"
+  },
+  "c89643f9dbd8243c09587b97": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.apple.com",
+    "original_sni": "www.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:51",
+    "last_seen": "2026-10-02T14:37:51"
+  },
+  "13af716dfceb2fa6e9af08e3": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:54",
+    "last_seen": "2026-10-02T14:36:54"
+  },
+  "376720cdb1c7f0062a88c8ad": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:58",
+    "last_seen": "2026-10-02T14:37:58"
+  },
+  "54442ba85c13016fd5f7364c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:39",
+    "last_seen": "2026-10-02T14:37:39"
+  },
+  "a0613dd91025d50acd5b3f2a": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:10",
+    "last_seen": "2026-10-02T14:38:10"
+  },
+  "10acfee7169686cad08780cc": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "e82756672c560987298bd11b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "small-cake-e99b.390-a20.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:10",
+    "last_seen": "2026-10-02T14:37:10"
+  },
+  "bd88a443464f678670dcbe65": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "8b3fffedbacb296c2fb87722": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:38",
+    "last_seen": "2026-10-02T14:37:38"
+  },
+  "f0f823795cb16345905e38f4": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:44",
+    "last_seen": "2026-10-02T14:37:44"
+  },
+  "59fa141facbaac30ec87bd67": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:24",
+    "last_seen": "2026-10-02T14:38:24"
+  },
+  "be991c46f8b5d7c1fbb71ab6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:32",
+    "last_seen": "2026-10-02T14:37:32"
+  },
+  "4f3131b6b2aeaed652aa6c2b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "anydesk.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:06",
+    "last_seen": "2026-10-02T14:37:06"
+  },
+  "adf9db47b9d765f88da6c8c0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:39",
+    "last_seen": "2026-10-02T14:37:39"
+  },
+  "d677dd64545f4b205cf681f8": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:42",
+    "last_seen": "2026-10-02T14:37:42"
+  },
+  "66fd0ea69c9155ce706c4173": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:48",
+    "last_seen": "2026-10-02T14:37:48"
+  },
+  "048c02618aeafd0ccb61bbab": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:37",
+    "last_seen": "2026-10-02T14:37:37"
+  },
+  "7b212cb3f89a34459bc1d3d9": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:56",
+    "last_seen": "2026-10-02T14:37:56"
+  },
+  "bae45b08e366c97bb04180fc": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:34",
+    "last_seen": "2026-10-02T14:37:34"
+  },
+  "79beabab41eba43a27bb0ae6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "shiny-salad-e491.479.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:07",
+    "last_seen": "2026-10-02T14:37:07"
+  },
+  "48dd3a8fbf5f52fae9004fc7": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "rough-mouse-2a3a.424-e94.workers.dev",
+    "original_sni": "rough-mouse-2a3a.424-e94.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:19",
+    "last_seen": "2026-10-02T14:37:19"
+  },
+  "304693cae2170025079267ee": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:32",
+    "last_seen": "2026-10-02T14:37:32"
+  },
+  "6cd3e108c6b386be31227399": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:54",
+    "last_seen": "2026-10-02T14:36:54"
+  },
+  "4e65cc53f55d2358f0e38cb9": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:40",
+    "last_seen": "2026-10-02T14:37:40"
+  },
+  "08424a256a60474814bc2bdd": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:18",
+    "last_seen": "2026-10-02T14:37:18"
+  },
+  "ef69ce2dca3354053f1bdf76": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "mypanel.unixzone.us",
+    "original_sni": "mypanel.unixzone.us",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:34",
+    "last_seen": "2026-10-02T14:38:34"
+  },
+  "28cd91d362d594986c60426c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "md5.univesalsrv.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:46",
+    "last_seen": "2026-10-02T14:37:46"
+  },
+  "00b5356ed52a3fee5d8c451d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:47",
+    "last_seen": "2026-10-02T14:37:47"
+  },
+  "e2385197b63a16490a5c1432": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "99e25553e57647a582493b6c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:39:20",
+    "last_seen": "2026-10-02T14:39:20"
+  },
+  "a7c75a5fa62e7e019fec2d83": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:20",
+    "last_seen": "2026-10-02T14:38:20"
+  },
+  "a9c1751d16c845dbb20363e5": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "gentle-violet-ceef.497-2fe.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:04",
+    "last_seen": "2026-10-02T14:37:04"
+  },
+  "fb51689bda5a75d7255b34ef": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:22",
+    "last_seen": "2026-10-02T14:38:22"
+  },
+  "4f12342ac956b44e4d2ef0d9": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "rumulti.federal-usa.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:24",
+    "last_seen": "2026-10-02T14:37:24"
+  },
+  "617c7f8ff8d13194132a79a1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "tight-recipe-11ad.252-068.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:02",
+    "last_seen": "2026-10-02T14:37:02"
+  },
+  "fe39249a03860e1bb0c39f52": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "07100740cdb2263a7bdfe026": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "platform103.halalkhor.info",
+    "original_sni": "platform103.halalkhor.info",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:55",
+    "last_seen": "2026-10-02T14:37:55"
+  },
+  "4f093d29bc06bfa5888dd726": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "nameless-disk-194d.485.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:21",
+    "last_seen": "2026-10-02T14:37:21"
+  },
+  "ebfc1ab6bb9fd37b9db85e9d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:23",
+    "last_seen": "2026-10-02T14:37:23"
+  },
+  "ac15ed22b6f9da02106d19dc": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.goo.gl",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:38",
+    "last_seen": "2026-10-02T14:37:38"
+  },
+  "e7cab06985e28420d4f087bf": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:10",
+    "last_seen": "2026-10-02T14:38:10"
+  },
+  "06b37ac4ca35cbe668294ada": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:31:49",
+    "last_seen": "2026-10-02T14:31:49"
+  },
+  "f11fee548771fb5d50dabeee": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "sc-thenetherlands1.09vpn.com",
+    "original_sni": "sc-thenetherlands1.09vpn.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:55",
+    "last_seen": "2026-10-02T14:37:55"
+  },
+  "4a8da63cffa2c897fc048679": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:12",
+    "last_seen": "2026-10-02T14:37:12"
+  },
+  "d266922d77e09624d5b2c9e5": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:49",
+    "last_seen": "2026-10-02T14:37:49"
+  },
+  "c18471929dd42193275e070d": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "85.17.145.65",
+    "original_sni": "85.17.145.65",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:51",
+    "last_seen": "2026-10-02T14:37:51"
+  },
+  "df49f2fb0a5dbd8066b13bc8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "lucky-field-0220.191-de2.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:39:05",
+    "last_seen": "2026-10-02T14:39:05"
+  },
+  "efdf5f3f9b0210bdafccd318": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:49",
+    "last_seen": "2026-10-02T14:37:49"
+  },
+  "ee47c5ab9e9f6efe8c3deb09": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:19",
+    "last_seen": "2026-10-02T14:37:19"
+  },
+  "83ffa20eaae54dae4760df86": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "ru-c2d937931e.sishka.network",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:51",
+    "last_seen": "2026-10-02T14:38:51"
+  },
+  "fc34385a390c80c307ccf2bb": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "bg4.univesalsrv.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:04",
+    "last_seen": "2026-10-02T14:38:04"
+  },
+  "0cee70b812e35a8a2703d1b2": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:49",
+    "last_seen": "2026-10-02T14:37:49"
+  },
+  "679e7ce6f92de61b4e0c173a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:42",
+    "last_seen": "2026-10-02T14:37:42"
+  },
+  "d3249d404d0c8ef852469fb0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:06",
+    "last_seen": "2026-10-02T14:37:06"
+  },
+  "572df3505cacbb8fccded959": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "bitter-morning-b4e3.283.workers.dev",
+    "original_sni": "bitter-morning-b4e3.283.workers.dev",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:36:59",
+    "last_seen": "2026-10-02T14:36:59"
+  },
+  "4d5b262fca241968ed0228fd": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "free.sahanwickramasinghe.me",
+    "original_sni": "free.sahanwickramasinghe.me",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:37:21",
+    "last_seen": "2026-10-02T14:37:21"
+  },
+  "98211a67b8a079825e46d614": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:15",
+    "last_seen": "2026-10-02T14:38:15"
+  },
+  "2a4dc8ae547ac6706a8c5f40": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:12",
+    "last_seen": "2026-10-02T14:38:12"
+  },
+  "2df9d6b7652b0bfdf9f5d181": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:05",
+    "last_seen": "2026-10-02T14:38:05"
+  },
+  "1f29ffed7e0e48f984eece21": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "pl.srv.vbuste-bot.com",
+    "original_sni": "pl.srv.vbuste-bot.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-02T14:38:15",
+    "last_seen": "2026-10-02T14:38:15"
   }
 }
