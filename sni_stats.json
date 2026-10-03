@@ -1,106 +1,106 @@
 {
   "web.max.ru": {
-    "attempts": 947,
+    "attempts": 958,
     "success": 0
   },
   "vk.com": {
-    "attempts": 1994,
+    "attempts": 2022,
     "success": 94
   },
   "rutube.ru": {
-    "attempts": 1918,
+    "attempts": 1943,
     "success": 8
   },
   "mail.ru": {
-    "attempts": 1994,
+    "attempts": 2018,
     "success": 90
   },
   "ok.ru": {
-    "attempts": 1971,
+    "attempts": 1998,
     "success": 73
   },
   "yandex.ru": {
-    "attempts": 1996,
+    "attempts": 2022,
     "success": 99
   },
   "dzen.ru": {
-    "attempts": 1913,
+    "attempts": 1936,
     "success": 9
   },
   "gosuslugi.ru": {
-    "attempts": 1863,
+    "attempts": 1890,
     "success": 2
   },
   "ozon.ru": {
-    "attempts": 2009,
+    "attempts": 2034,
     "success": 108
   },
   "wildberries.ru": {
-    "attempts": 1985,
+    "attempts": 2009,
     "success": 86
   },
   "kinopoisk.ru": {
-    "attempts": 1899,
+    "attempts": 1924,
     "success": 5
   },
   "yandex.by": {
-    "attempts": 947,
+    "attempts": 958,
     "success": 0
   },
   "yandex.kz": {
-    "attempts": 961,
+    "attempts": 969,
     "success": 0
   },
   "telegram.org": {
-    "attempts": 945,
+    "attempts": 955,
     "success": 0
   },
   "cdn.x5.ru": {
-    "attempts": 1414,
+    "attempts": 1439,
     "success": 1
   },
   "storage.yandex.net": {
-    "attempts": 1916,
+    "attempts": 1940,
     "success": 16
   },
   "api-maps.yandex.ru": {
-    "attempts": 2159,
+    "attempts": 2182,
     "success": 268
   },
   "avatars.mds.yandex.net": {
-    "attempts": 949,
+    "attempts": 966,
     "success": 0
   },
   "sberbank.ru": {
-    "attempts": 961,
+    "attempts": 974,
     "success": 0
   },
   "tbank.ru": {
-    "attempts": 1416,
+    "attempts": 1434,
     "success": 1
   },
   "avito.ru": {
-    "attempts": 1411,
+    "attempts": 1439,
     "success": 1
   },
   "hh.ru": {
-    "attempts": 1422,
+    "attempts": 1438,
     "success": 1
   },
   "rambler.ru": {
-    "attempts": 940,
+    "attempts": 959,
     "success": 0
   },
   "lenta.ru": {
-    "attempts": 944,
+    "attempts": 957,
     "success": 0
   },
   "ria.ru": {
-    "attempts": 947,
+    "attempts": 958,
     "success": 0
   },
   "tass.ru": {
-    "attempts": 949,
+    "attempts": 959,
     "success": 0
   }
 }

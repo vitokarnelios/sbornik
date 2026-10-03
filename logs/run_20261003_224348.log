@@ -1,0 +1,68 @@
+2026-10-03 22:43:48,317 | INFO | 📊 Загружена статистика SNI: 26 доменов
+2026-10-03 22:43:48,332 | INFO | 📊 Загружена статистика сервисов: 6 сайтов
+2026-10-03 22:43:48,332 | INFO | === SING-BOX STATUS ===
+2026-10-03 22:43:48,377 | INFO | sing-box version 1.14.2
+
+Environment: go1.26.8 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_cloudflared,with_naive_outbound,with_usbip,with_openvpn,with_openconnect,badlinkname,tfogo_checklinkname0,with_musl
+Revision: af6e64c3b69e6132ebaee0e1a3d24e93903f6709
+CGO: enabled
+2026-10-03 22:43:48,377 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-10-03 22:43:48,415 | INFO | Loaded 59 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-03 22:43:48,444 | INFO | Loaded 0 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-03 22:43:48,473 | INFO | Loaded 13 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-03 22:43:48,499 | INFO | Loaded 8 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-03 22:43:48,528 | INFO | Loaded 61 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-03 22:43:48,609 | INFO | Loaded 155 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLES...
+2026-10-03 22:43:48,688 | INFO | Loaded 147 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLES...
+2026-10-03 22:43:48,781 | INFO | Loaded 27 lines from https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt...
+2026-10-03 22:43:48,781 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-10-03 22:43:48,782 | INFO | Unique VLESS configs: 236
+2026-10-03 22:43:48,810 | INFO | Archive updated: 10000 nodes (limit 10000)
+2026-10-03 22:43:48,812 | INFO | 
+--- STEP 3: LIVE CHECK (236 nodes, threads: 40) ---
+2026-10-03 22:45:25,619 | INFO | ⏱️ Время проверки: 96.8 сек
+2026-10-03 22:45:25,619 | INFO | 
+--- RESULT: Found 103 live nodes ---
+2026-10-03 22:45:25,619 | INFO | After dedup: 103
+2026-10-03 22:45:25,630 | INFO | alive_archive.txt updated: 5000 nodes (limit 5000)
+2026-10-03 22:45:25,631 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt
+2026-10-03 22:45:25,631 | INFO | 
+--- STATS BY PROTOCOL ---
+2026-10-03 22:45:25,631 | INFO | reality: 75
+2026-10-03 22:45:25,631 | INFO | tls: 3
+2026-10-03 22:45:25,631 | INFO | ws: 24
+2026-10-03 22:45:25,631 | INFO | other: 1
+2026-10-03 22:45:25,631 | INFO | 
+--- TEST SITE STATS ---
+2026-10-03 22:45:25,631 | INFO | https://telegram.org: 1072/30095 успешных (3.6%)
+2026-10-03 22:45:25,631 | INFO | https://www.instagram.com: 1095/30052 успешных (3.6%)
+2026-10-03 22:45:25,631 | INFO | https://www.youtube.com: 1091/30006 успешных (3.6%)
+2026-10-03 22:45:25,631 | INFO | https://chatgpt.com: 891/29952 успешных (3.0%)
+2026-10-03 22:45:25,631 | INFO | https://gemini.google.com: 899/29886 успешных (3.0%)
+2026-10-03 22:45:25,631 | INFO | https://www.google.com: 993/29823 успешных (3.3%)
+2026-10-03 22:45:25,632 | INFO | 💾 Статистика сервисов сохранена
+2026-10-03 22:45:25,632 | INFO | 💾 Статистика источников сохранена: source_stats.json
+2026-10-03 22:45:25,678 | INFO | 💾 Статистика нод сохранена: node_stats.json
+2026-10-03 22:45:25,682 | INFO | 💾 Связь SNI→сервисы сохранена: sni_service_stats.json
+2026-10-03 22:45:25,682 | INFO | 
+--- TOP SNI STATS ---
+2026-10-03 22:45:25,682 | INFO | api-maps.yandex.ru: 268/2182 успешных (12.3%)
+2026-10-03 22:45:25,683 | INFO | ozon.ru: 108/2034 успешных (5.3%)
+2026-10-03 22:45:25,683 | INFO | yandex.ru: 99/2022 успешных (4.9%)
+2026-10-03 22:45:25,683 | INFO | vk.com: 94/2022 успешных (4.6%)
+2026-10-03 22:45:25,683 | INFO | mail.ru: 90/2018 успешных (4.5%)
+2026-10-03 22:45:25,683 | INFO | wildberries.ru: 86/2009 успешных (4.3%)
+2026-10-03 22:45:25,683 | INFO | ok.ru: 73/1998 успешных (3.7%)
+2026-10-03 22:45:25,683 | INFO | storage.yandex.net: 16/1940 успешных (0.8%)
+2026-10-03 22:45:25,683 | INFO | dzen.ru: 9/1936 успешных (0.5%)
+2026-10-03 22:45:25,683 | INFO | rutube.ru: 8/1943 успешных (0.4%)
+2026-10-03 22:45:25,683 | INFO | kinopoisk.ru: 5/1924 успешных (0.3%)
+2026-10-03 22:45:25,683 | INFO | gosuslugi.ru: 2/1890 успешных (0.1%)
+2026-10-03 22:45:25,683 | INFO | cdn.x5.ru: 1/1439 успешных (0.1%)
+2026-10-03 22:45:25,683 | INFO | avito.ru: 1/1439 успешных (0.1%)
+2026-10-03 22:45:25,683 | INFO | hh.ru: 1/1438 успешных (0.1%)
+2026-10-03 22:45:25,684 | INFO | 💾 Статистика SNI сохранена
+2026-10-03 22:45:25,684 | INFO | 💾 Статистика запуска сохранена: run_stats.json
