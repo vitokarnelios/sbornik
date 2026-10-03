@@ -9212,12 +9212,12 @@
     "last_seen": "2026-09-30T14:46:59"
   },
   "601a8466d9689618a38d394a": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -9226,7 +9226,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-09-30T14:46:54",
-    "last_seen": "2026-09-30T14:46:54"
+    "last_seen": "2026-10-03T19:08:13"
   },
   "215c31ee6bc999b27e49887c": {
     "attempts": 1,
@@ -21702,11 +21702,11 @@
     "last_seen": ""
   },
   "363943ded031066759e0fca1": {
-    "attempts": 2,
+    "attempts": 3,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 2,
+    "dead": 3,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -21716,7 +21716,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-02T20:35:57",
-    "last_seen": "2026-10-03T13:12:54"
+    "last_seen": "2026-10-03T19:08:13"
   },
   "fb398690515f1ba82ce618b4": {
     "attempts": 0,
@@ -39779,9 +39779,9 @@
     "last_seen": "2026-10-02T14:37:47"
   },
   "e2385197b63a16490a5c1432": {
-    "attempts": 3,
-    "live": 3,
-    "original_live": 3,
+    "attempts": 4,
+    "live": 4,
+    "original_live": 4,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -39793,7 +39793,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-02T14:31:49",
-    "last_seen": "2026-10-03T04:18:22"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "99e25553e57647a582493b6c": {
     "attempts": 1,
@@ -39915,9 +39915,9 @@
     "last_seen": "2026-10-02T14:31:49"
   },
   "07100740cdb2263a7bdfe026": {
-    "attempts": 3,
-    "live": 3,
-    "original_live": 3,
+    "attempts": 4,
+    "live": 4,
+    "original_live": 4,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -39929,7 +39929,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-02T14:37:55",
-    "last_seen": "2026-10-03T13:08:11"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "4f093d29bc06bfa5888dd726": {
     "attempts": 1,
@@ -45282,22 +45282,22 @@
     "last_seen": ""
   },
   "dc6253bf53aaeb71e0ad7276": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "pol4.o4ka-internet.com",
     "original_sni": "pol4.o4ka-internet.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:08:35",
-    "last_seen": "2026-10-03T13:08:35"
+    "last_seen": "2026-10-03T19:04:23"
   },
   "229bcb84fddf0ca025ba97fb": {
     "attempts": 0,
@@ -49001,9 +49001,9 @@
     "last_seen": ""
   },
   "5b986a2d274bac87a24e9a48": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -49015,7 +49015,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-03T13:12:36",
-    "last_seen": "2026-10-03T13:12:36"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "bf974776f3d9adf90089cb31": {
     "attempts": 0,
@@ -49052,12 +49052,12 @@
     "last_seen": ""
   },
   "e6bd189b99e1ee30e3517040": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -49066,7 +49066,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-03T13:12:46",
-    "last_seen": "2026-10-03T13:12:46"
+    "last_seen": "2026-10-03T19:08:04"
   },
   "a1eea34e8c8d974ddc99b715": {
     "attempts": 0,
@@ -49086,12 +49086,12 @@
     "last_seen": ""
   },
   "f0fb47bbcd4652aabba23de9": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -49100,7 +49100,7 @@
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
     "first_seen": "2026-10-03T13:12:44",
-    "last_seen": "2026-10-03T13:12:44"
+    "last_seen": "2026-10-03T19:08:02"
   },
   "88291d8da4a05b58842de53b": {
     "attempts": 0,
@@ -49205,21 +49205,21 @@
     "last_seen": ""
   },
   "50cf9cf87ab104e9bb06d7b0": {
-    "attempts": 0,
+    "attempts": 1,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "discovered",
+    "last_status": "dead",
     "last_sni": "",
     "original_sni": "dl.google.com",
     "sources": [
       "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
     ],
-    "first_seen": "",
-    "last_seen": ""
+    "first_seen": "2026-10-03T19:08:07",
+    "last_seen": "2026-10-03T19:08:07"
   },
   "2f3c59e3b8e793d31bf8c8b0": {
     "attempts": 1,
@@ -49833,11 +49833,11 @@
     "last_seen": "2026-10-03T13:10:24"
   },
   "34b6b552fa23b27b4c6c2a0d": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -49847,7 +49847,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:10:44",
-    "last_seen": "2026-10-03T13:10:44"
+    "last_seen": "2026-10-03T19:06:26"
   },
   "55f438df1db8eba2b854ba3e": {
     "attempts": 1,
@@ -49868,11 +49868,11 @@
     "last_seen": "2026-10-03T13:09:51"
   },
   "19021d9bbb43b189ab95028d": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -49883,24 +49883,25 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:01",
-    "last_seen": "2026-10-03T13:11:01"
+    "last_seen": "2026-10-03T19:07:09"
   },
   "0108be5269e3b7dca425ae1f": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "de-fra-7.blook.network",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:02",
-    "last_seen": "2026-10-03T13:11:02"
+    "last_seen": "2026-10-03T19:07:10"
   },
   "97bda8045aaaa1492062be95": {
     "attempts": 1,
@@ -49973,12 +49974,12 @@
     "last_seen": "2026-10-03T13:10:26"
   },
   "bd044668deb170f5875769f6": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -49988,7 +49989,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:08:43",
-    "last_seen": "2026-10-03T13:08:43"
+    "last_seen": "2026-10-03T19:04:39"
   },
   "9b5b7bb31274140341ff788d": {
     "attempts": 1,
@@ -50115,12 +50116,12 @@
     "last_seen": "2026-10-03T13:08:25"
   },
   "7574bba7ad91f0f6eb353c96": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -50130,7 +50131,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:08:43",
-    "last_seen": "2026-10-03T13:08:43"
+    "last_seen": "2026-10-03T19:04:39"
   },
   "288c9c6280e1cfef1c80ec0a": {
     "attempts": 1,
@@ -50169,9 +50170,9 @@
     "last_seen": "2026-10-03T13:10:08"
   },
   "fb18ae443a00acc4522f911c": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -50184,7 +50185,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:10",
-    "last_seen": "2026-10-03T13:10:10"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "85d3428eb362711c75a5fc9f": {
     "attempts": 1,
@@ -50292,9 +50293,9 @@
     "last_seen": "2026-10-03T13:08:40"
   },
   "4f62d043313caf136593f1ec": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -50307,7 +50308,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:12",
-    "last_seen": "2026-10-03T13:10:12"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "aee2033be04ae52a171c6952": {
     "attempts": 1,
@@ -50554,9 +50555,9 @@
     "last_seen": "2026-10-03T13:09:21"
   },
   "b019294456463f82e63a3e15": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -50569,7 +50570,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:47",
-    "last_seen": "2026-10-03T13:10:47"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "713fe3cf89bec5807bc37068": {
     "attempts": 1,
@@ -50607,11 +50608,11 @@
     "last_seen": "2026-10-03T13:08:34"
   },
   "0b6eaac5ecde3a9969c947b3": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -50622,7 +50623,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:03",
-    "last_seen": "2026-10-03T13:11:03"
+    "last_seen": "2026-10-03T19:07:11"
   },
   "884647c670798bbe8a9ac8d4": {
     "attempts": 1,
@@ -50660,9 +50661,9 @@
     "last_seen": "2026-10-03T13:08:12"
   },
   "f039151eff052fa296625cf2": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -50671,10 +50672,11 @@
     "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:47",
-    "last_seen": "2026-10-03T13:10:47"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "a47448dba832ad7dd0128a6a": {
     "attempts": 1,
@@ -50869,9 +50871,9 @@
     "last_seen": "2026-10-03T13:08:43"
   },
   "775caa47e01853f7e6e2d255": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -50884,7 +50886,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:14",
-    "last_seen": "2026-10-03T13:10:14"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "3c492c55d858ff57613ea409": {
     "attempts": 1,
@@ -51011,11 +51013,11 @@
     "last_seen": "2026-10-03T13:08:12"
   },
   "19f2eea3c287ffb345eac0b5": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -51026,7 +51028,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:44",
-    "last_seen": "2026-10-03T13:10:44"
+    "last_seen": "2026-10-03T19:07:46"
   },
   "f23b29681eec993cfb279bac": {
     "attempts": 1,
@@ -51099,11 +51101,11 @@
     "last_seen": "2026-10-03T13:08:12"
   },
   "39b80d4d06276103503c546a": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -51114,24 +51116,24 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:09:09",
-    "last_seen": "2026-10-03T13:09:09"
+    "last_seen": "2026-10-03T19:05:36"
   },
   "cc0d4291781ad47e43fe1290": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:10:46",
-    "last_seen": "2026-10-03T13:10:46"
+    "last_seen": "2026-10-03T19:06:26"
   },
   "98ea1f43de4b782816af4b30": {
     "attempts": 1,
@@ -51309,11 +51311,11 @@
     "last_seen": "2026-10-03T13:08:15"
   },
   "d7c46dd0b5e17c3928ce4250": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -51323,7 +51325,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:08:59",
-    "last_seen": "2026-10-03T13:08:59"
+    "last_seen": "2026-10-03T19:05:30"
   },
   "551247dffb5cc580cc541ad4": {
     "attempts": 1,
@@ -51379,12 +51381,12 @@
     "last_seen": "2026-10-03T13:10:06"
   },
   "435b5796b02e02e7235a83af": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -51393,7 +51395,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:08:36",
-    "last_seen": "2026-10-03T13:08:36"
+    "last_seen": "2026-10-03T19:04:23"
   },
   "e04347f252d3a60a1b5e45b8": {
     "attempts": 1,
@@ -51413,11 +51415,11 @@
     "last_seen": "2026-10-03T13:08:12"
   },
   "416c13c38d63f1714f73156b": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -51428,7 +51430,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:09:11",
-    "last_seen": "2026-10-03T13:09:11"
+    "last_seen": "2026-10-03T19:05:39"
   },
   "a95b5dbd8c8cf0c15b19ab6a": {
     "attempts": 1,
@@ -51448,12 +51450,12 @@
     "last_seen": "2026-10-03T13:11:06"
   },
   "368fae7f9c5e3151e055cf38": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -51463,7 +51465,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:08:43",
-    "last_seen": "2026-10-03T13:08:43"
+    "last_seen": "2026-10-03T19:07:27"
   },
   "cd123031dd41ffff337c3b9f": {
     "attempts": 1,
@@ -51675,9 +51677,9 @@
     "last_seen": "2026-10-03T13:08:29"
   },
   "7f477a31a1f80a46e7ac4c4c": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -51686,10 +51688,11 @@
     "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:11",
-    "last_seen": "2026-10-03T13:10:11"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "b5190fe012b28dbfd52f49bc": {
     "attempts": 1,
@@ -51799,11 +51802,11 @@
     "last_seen": "2026-10-03T13:08:12"
   },
   "b43c91e35f4956102fbeefb7": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -51814,14 +51817,14 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:01",
-    "last_seen": "2026-10-03T13:11:01"
+    "last_seen": "2026-10-03T19:07:10"
   },
   "d6335e29a14043f0919d3758": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -51832,7 +51835,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:09:15",
-    "last_seen": "2026-10-03T13:09:15"
+    "last_seen": "2026-10-03T19:05:42"
   },
   "07ba26f8c5103076c259da96": {
     "attempts": 1,
@@ -51852,9 +51855,9 @@
     "last_seen": "2026-10-03T13:08:24"
   },
   "5a9e4a5d1029cb56d0a7d6a7": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -51866,7 +51869,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:10:49",
-    "last_seen": "2026-10-03T13:10:49"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "7bd829ed4bb56bc0550ab877": {
     "attempts": 1,
@@ -51957,9 +51960,9 @@
     "last_seen": "2026-10-03T13:08:33"
   },
   "a05bedc1117629db565a0536": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -51968,27 +51971,28 @@
     "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:47",
-    "last_seen": "2026-10-03T13:10:47"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "b4d2ce38ef90c42a12dfe678": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "pol4.o4ka-internet.com",
     "original_sni": "pol4.o4ka-internet.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:08:35",
-    "last_seen": "2026-10-03T13:08:35"
+    "last_seen": "2026-10-03T19:04:23"
   },
   "689710fcfd764a4f0df7ac2e": {
     "attempts": 1,
@@ -52062,9 +52066,9 @@
     "last_seen": "2026-10-03T13:10:19"
   },
   "332490b94dd0db89674b73e7": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -52073,10 +52077,11 @@
     "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:10:41",
-    "last_seen": "2026-10-03T13:10:41"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "90c85d29c5b09325661057e2": {
     "attempts": 1,
@@ -52201,21 +52206,22 @@
     "last_seen": "2026-10-03T13:11:16"
   },
   "98e003a681b13066e0e307a1": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "d3-nl1.cloud-cdn.xyz",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:11:52",
-    "last_seen": "2026-10-03T13:11:52"
+    "last_seen": "2026-10-03T19:05:42"
   },
   "759a6b32cfffa52da1c38687": {
     "attempts": 1,
@@ -52320,21 +52326,22 @@
     "last_seen": "2026-10-03T13:11:06"
   },
   "dee01cae419f9ab89329b3c1": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "d3-nl1.cloud-cdn.xyz",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:11:57",
-    "last_seen": "2026-10-03T13:11:57"
+    "last_seen": "2026-10-03T19:05:45"
   },
   "be55e967309cfe3954805ec3": {
     "attempts": 1,
@@ -52354,9 +52361,9 @@
     "last_seen": "2026-10-03T13:12:03"
   },
   "ab370c834852f0103f34c6d9": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -52365,27 +52372,29 @@
     "last_sni": "kaneki.cfd",
     "original_sni": "kaneki.cfd",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:12:27",
-    "last_seen": "2026-10-03T13:12:27"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "e77c16c89c39b4348833540e": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "d3-nl1.cloud-cdn.xyz",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:11:54",
-    "last_seen": "2026-10-03T13:11:54"
+    "last_seen": "2026-10-03T19:05:45"
   },
   "2c80e7cbb69ba00747dc0aed": {
     "attempts": 1,
@@ -52405,9 +52414,9 @@
     "last_seen": "2026-10-03T13:11:42"
   },
   "71c921840c933c382a7a4b1a": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -52416,10 +52425,11 @@
     "last_sni": "kaneki.cfd",
     "original_sni": "kaneki.cfd",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:12:30",
-    "last_seen": "2026-10-03T13:12:30"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "93e71ed2341626125d189632": {
     "attempts": 1,
@@ -52439,12 +52449,12 @@
     "last_seen": "2026-10-03T13:12:29"
   },
   "49fe5622bc0b880557a8f30e": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
-    "mutation_attempts": 20,
+    "dead": 2,
+    "mutation_attempts": 40,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
@@ -52453,7 +52463,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:38",
-    "last_seen": "2026-10-03T13:11:38"
+    "last_seen": "2026-10-03T19:07:16"
   },
   "18c16dc67e1e7eca1ae83976": {
     "attempts": 1,
@@ -52473,26 +52483,27 @@
     "last_seen": "2026-10-03T13:12:22"
   },
   "e46aa8ca6edab3008bf3c1ad": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:12:21",
-    "last_seen": "2026-10-03T13:12:21"
+    "last_seen": "2026-10-03T19:06:29"
   },
   "739f58c16e298842ecf907e9": {
-    "attempts": 1,
-    "live": 1,
-    "original_live": 1,
+    "attempts": 2,
+    "live": 2,
+    "original_live": 2,
     "mutated_live": 0,
     "dead": 0,
     "mutation_attempts": 0,
@@ -52501,10 +52512,11 @@
     "last_sni": "kaneki.cfd",
     "original_sni": "kaneki.cfd",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:12:30",
-    "last_seen": "2026-10-03T13:12:30"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "14ac3717489fc48cbd03da71": {
     "attempts": 1,
@@ -52779,11 +52791,11 @@
     "last_seen": "2026-10-03T13:12:16"
   },
   "8dbe5354599f4b83b74ccaee": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -52793,7 +52805,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:47",
-    "last_seen": "2026-10-03T13:11:47"
+    "last_seen": "2026-10-03T19:07:31"
   },
   "af9c1cd2bcf4db051e9dbfea": {
     "attempts": 1,
@@ -52847,21 +52859,22 @@
     "last_seen": "2026-10-03T13:12:01"
   },
   "f5336f6191fc853ac8e56bf9": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:12:05",
-    "last_seen": "2026-10-03T13:12:05"
+    "last_seen": "2026-10-03T19:06:26"
   },
   "3691931483a70216013930d9": {
     "attempts": 1,
@@ -52881,38 +52894,39 @@
     "last_seen": "2026-10-03T13:12:13"
   },
   "5b51a05f9575bb2ab361519b": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "pol4.o4ka-internet.com",
     "original_sni": "pol4.o4ka-internet.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:40",
-    "last_seen": "2026-10-03T13:11:40"
+    "last_seen": "2026-10-03T19:07:19"
   },
   "1d9e395a79f89bb4a6d2ecb4": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
     "last_sni": "",
     "original_sni": "d3-nl1.cloud-cdn.xyz",
     "sources": [
-      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     ],
     "first_seen": "2026-10-03T13:11:53",
-    "last_seen": "2026-10-03T13:11:53"
+    "last_seen": "2026-10-03T19:05:44"
   },
   "e3ae17f6ea11a02ee63f231b": {
     "attempts": 1,
@@ -52949,11 +52963,11 @@
     "last_seen": "2026-10-03T13:12:17"
   },
   "7829d7fe4a45dc32f0e5e3bb": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 0,
     "original_live": 0,
     "mutated_live": 0,
-    "dead": 1,
+    "dead": 2,
     "mutation_attempts": 0,
     "mutation_success": 0,
     "last_status": "dead",
@@ -52963,7 +52977,7 @@
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:12:19",
-    "last_seen": "2026-10-03T13:12:19"
+    "last_seen": "2026-10-03T19:07:46"
   },
   "c93b7d5b0c9a08db5fe0de06": {
     "attempts": 1,
@@ -53000,21 +53014,21 @@
     "last_seen": "2026-10-03T13:11:06"
   },
   "a3e8b5da25e129b8d7c85fd3": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "pol4.o4ka-internet.com",
     "original_sni": "pol4.o4ka-internet.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:41",
-    "last_seen": "2026-10-03T13:11:41"
+    "last_seen": "2026-10-03T19:07:22"
   },
   "90cc6d47c3f4f17a547c6845": {
     "attempts": 1,
@@ -53034,21 +53048,21 @@
     "last_seen": "2026-10-03T13:12:30"
   },
   "c5344cbaf7fb90b788362562": {
-    "attempts": 1,
-    "live": 0,
-    "original_live": 0,
+    "attempts": 2,
+    "live": 1,
+    "original_live": 1,
     "mutated_live": 0,
     "dead": 1,
     "mutation_attempts": 0,
     "mutation_success": 0,
-    "last_status": "dead",
-    "last_sni": "",
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
     "original_sni": "v2ray.aizgl.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:12:22",
-    "last_seen": "2026-10-03T13:12:22"
+    "last_seen": "2026-10-03T19:07:48"
   },
   "ace37af3d371831bfdc9f971": {
     "attempts": 1,
@@ -53119,21 +53133,21 @@
     "last_seen": "2026-10-03T13:12:18"
   },
   "42135c1efc7da0ef2fcb549c": {
-    "attempts": 1,
+    "attempts": 2,
     "live": 1,
     "original_live": 1,
     "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
     "mutation_success": 0,
-    "last_status": "original_live",
+    "last_status": "dead",
     "last_sni": "pol4.o4ka-internet.com",
     "original_sni": "pol4.o4ka-internet.com",
     "sources": [
       "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
     ],
     "first_seen": "2026-10-03T13:11:40",
-    "last_seen": "2026-10-03T13:11:40"
+    "last_seen": "2026-10-03T19:04:09"
   },
   "5857013d843f73f258c7fd6c": {
     "attempts": 1,
@@ -53440,5 +53454,2676 @@
     ],
     "first_seen": "2026-10-03T13:12:35",
     "last_seen": "2026-10-03T13:12:35"
+  },
+  "3db2c669b6de61a972c2a5a8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "eg-cai-1.blook.rs",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "b26b6f71cd701a7e3c441542": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "eg-cai-1.blook.rs",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "1d560e48829b785124ad8498": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "1a11e7449b0e0c4777eea109": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "eg-cai-1.blook.rs",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "99eb6a6cd93d1282a0e2f098": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cloudcdn-m9-9.cdn.yandex.net",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "e99a20ef22ad6b4886d739b6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "4e4255720ceae5dbba9801da": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "3f8efdt.fi1.h1clayd.click",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "01a46923d12de5808ed9dfda": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cloudcdn-m9-9.cdn.yandex.net",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "aff3902101a6c5c598917894": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "eg-cai-1.blook.rs",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "b7d30e5a53aafa07d394872e": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "3f8efdt.fi1.h1clayd.click",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "7faa8d73e92e434a734fc9b9": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "cba065c9a63d9b98995f14a6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "eg-cai-1.blook.rs",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "fc103c9bc9cb31e79b206d85": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "3f8efdt.fi1.h1clayd.click",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "fcf972f70d797167ace8af9a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "a0b21c8f4eb98b062ffed4e2": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "3f8efdt.fi1.h1clayd.click",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "77ec23f7cfda74112dc73b72": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cloudcdn-m9-9.cdn.yandex.net",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "b6cbbf230dd484eda4b102fd": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cloudcdn-m9-9.cdn.yandex.net",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "62d1454a435494e9e789471a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "3f8efdt.fi1.h1clayd.click",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "f8b11868748d782b93c87db6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "3defbe1253b67f83ced24229": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cloudcdn-m9-9.cdn.yandex.net",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "f5068a8c8c3f259fc345df5c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "9bca400de71777cff4a96293": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "cdn.tbank.ru",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "561568544f69644e95e7df91": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:11",
+    "last_seen": "2026-10-03T19:04:11"
+  },
+  "b4dfcc1eb4eda432f415c02b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "34884c2bab5bcef01ba7c502": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "cdn.tbank.ru",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:09",
+    "last_seen": "2026-10-03T19:04:09"
+  },
+  "ee7e45781a9c79dd15ad4152": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:39",
+    "last_seen": "2026-10-03T19:04:39"
+  },
+  "ff37667f3e5246e4b80e3e25": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:22",
+    "last_seen": "2026-10-03T19:04:22"
+  },
+  "160213ee2c9629b2ac4533b0": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:31",
+    "last_seen": "2026-10-03T19:04:31"
+  },
+  "267d71b98be30562d2dd3603": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "drhvv.huinaduok.fans",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:44",
+    "last_seen": "2026-10-03T19:06:44"
+  },
+  "3afa21da3ee7aee5cb40d396": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:05",
+    "last_seen": "2026-10-03T19:07:05"
+  },
+  "dd8606936ce358f50a497b64": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "24f9d11d.ferrin.uk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:19",
+    "last_seen": "2026-10-03T19:04:19"
+  },
+  "b244cfca6b7571a5a4855389": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:07",
+    "last_seen": "2026-10-03T19:06:07"
+  },
+  "f1bd974cf92deecc75da5cda": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "news.samsung.com",
+    "original_sni": "news.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:28",
+    "last_seen": "2026-10-03T19:05:28"
+  },
+  "577b88811aa98665f8f668e5": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:48",
+    "last_seen": "2026-10-03T19:05:48"
+  },
+  "f355eaa7d82798298457bb4a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:23",
+    "last_seen": "2026-10-03T19:04:23"
+  },
+  "0fcf5c63097f1410c9293ce2": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:22",
+    "last_seen": "2026-10-03T19:04:22"
+  },
+  "fcc8bc410933f6ec5ef6b827": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:22",
+    "last_seen": "2026-10-03T19:04:22"
+  },
+  "24d3df9b02cafefa8275e5a8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:11",
+    "last_seen": "2026-10-03T19:07:11"
+  },
+  "a0bb531cfe8ca21520261d22": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "24f9d11d.ferrin.uk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:18",
+    "last_seen": "2026-10-03T19:04:18"
+  },
+  "2ef6e4175e3be233ec4622ec": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:23",
+    "last_seen": "2026-10-03T19:06:23"
+  },
+  "f5e68326179e03a9dd48fd81": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:51",
+    "last_seen": "2026-10-03T19:05:51"
+  },
+  "622517c9f1c4511fff5025c8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:11",
+    "last_seen": "2026-10-03T19:04:11"
+  },
+  "d51442d321a5038117d201c8": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:11",
+    "last_seen": "2026-10-03T19:07:11"
+  },
+  "1b07f99c1a05ea92d914c9cb": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "m.zoom.us",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:33",
+    "last_seen": "2026-10-03T19:04:33"
+  },
+  "f3cb5e53dbe5f7011ed2b5ce": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "news.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:52",
+    "last_seen": "2026-10-03T19:04:52"
+  },
+  "70c3f51312855040f30f299c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "drhvv.huinaduok.fans",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:51",
+    "last_seen": "2026-10-03T19:06:51"
+  },
+  "3af301331c9a55601e05ea4c": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "cdn.tbank.ru",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:05",
+    "last_seen": "2026-10-03T19:06:05"
+  },
+  "93e9bcaaf6a9a6bfa229cc1e": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:44",
+    "last_seen": "2026-10-03T19:06:44"
+  },
+  "bb8d9e60a439b0fd1b036568": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:59",
+    "last_seen": "2026-10-03T19:05:59"
+  },
+  "2c18eb2a5ad7b430119f175b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:42",
+    "last_seen": "2026-10-03T19:04:42"
+  },
+  "08bc43b165a3b9e58326f564": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:22",
+    "last_seen": "2026-10-03T19:04:22"
+  },
+  "02b22185a1f65e2912c4c6b1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:26",
+    "last_seen": "2026-10-03T19:04:26"
+  },
+  "abd3bdd281791a9b29ff7956": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "24f9d11d.ferrin.uk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:18",
+    "last_seen": "2026-10-03T19:04:18"
+  },
+  "7cba7648f2ddd9b6b8873b2f": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "kaneki.cfd",
+    "original_sni": "kaneki.cfd",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:54",
+    "last_seen": "2026-10-03T19:06:54"
+  },
+  "25abfc4542ba98498446162c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:11",
+    "last_seen": "2026-10-03T19:04:11"
+  },
+  "44aa4e5ea0fbf7d51f73da42": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:59",
+    "last_seen": "2026-10-03T19:05:59"
+  },
+  "b6b10ba10482ccd1b10b131f": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "net.pluse.vexava.ir",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:19",
+    "last_seen": "2026-10-03T19:04:19"
+  },
+  "5020a8dc68d008f2af8a1ae8": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:40",
+    "last_seen": "2026-10-03T19:06:40"
+  },
+  "66595dda186b5e9f111668e7": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:31",
+    "last_seen": "2026-10-03T19:06:31"
+  },
+  "ca97207566580a3c4e419c1a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:33",
+    "last_seen": "2026-10-03T19:04:33"
+  },
+  "90f532a420a39bac873b0172": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:56",
+    "last_seen": "2026-10-03T19:05:56"
+  },
+  "8ab638a5589217b9e79f80e8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:39",
+    "last_seen": "2026-10-03T19:04:39"
+  },
+  "f51ae58484fafb8d3351e7b0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "drhvv.huinaduok.fans",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:49",
+    "last_seen": "2026-10-03T19:06:49"
+  },
+  "64d6525cbe1b79cce550ef4d": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:58",
+    "last_seen": "2026-10-03T19:06:58"
+  },
+  "d1e0787be69fb1c652359d55": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:59",
+    "last_seen": "2026-10-03T19:06:59"
+  },
+  "13d2b90745ccfc730bbd61ce": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "m.zoom.us",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:36",
+    "last_seen": "2026-10-03T19:04:36"
+  },
+  "405cdc42a76ba0710bfe78db": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:59",
+    "last_seen": "2026-10-03T19:05:59"
+  },
+  "202b6b46bd63ec00a10f0a3e": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:21",
+    "last_seen": "2026-10-03T19:04:21"
+  },
+  "4fa8d781c857401f2da7c8d7": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:39",
+    "last_seen": "2026-10-03T19:06:39"
+  },
+  "b524fa10e99ae041320dcf77": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:23",
+    "last_seen": "2026-10-03T19:06:23"
+  },
+  "20858b3353fcfeb0b03065e9": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:07",
+    "last_seen": "2026-10-03T19:06:07"
+  },
+  "1d3e59217dca7ddd8572723b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:11",
+    "last_seen": "2026-10-03T19:04:11"
+  },
+  "58ca44c5bb09ec0c215bd2b6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:05",
+    "last_seen": "2026-10-03T19:06:05"
+  },
+  "93dce2026045dfac0f1c3b85": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "news.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:49",
+    "last_seen": "2026-10-03T19:04:49"
+  },
+  "9ec579cfa2635b563bc93c9f": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:04",
+    "last_seen": "2026-10-03T19:07:04"
+  },
+  "6b57010de8cabfad13866308": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:27",
+    "last_seen": "2026-10-03T19:04:27"
+  },
+  "75626810cce1c074d506e29c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:21",
+    "last_seen": "2026-10-03T19:06:21"
+  },
+  "1aad405476202484b0e4a420": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:36",
+    "last_seen": "2026-10-03T19:06:36"
+  },
+  "7771f210dac7fc60981ec3bb": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:22",
+    "last_seen": "2026-10-03T19:06:22"
+  },
+  "60a5559f5e1968e8f704efab": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:07",
+    "last_seen": "2026-10-03T19:06:07"
+  },
+  "4df44a38a739765006846fc0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:04",
+    "last_seen": "2026-10-03T19:06:04"
+  },
+  "ac875719f0821fd45e0372fe": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "kaneki.cfd",
+    "original_sni": "kaneki.cfd",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:54",
+    "last_seen": "2026-10-03T19:06:54"
+  },
+  "ea54192884521d52d257398e": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:32",
+    "last_seen": "2026-10-03T19:04:32"
+  },
+  "32d8bc84b6a16e20eb1fa32b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:37",
+    "last_seen": "2026-10-03T19:06:37"
+  },
+  "4c94f96f1966957a6dff0bac": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:48",
+    "last_seen": "2026-10-03T19:05:48"
+  },
+  "a60a0c841cba5e73a975bf44": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:30",
+    "last_seen": "2026-10-03T19:04:30"
+  },
+  "c867965cec0b5d1ea243c3ac": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:39",
+    "last_seen": "2026-10-03T19:04:39"
+  },
+  "ba5fe7ead90a94c3eb8f64c6": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:21",
+    "last_seen": "2026-10-03T19:04:21"
+  },
+  "22242907e4398f06489dd187": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:11",
+    "last_seen": "2026-10-03T19:04:11"
+  },
+  "6239776b649caaf832b7c31c": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:32",
+    "last_seen": "2026-10-03T19:06:32"
+  },
+  "0f2346a6ff08179290e14860": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "news.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:50",
+    "last_seen": "2026-10-03T19:04:50"
+  },
+  "94693d77d29ca53742872b08": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:57",
+    "last_seen": "2026-10-03T19:05:57"
+  },
+  "a7dd9514c1aba3249fd5e3d3": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:39",
+    "last_seen": "2026-10-03T19:04:39"
+  },
+  "28f2840b9b4a39895bb602bf": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:32",
+    "last_seen": "2026-10-03T19:04:32"
+  },
+  "5ce2333f0f9a1a5e144b0abf": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "cdn.tbank.ru",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:05",
+    "last_seen": "2026-10-03T19:06:05"
+  },
+  "764877214191979386340cb0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:23",
+    "last_seen": "2026-10-03T19:04:23"
+  },
+  "f72a1bbd810790b282a05708": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:19",
+    "last_seen": "2026-10-03T19:04:19"
+  },
+  "b52fc16f40c6b4e98012f921": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:44",
+    "last_seen": "2026-10-03T19:06:44"
+  },
+  "d55c8b634046af49693b9fce": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:48",
+    "last_seen": "2026-10-03T19:05:48"
+  },
+  "aa37418f2bc640effe8821e8": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:11",
+    "last_seen": "2026-10-03T19:06:11"
+  },
+  "4e6094101378cf1dbe7b6625": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:57",
+    "last_seen": "2026-10-03T19:05:57"
+  },
+  "fd2f66b0bbfdb4e9e68a2fe1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:23",
+    "last_seen": "2026-10-03T19:04:23"
+  },
+  "6ee12b8043fcc8cade566e73": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:27",
+    "last_seen": "2026-10-03T19:04:27"
+  },
+  "c3f976ccf4901a3013393435": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "pol4.o4ka-internet.com",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:25",
+    "last_seen": "2026-10-03T19:04:25"
+  },
+  "ab17e6066a7a6791582426b1": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "24f9d11d.ferrin.uk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:18",
+    "last_seen": "2026-10-03T19:04:18"
+  },
+  "9d6d91d5a43b28b77377ad76": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:44",
+    "last_seen": "2026-10-03T19:04:44"
+  },
+  "63e07bc328b45a96ec0558e4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cloud.ghostdev.lk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:36",
+    "last_seen": "2026-10-03T19:04:36"
+  },
+  "55cb43d274060528d2c56eed": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "drhvv.huinaduok.fans",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:47",
+    "last_seen": "2026-10-03T19:06:47"
+  },
+  "dd508f7a81ab7d48dff6d4b0": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:04:23",
+    "last_seen": "2026-10-03T19:04:23"
+  },
+  "234ba712f450cd367215aa56": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:05:56",
+    "last_seen": "2026-10-03T19:05:56"
+  },
+  "69a2e66eea291de655affc7b": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:06:04",
+    "last_seen": "2026-10-03T19:06:04"
+  },
+  "587ee48d88ca0e9d452204ac": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:01",
+    "last_seen": "2026-10-03T19:08:01"
+  },
+  "14152d339b0edf54ed04b331": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:45",
+    "last_seen": "2026-10-03T19:07:45"
+  },
+  "28b29c532222dd9e0722649c": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:23",
+    "last_seen": "2026-10-03T19:07:23"
+  },
+  "ffac5ecd5ad51f8ee47f0014": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "d3-nl1.cloud-cdn.xyz",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:32",
+    "last_seen": "2026-10-03T19:07:32"
+  },
+  "d57e44085d3a2eb1f204db91": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:39",
+    "last_seen": "2026-10-03T19:07:39"
+  },
+  "11445f4d35d3928d1c375847": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:12",
+    "last_seen": "2026-10-03T19:07:12"
+  },
+  "b80da6c9085b8c53d6e2e4c3": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:29",
+    "last_seen": "2026-10-03T19:07:29"
+  },
+  "fdbf4838a908a2ab935960ef": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:45",
+    "last_seen": "2026-10-03T19:07:45"
+  },
+  "6b898f448c49cc27adca421d": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:41",
+    "last_seen": "2026-10-03T19:07:41"
+  },
+  "a7dbddded48376727ca4075b": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "pol4.o4ka-internet.com",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:18",
+    "last_seen": "2026-10-03T19:07:18"
+  },
+  "328665ba6de0d50e1ee94a03": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "www.cloudflare.com",
+    "original_sni": "www.cloudflare.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:26",
+    "last_seen": "2026-10-03T19:07:26"
+  },
+  "cf954163315fb98a3109f720": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:49",
+    "last_seen": "2026-10-03T19:07:49"
+  },
+  "c845f8967f4564be4859c3ea": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "v2ray.aizgl.com",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:46",
+    "last_seen": "2026-10-03T19:07:46"
+  },
+  "e06c65113b80c1b2422907e9": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "drhvv.huinaduok.fans",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:50",
+    "last_seen": "2026-10-03T19:07:50"
+  },
+  "57a13c8877d45a6d241c4187": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "d3-nl1.cloud-cdn.xyz",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:31",
+    "last_seen": "2026-10-03T19:07:31"
+  },
+  "b3ba28a8cabe8dd512a913a0": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "news.samsung.com",
+    "original_sni": "news.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:29",
+    "last_seen": "2026-10-03T19:07:29"
+  },
+  "051c374c52889d18c3356533": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "24f9d11d.ferrin.uk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:13",
+    "last_seen": "2026-10-03T19:07:13"
+  },
+  "cd01871e6cb681892a9c676e": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:43",
+    "last_seen": "2026-10-03T19:07:43"
+  },
+  "ff2476c7c3010b8e77b27e14": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:33",
+    "last_seen": "2026-10-03T19:07:33"
+  },
+  "5e86298cbcd70191af3affaf": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "drhvv.huinaduok.fans",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:51",
+    "last_seen": "2026-10-03T19:07:51"
+  },
+  "a316c299cccce4e13a3351d9": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:15",
+    "last_seen": "2026-10-03T19:07:15"
+  },
+  "0085c88a59bbf10fda4e9cf6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "24f9d11d.ferrin.uk",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:12",
+    "last_seen": "2026-10-03T19:07:12"
+  },
+  "528414f466b07aa5bef2283d": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:14",
+    "last_seen": "2026-10-03T19:07:14"
+  },
+  "afc4bb0d7366d2a408ea0382": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:37",
+    "last_seen": "2026-10-03T19:07:37"
+  },
+  "22e439ad3d9e8499552e0bac": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.tbank.ru",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:43",
+    "last_seen": "2026-10-03T19:07:43"
+  },
+  "756831418306ab95d1b82c01": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:40",
+    "last_seen": "2026-10-03T19:07:40"
+  },
+  "1f91db24265528f27540b252": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "chubby0.failspace.top",
+    "original_sni": "chubby0.failspace.top",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:42",
+    "last_seen": "2026-10-03T19:07:42"
+  },
+  "c72726ef02fc2dfbd38db303": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:15",
+    "last_seen": "2026-10-03T19:07:15"
+  },
+  "0b8e680c186db062a7ff26b9": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "iosapps.itunes.apple.com",
+    "original_sni": "iosapps.itunes.apple.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:16",
+    "last_seen": "2026-10-03T19:07:16"
+  },
+  "6130b530c3d41af1aac09e55": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "cdn.fwqfw783rg2dad.website",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:01",
+    "last_seen": "2026-10-03T19:08:01"
+  },
+  "08e07eacda4333ef99886144": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "pol4.o4ka-internet.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:23",
+    "last_seen": "2026-10-03T19:07:23"
+  },
+  "65bdfd2d977ec1b45334bd0f": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "owkd.pashalloh.org",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:29",
+    "last_seen": "2026-10-03T19:07:29"
+  },
+  "0fb5096bcc7ef6b1ac5ec51a": {
+    "attempts": 1,
+    "live": 1,
+    "original_live": 1,
+    "mutated_live": 0,
+    "dead": 0,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "original_live",
+    "last_sni": "news.samsung.com",
+    "original_sni": "news.samsung.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:31",
+    "last_seen": "2026-10-03T19:07:31"
+  },
+  "955c0c4de7f921cf4e2aa13b": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:49",
+    "last_seen": "2026-10-03T19:07:49"
+  },
+  "81589d0985115d6000985ad7": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 0,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "v2ray.aizgl.com",
+    "sources": [
+      "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    ],
+    "first_seen": "2026-10-03T19:07:48",
+    "last_seen": "2026-10-03T19:07:48"
+  },
+  "4676738b318dc14278c624f6": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "open.spotify.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:06",
+    "last_seen": "2026-10-03T19:08:06"
+  },
+  "549afdc91fea0cf363a2d6b4": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:03",
+    "last_seen": "2026-10-03T19:08:03"
+  },
+  "f0e35f88c81a8d33014b6d35": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:04",
+    "last_seen": "2026-10-03T19:08:04"
+  },
+  "bd3a80ecbb5b6cf490598d7a": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:08",
+    "last_seen": "2026-10-03T19:08:08"
+  },
+  "8694eb0caf6a4acf32aa48cb": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:12",
+    "last_seen": "2026-10-03T19:08:12"
+  },
+  "a4a74263e8e1359a722dd226": {
+    "attempts": 1,
+    "live": 0,
+    "original_live": 0,
+    "mutated_live": 0,
+    "dead": 1,
+    "mutation_attempts": 20,
+    "mutation_success": 0,
+    "last_status": "dead",
+    "last_sni": "",
+    "original_sni": "dl.google.com",
+    "sources": [
+      "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt"
+    ],
+    "first_seen": "2026-10-03T19:08:05",
+    "last_seen": "2026-10-03T19:08:05"
   }
 }
