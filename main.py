@@ -6,8 +6,8 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - Мутация SNI удалена полностью
 - Статистика SNI удалена полностью
 - Перед запуском sing-box делает быстрый TCP pre-check
-- Живая нода = прошла проверку минимум на 3 из 5 тестовых сайтов
-- Проверяет Telegram, Instagram, YouTube, Gemini, Google
+- Живая нода = прошла проверку минимум на 2 из 3 тестовых сайтов
+- Проверяет Telegram, Instagram, YouTube
 - Проверяются ВСЕ ноды из источников (без остановки на 100 живых)
 - Один архив: archive.txt — только рабочие ноды, без дубликатов
 - В архив уходят ВСЕ живые ноды (не только 100)
@@ -18,6 +18,9 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - Мёртвые проверенные архивные ноды удаляются из архива
 - Статистика по транспортам и security: protocol_stats.json
 - Финальный итог запуска в лог + run_stats.json
+- Детализация ошибок: dead_tcp / dead_config / dead_start /
+  dead_sites / dead_parse
+- nodes_tested по источникам считается один раз на ноду
 - Потоки берут задачи из очереди
 """
 
@@ -96,7 +99,7 @@ MAX_NODES = 100
 MAX_THREADS = 40
 
 # Минимум успешных тестовых сайтов, чтобы нода считалась живой
-MIN_SITES_OK = 3
+MIN_SITES_OK = 2
 
 # Таймаут TCP pre-check (секунды)
 TCP_TIMEOUT = 2.0
@@ -115,8 +118,6 @@ TEST_URLS = [
     "https://telegram.org",
     "https://www.instagram.com",
     "https://www.youtube.com",
-    "https://gemini.google.com",
-    "https://www.google.com",
 ]
 
 
@@ -840,9 +841,12 @@ def ensure_source_bucket(source):
 
 # ========== ПРОВЕРКА ОДНОЙ НОДЫ ==========
 #
-# Возвращает (alive, ok_count):
-#   alive    = True, если ok_count >= MIN_SITES_OK
-#   ok_count = сколько тестовых сайтов ответили успешно
+# Возвращает словарь:
+#   {
+#     "alive": bool,
+#     "ok_count": int,
+#     "error": str | None,
+#   }
 #
 def check_single_uri(
     vless_uri,
@@ -852,7 +856,7 @@ def check_single_uri(
 ):
 
     if stop_event.is_set():
-        return False, 0
+        return {"alive": False, "ok_count": 0, "error": "aborted"}
 
     temp_config_path = os.path.join(
         BASE_PATH,
@@ -870,7 +874,11 @@ def check_single_uri(
     )
 
     if not config:
-        return False, 0
+        return {
+            "alive": False,
+            "ok_count": 0,
+            "error": "parse_failed"
+        }
 
     with open(
         temp_config_path,
@@ -908,12 +916,20 @@ def check_single_uri(
         for _ in range(15):
 
             if stop_event.is_set():
-                return False, 0
+                return {
+                    "alive": False,
+                    "ok_count": 0,
+                    "error": "aborted"
+                }
 
             time.sleep(0.1)
 
         if proc.poll() is not None:
-            return False, 0
+            return {
+                "alive": False,
+                "ok_count": 0,
+                "error": "start_failed"
+            }
 
         proxies = {
 
@@ -937,7 +953,7 @@ def check_single_uri(
         for url in TEST_URLS:
 
             if stop_event.is_set():
-                return False, ok_count
+                break
 
             success = False
 
@@ -983,11 +999,26 @@ def check_single_uri(
             if success:
                 ok_count += 1
 
-        return (ok_count >= MIN_SITES_OK), ok_count
+        alive = (ok_count >= MIN_SITES_OK)
+
+        if alive:
+            error = None
+        else:
+            error = "sites_failed"
+
+        return {
+            "alive": alive,
+            "ok_count": ok_count,
+            "error": error
+        }
 
     except:
 
-        pass
+        return {
+            "alive": False,
+            "ok_count": 0,
+            "error": "start_failed"
+        }
 
     finally:
 
@@ -1029,7 +1060,7 @@ def check_single_uri(
 
                     pass
 
-    return False, 0
+    return {"alive": False, "ok_count": 0, "error": "start_failed"}
 
 
 # ========== WORKER ==========
@@ -1039,7 +1070,9 @@ def worker(
     result_list,
     lock,
     node_sources_map,
-    run_stats
+    run_stats,
+    tested_node_ids,
+    tested_sources_by_node,
 ):
 
     while not stop_event.is_set():
@@ -1061,17 +1094,23 @@ def worker(
 
         result_uri = None
 
-        original_sni = extract_sni(
-            vless_uri
-        )
-
         # Классификация для protocol_stats
         transport = classify_transport(vless_uri)
         security = classify_security(vless_uri)
 
+        # Считаем ли мы эту ноду первый раз за запуск
+        nid = node_id(vless_uri)
+
         with lock:
 
             run_stats["nodes_tested"] += 1
+
+            first_time_this_node = (
+                nid not in tested_node_ids
+            )
+
+            if first_time_this_node:
+                tested_node_ids.add(nid)
 
         try:
 
@@ -1086,16 +1125,23 @@ def worker(
                     f"(порт {local_port})"
                 )
 
+                with lock:
+                    run_stats["dead_tcp"] += 1
+
             else:
 
                 # ===== ПРОВЕРКА ОРИГИНАЛЬНОЙ НОДЫ =====
 
-                is_alive, ok_count = check_single_uri(
+                res = check_single_uri(
                     vless_uri,
                     local_port,
                     SERVICE_STATS,
                     lock
                 )
+
+                is_alive = res["alive"]
+                ok_count = res["ok_count"]
+                err = res["error"]
 
                 if is_alive:
 
@@ -1118,15 +1164,27 @@ def worker(
                             True
                         )
 
-                        for src in node_sources_map.get(
-                            vless_uri,
-                            []
-                        ):
+                        if first_time_this_node:
 
-                            b = ensure_source_bucket(src)
+                            for src in node_sources_map.get(
+                                vless_uri,
+                                []
+                            ):
 
-                            b["nodes_tested"] += 1
-                            b["original_live"] += 1
+                                b = ensure_source_bucket(src)
+
+                                b["nodes_tested"] += 1
+                                b["original_live"] += 1
+
+                        else:
+
+                            for src in node_sources_map.get(
+                                vless_uri,
+                                []
+                            ):
+
+                                b = ensure_source_bucket(src)
+                                b["original_live"] += 1
 
                 else:
 
@@ -1135,6 +1193,15 @@ def worker(
                         f"Нода мертва "
                         f"(порт {local_port})"
                     )
+
+                    with lock:
+
+                        if err == "parse_failed":
+                            run_stats["dead_parse"] += 1
+                        elif err == "start_failed":
+                            run_stats["dead_start"] += 1
+                        elif err == "sites_failed":
+                            run_stats["dead_sites"] += 1
 
         except Exception as e:
 
@@ -1157,20 +1224,32 @@ def worker(
                         False
                     )
 
-                    for src in node_sources_map.get(
-                        vless_uri,
-                        []
-                    ):
+                    if first_time_this_node:
 
-                        ensure_source_bucket(src)["dead"] += 1
+                        for src in node_sources_map.get(
+                            vless_uri,
+                            []
+                        ):
+
+                            b = ensure_source_bucket(src)
+                            b["nodes_tested"] += 1
+                            b["dead"] += 1
+
+                    else:
+
+                        for src in node_sources_map.get(
+                            vless_uri,
+                            []
+                        ):
+
+                            b = ensure_source_bucket(src)
+                            b["dead"] += 1
 
             port_queue.put(
                 local_port
             )
 
         # ===== Сохраняем ЖИВУЮ НОДУ =====
-        # ВАЖНО: не останавливаемся при достижении MAX_NODES,
-        # чтобы проверить ВСЕ ноды из источников.
 
         if result_uri:
 
@@ -1300,7 +1379,6 @@ def main():
         "=== SING-BOX STATUS ==="
     )
 
-    # Сброс _last полей в protocol_stats перед запуском
     reset_protocol_last(PROTOCOL_STATS)
 
     try:
@@ -1364,6 +1442,21 @@ def main():
             0,
 
         "dead":
+            0,
+
+        "dead_tcp":
+            0,
+
+        "dead_config":
+            0,
+
+        "dead_start":
+            0,
+
+        "dead_sites":
+            0,
+
+        "dead_parse":
             0,
 
         "archive_checked":
@@ -1546,7 +1639,6 @@ def main():
 
     seen_priority = set()
 
-    # Сначала свежие живые из архива
     for node in reversed(archive_list):
 
         if (
@@ -1557,7 +1649,6 @@ def main():
             priority_order.append(node)
             seen_priority.add(node)
 
-    # Потом свежие из источников
     for node in unique_nodes:
 
         if node not in seen_priority:
@@ -1590,6 +1681,9 @@ def main():
 
     stop_event.clear()
 
+    tested_node_ids = set()
+    tested_sources_by_node = {}
+
     with ThreadPoolExecutor(
         max_workers=MAX_THREADS
     ) as executor:
@@ -1601,7 +1695,9 @@ def main():
                     result_list,
                     lock,
                     node_sources_map,
-                    run_stats
+                    run_stats,
+                    tested_node_ids,
+                    tested_sources_by_node
                 ),
             range(MAX_THREADS)
         )
@@ -1631,15 +1727,9 @@ def main():
     # =========================================
     # ОБНОВЛЕНИЕ ARCHIVE + FILL (единый блок)
     # =========================================
-    #
-    # all_alive      — ВСЕ живые ноды (источники + добранные из архива).
-    #                  Идут в архив.
-    # subscribe_nodes — первые MAX_NODES из all_alive. Идут в подписку.
 
     archive_revived_count = 0
 
-    # 1. Если живых < MAX_NODES — добираем из архива с проверкой,
-    #    ровно до MAX_NODES, дальше архив не трогаем.
     if len(all_alive) < MAX_NODES:
 
         logger.info(
@@ -1666,15 +1756,10 @@ def main():
 
             run_stats["archive_checked"] += 1
 
-            # Классификация для protocol_stats
             transport = classify_transport(node)
             security = classify_security(node)
 
             try:
-
-                # ===== Быстрый TCP pre-check =====
-                # (может быть уже пройден в ARCHIVE TCP CLEANUP,
-                # но делаем ещё раз — нода могла упасть за это время)
 
                 tcp_ok = tcp_precheck(node)
 
@@ -1699,12 +1784,15 @@ def main():
 
                 else:
 
-                    is_alive, ok_count = check_single_uri(
+                    res = check_single_uri(
                         node,
                         local_port,
                         SERVICE_STATS,
                         lock
                     )
+
+                    is_alive = res["alive"]
+                    ok_count = res["ok_count"]
 
                     if is_alive:
 
@@ -1755,17 +1843,11 @@ def main():
 
                 port_queue.put(local_port)
 
-        # 2. Новый архив = ВСЕ живые (источники + добавленные из архива)
-        #    + старые архивные, которые мы НЕ проверяли в этом запуске
-        #    (их сохраняем как есть). Мёртвых (checked_dead) выкидываем.
-
         new_archive = []
 
-        # 2.1. ВСЕ живые ноды текущего запуска — в конец (свежие)
         for node in all_alive:
             new_archive.append(node)
 
-        # 2.2. Старый архив, кроме мёртвых и уже добавленных
         for node in archive_list:
             if node in checked_dead:
                 continue
@@ -1775,23 +1857,20 @@ def main():
 
     else:
 
-        # Живых ≥ MAX_NODES — архив не трогаем, но ВСЕ живые в архив.
         checked_dead = set()
 
         new_archive = []
 
-        # 2.1. ВСЕ живые ноды текущего запуска — в конец (свежие)
         for node in all_alive:
             new_archive.append(node)
 
-        # 2.2. Старый архив, кроме уже добавленных
         for node in archive_list:
             if node in all_alive:
                 continue
             new_archive.append(node)
 
     # =========================================
-    # SAVE ARCHIVE (уникальный, свежие в конце)
+    # SAVE ARCHIVE
     # =========================================
 
     archive_list = save_archive(
@@ -1971,10 +2050,6 @@ def main():
 
     run_stats["archive_total"] = len(archive_list)
     run_stats["subscribe_total"] = len(subscribe_nodes)
-
-    # =========================================
-    # ИТОГ ЗАПУСКА В ЛОГ
-    # =========================================
 
     _log_summary(
         run_stats,
