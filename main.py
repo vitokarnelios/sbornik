@@ -14,12 +14,12 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - ARCHIVE TCP CLEANUP: параллельная TCP-проверка всего архива каждый запуск.
   Не прошли TCP — сразу удаляются из архива.
 - Если живых < MAX_NODES — добираем из архива с TCP+sing-box,
-  ровно до MAX_NODES, дальше архив не трогаем
+  параллельно в 40 потоков, ровно до MAX_NODES, дальше архив не трогаем
 - Мёртвые проверенные архивные ноды удаляются из архива
 - Статистика по транспортам и security: protocol_stats.json
 - Финальный итог запуска в лог + run_stats.json
 - Детализация ошибок: dead_tcp / dead_config / dead_start /
-  dead_sites / dead_parse
+  dead_sites / dead_parse (выводятся в лог)
 - nodes_tested по источникам считается один раз на ноду
 - Потоки берут задачи из очереди
 """
@@ -680,10 +680,6 @@ def empty_protocol_stats():
 
 
 def load_protocol_stats(path):
-    """
-    Загружает protocol_stats.json.
-    Гарантирует наличие всех ключей by_transport / by_security.
-    """
     default = empty_protocol_stats()
 
     if not os.path.exists(path):
@@ -729,10 +725,6 @@ def save_protocol_stats(path, data):
 
 
 def reset_protocol_last(data):
-    """
-    Сбрасывает _last поля в 0 перед новым запуском.
-    _total не трогает.
-    """
     for section in ("by_transport", "by_security"):
         block = data.get(section, {})
         for item in block.values():
@@ -741,10 +733,6 @@ def reset_protocol_last(data):
 
 
 def classify_transport(vless_uri):
-    """
-    Возвращает транспорт из type= (default 'tcp').
-    Если тип не входит в PROTOCOL_TRANSPORTS — возвращает 'tcp'.
-    """
     try:
         q = parse_qs(urlparse(vless_uri).query)
         t = q.get("type", ["tcp"])[0].strip().lower()
@@ -756,11 +744,6 @@ def classify_transport(vless_uri):
 
 
 def classify_security(vless_uri):
-    """
-    Возвращает security из security= (default 'none').
-    reality — если security=reality или есть pbk.
-    Если не none/tls/reality — считаем 'none'.
-    """
     try:
         q = parse_qs(urlparse(vless_uri).query)
         s = q.get("security", ["none"])[0].strip().lower()
@@ -777,10 +760,6 @@ def classify_security(vless_uri):
 
 
 def protocol_inc(data, transport, security, alive):
-    """
-    Инкрементирует live/dead для by_transport и by_security.
-    alive=True → live_total/live_last, alive=False → dead_total/dead_last.
-    """
     tr = data["by_transport"].setdefault(
         transport,
         empty_protocol_bucket()
@@ -840,14 +819,7 @@ def ensure_source_bucket(source):
 
 
 # ========== ПРОВЕРКА ОДНОЙ НОДЫ ==========
-#
-# Возвращает словарь:
-#   {
-#     "alive": bool,
-#     "ok_count": int,
-#     "error": str | None,
-#   }
-#
+
 def check_single_uri(
     vless_uri,
     local_port,
@@ -1063,7 +1035,7 @@ def check_single_uri(
     return {"alive": False, "ok_count": 0, "error": "start_failed"}
 
 
-# ========== WORKER ==========
+# ========== WORKER (source nodes) ==========
 
 def worker(
     task_queue,
@@ -1094,11 +1066,9 @@ def worker(
 
         result_uri = None
 
-        # Классификация для protocol_stats
         transport = classify_transport(vless_uri)
         security = classify_security(vless_uri)
 
-        # Считаем ли мы эту ноду первый раз за запуск
         nid = node_id(vless_uri)
 
         with lock:
@@ -1249,8 +1219,6 @@ def worker(
                 local_port
             )
 
-        # ===== Сохраняем ЖИВУЮ НОДУ =====
-
         if result_uri:
 
             with lock:
@@ -1262,14 +1230,141 @@ def worker(
         task_queue.task_done()
 
 
+# ========== WORKER (archive fill, parallel) ==========
+
+def archive_fill_worker(
+    archive_task_queue,
+    all_alive,
+    checked_dead,
+    lock,
+    run_stats
+):
+    """
+    Параллельный воркер для FILL FROM ARCHIVE.
+    Забирает ноды из archive_task_queue, проверяет TCP → sing-box.
+    Живые идут в all_alive, мёртвые в checked_dead.
+    Останавливается при достижении MAX_NODES или опустошении очереди.
+    """
+
+    while not stop_event.is_set():
+
+        # Если уже набрали MAX_NODES — выходим
+        with lock:
+            if len(all_alive) >= MAX_NODES:
+                stop_event.set()
+                return
+
+        try:
+            node = archive_task_queue.get(timeout=0.5)
+        except queue.Empty:
+            return
+
+        if stop_event.is_set():
+            archive_task_queue.task_done()
+            return
+
+        # Пропускаем ноды, которые уже в all_alive
+        with lock:
+            if node in all_alive:
+                archive_task_queue.task_done()
+                continue
+
+        local_port = port_queue.get()
+
+        with lock:
+            run_stats["archive_checked"] += 1
+
+        transport = classify_transport(node)
+        security = classify_security(node)
+
+        try:
+
+            tcp_ok = tcp_precheck(node)
+
+            if not tcp_ok:
+
+                logger.info(
+                    "[ARCHIVE TCP FAIL] "
+                    "Нода из архива недоступна, удаляю"
+                )
+
+                with lock:
+                    checked_dead.add(node)
+                    run_stats["archive_removed"] += 1
+                    protocol_inc(
+                        PROTOCOL_STATS,
+                        transport,
+                        security,
+                        False
+                    )
+
+            else:
+
+                res = check_single_uri(
+                    node,
+                    local_port,
+                    SERVICE_STATS,
+                    lock
+                )
+
+                is_alive = res["alive"]
+                ok_count = res["ok_count"]
+
+                if is_alive:
+
+                    with lock:
+
+                        if len(all_alive) >= MAX_NODES:
+                            stop_event.set()
+                        else:
+                            logger.info(
+                                f"[ARCHIVE LIVE {ok_count}/{len(TEST_URLS)}] "
+                                f"Нода из архива рабочая, добавляю"
+                            )
+
+                            all_alive.append(node)
+                            run_stats["archive_revived"] += 1
+
+                            protocol_inc(
+                                PROTOCOL_STATS,
+                                transport,
+                                security,
+                                True
+                            )
+
+                else:
+
+                    logger.info(
+                        f"[ARCHIVE DEAD {ok_count}/{len(TEST_URLS)}] "
+                        f"Нода из архива мертва, удаляю"
+                    )
+
+                    with lock:
+                        checked_dead.add(node)
+                        run_stats["archive_removed"] += 1
+                        protocol_inc(
+                            PROTOCOL_STATS,
+                            transport,
+                            security,
+                            False
+                        )
+
+        except Exception as e:
+
+            logger.error(
+                f"Ошибка проверки архивной ноды: {e}"
+            )
+
+        finally:
+
+            port_queue.put(local_port)
+
+        archive_task_queue.task_done()
+
+
 # ========== АРХИВ ЖИВЫХ НОД ==========
 
 def load_archive(path):
-    """
-    Читает archive.txt.
-    Возвращает список уникальных URI (порядок сохраняется,
-    дубликаты оставляют последнее вхождение).
-    """
     if not os.path.exists(path):
         return []
 
@@ -1293,9 +1388,6 @@ def load_archive(path):
 
 
 def save_archive(path, nodes):
-    """
-    Пишет archive.txt: уникальные ноды, свежие — в конец.
-    """
     seen = set()
     ordered = []
     for uri in reversed(nodes):
@@ -1312,10 +1404,6 @@ def save_archive(path, nodes):
 
 
 def archive_tcp_cleanup(archive_list, lock, run_stats):
-    """
-    Параллельная TCP-проверка ВСЕГО архива.
-    Ноды, не прошедшие TCP, удаляются (возвращаются только прошедшие).
-    """
     if not archive_list:
         return archive_list
 
@@ -1576,7 +1664,6 @@ def main():
         "archive.txt"
     )
 
-    # Устаревший alive_archive.txt больше не используется
     legacy_alive_path = os.path.join(
         BASE_PATH,
         "alive_archive.txt"
@@ -1594,7 +1681,6 @@ def main():
                 f"Не удалось удалить alive_archive.txt: {e}"
             )
 
-    # Устаревший node_stats.json больше не используется
     legacy_node_stats_path = os.path.join(
         BASE_PATH,
         "node_stats.json"
@@ -1734,7 +1820,8 @@ def main():
 
         logger.info(
             f"\n--- FILL FROM ARCHIVE "
-            f"(need {MAX_NODES - len(all_alive)} more) ---"
+            f"(need {MAX_NODES - len(all_alive)} more, "
+            f"threads: {MAX_THREADS}) ---"
         )
 
         candidates = [
@@ -1744,104 +1831,33 @@ def main():
 
         checked_dead = set()
 
+        # Параллельная очередь
+        archive_task_queue = queue.Queue()
+
         for node in candidates:
+            archive_task_queue.put(node)
 
-            if len(all_alive) >= MAX_NODES:
-                break
+        stop_event.clear()
 
-            if stop_event.is_set():
-                break
+        with ThreadPoolExecutor(
+            max_workers=MAX_THREADS
+        ) as executor:
 
-            local_port = port_queue.get()
+            executor.map(
+                lambda _:
+                    archive_fill_worker(
+                        archive_task_queue,
+                        all_alive,
+                        checked_dead,
+                        lock,
+                        run_stats
+                    ),
+                range(MAX_THREADS)
+            )
 
-            run_stats["archive_checked"] += 1
-
-            transport = classify_transport(node)
-            security = classify_security(node)
-
-            try:
-
-                tcp_ok = tcp_precheck(node)
-
-                if not tcp_ok:
-
-                    logger.info(
-                        "[ARCHIVE TCP FAIL] "
-                        "Нода из архива недоступна, удаляю"
-                    )
-
-                    checked_dead.add(node)
-
-                    run_stats["archive_removed"] += 1
-
-                    with lock:
-                        protocol_inc(
-                            PROTOCOL_STATS,
-                            transport,
-                            security,
-                            False
-                        )
-
-                else:
-
-                    res = check_single_uri(
-                        node,
-                        local_port,
-                        SERVICE_STATS,
-                        lock
-                    )
-
-                    is_alive = res["alive"]
-                    ok_count = res["ok_count"]
-
-                    if is_alive:
-
-                        logger.info(
-                            f"[ARCHIVE LIVE {ok_count}/{len(TEST_URLS)}] "
-                            f"Нода из архива рабочая, добавляю"
-                        )
-
-                        all_alive.append(node)
-                        archive_revived_count += 1
-
-                        run_stats["archive_revived"] += 1
-
-                        with lock:
-                            protocol_inc(
-                                PROTOCOL_STATS,
-                                transport,
-                                security,
-                                True
-                            )
-
-                    else:
-
-                        logger.info(
-                            f"[ARCHIVE DEAD {ok_count}/{len(TEST_URLS)}] "
-                            f"Нода из архива мертва, удаляю"
-                        )
-
-                        checked_dead.add(node)
-
-                        run_stats["archive_removed"] += 1
-
-                        with lock:
-                            protocol_inc(
-                                PROTOCOL_STATS,
-                                transport,
-                                security,
-                                False
-                            )
-
-            except Exception as e:
-
-                logger.error(
-                    f"Ошибка проверки архивной ноды: {e}"
-                )
-
-            finally:
-
-                port_queue.put(local_port)
+        archive_revived_count = (
+            run_stats["archive_revived"]
+        )
 
         new_archive = []
 
@@ -2080,7 +2096,7 @@ def _log_summary(
     subscribe_total
 ):
     """
-    Краткий итог запуска в лог.
+    Краткий итог запуска в лог + детализация ошибок.
     """
     archive_removed = (
         run_stats.get("archive_removed", 0)
@@ -2095,6 +2111,13 @@ def _log_summary(
         f"Удалено из архива (мёртвых):  {archive_removed}\n"
         f"Итого в подписке:             {subscribe_total}\n"
         f"Итого в архиве:               {archive_total}\n"
+        "\n"
+        "--- ДЕТАЛИЗАЦИЯ ОШИБОК ---\n"
+        f"dead_tcp (TCP не открылся):    {run_stats.get('dead_tcp', 0)}\n"
+        f"dead_config (битый конфиг):    {run_stats.get('dead_config', 0)}\n"
+        f"dead_start (sing-box упал):    {run_stats.get('dead_start', 0)}\n"
+        f"dead_sites (мало сайтов):      {run_stats.get('dead_sites', 0)}\n"
+        f"dead_parse (URI не парсится):  {run_stats.get('dead_parse', 0)}\n"
         "======================================"
     )
 
