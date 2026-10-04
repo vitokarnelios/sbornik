@@ -5,6 +5,8 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - Проверяет ноды с оригинальным SNI
 - Мутация SNI удалена полностью
 - Статистика SNI удалена полностью
+- Накопительная статистика сервисов удалена.
+  Вместо неё — минимальный вывод по 3 сайтам в конце запуска.
 - Перед запуском sing-box делает быстрый TCP pre-check
 - Живая нода = прошла проверку минимум на 2 из 3 тестовых сайтов
 - Проверяет Telegram, Instagram, YouTube
@@ -12,9 +14,8 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - Один архив: archive.txt — только рабочие ноды, без дубликатов
 - В архив уходят ВСЕ живые ноды (не только 100)
 - ARCHIVE TCP CLEANUP: параллельная TCP-проверка всего архива каждый запуск.
-  Не прошли TCP — сразу удаляются из архива.
 - Если живых < MAX_NODES — добираем из архива с TCP+sing-box,
-  параллельно в 40 потоков, ровно до MAX_NODES, дальше архив не трогаем
+  параллельно в 40 потоков, ровно до MAX_NODES
 - Мёртвые проверенные архивные ноды удаляются из архива
 - Статистика по транспортам и security: protocol_stats.json
 - Финальный итог запуска в лог + run_stats.json
@@ -72,10 +73,12 @@ logger = logging.getLogger(__name__)
 # ========== КОНФИГ ==========
 
 SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
-SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
 SOURCE_STATS_FILE = os.path.join(BASE_PATH, "source_stats.json")
 RUN_STATS_FILE = os.path.join(BASE_PATH, "run_stats.json")
 PROTOCOL_STATS_FILE = os.path.join(BASE_PATH, "protocol_stats.json")
+
+# Устаревший файл накопительной статистики сервисов
+LEGACY_SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
 
 MAX_SOURCE_NODE_LIST = 5000
 
@@ -119,6 +122,14 @@ TEST_URLS = [
     "https://www.instagram.com",
     "https://www.youtube.com",
 ]
+
+# In-memory счётчики сервисов за текущий запуск (без сохранения на диск)
+RUN_SERVICE_STATS = {
+    url: {"attempts": 0, "success": 0}
+    for url in TEST_URLS
+}
+
+RUN_SERVICE_LOCK = threading.Lock()
 
 
 # ========== TCP PRE-CHECK ==========
@@ -518,105 +529,6 @@ def parse_vless_to_json(
         return None
 
 
-# ========== СТАТИСТИКА СЕРВИСОВ ==========
-
-def empty_service_stats():
-    return {
-        url: {
-            "attempts": 0,
-            "success": 0
-        }
-        for url in TEST_URLS
-    }
-
-
-def load_service_stats():
-
-    if not os.path.exists(SERVICE_STATS_FILE):
-        logger.info("📊 Файл статистики сервисов не найден")
-        return empty_service_stats()
-
-    try:
-
-        with open(
-            SERVICE_STATS_FILE,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            loaded = json.load(f)
-
-        stats = {}
-
-        for url, value in loaded.items():
-
-            if isinstance(value, dict):
-
-                stats[url] = {
-                    "attempts": int(
-                        value.get("attempts", 0)
-                    ),
-                    "success": int(
-                        value.get("success", 0)
-                    )
-                }
-
-        for url in TEST_URLS:
-
-            if url not in stats:
-
-                stats[url] = {
-                    "attempts": 0,
-                    "success": 0
-                }
-
-        logger.info(
-            f"📊 Загружена статистика сервисов: "
-            f"{len(stats)} сайтов"
-        )
-
-        return stats
-
-    except Exception as e:
-
-        logger.warning(
-            f"Ошибка загрузки статистики сервисов: {e}"
-        )
-
-        return empty_service_stats()
-
-
-def save_service_stats(stats):
-
-    try:
-
-        with open(
-            SERVICE_STATS_FILE,
-            "w",
-            encoding="utf-8"
-        ) as f:
-
-            json.dump(
-                stats,
-                f,
-                indent=2,
-                ensure_ascii=False
-            )
-
-        logger.info(
-            "💾 Статистика сервисов сохранена"
-        )
-
-    except Exception as e:
-
-        logger.warning(
-            f"Ошибка сохранения статистики сервисов: {e}"
-        )
-
-
-SERVICE_STATS = load_service_stats()
-
-
 # ========== JSON STATS HELPERS ==========
 
 def load_json_stats(path, default_factory):
@@ -818,12 +730,23 @@ def ensure_source_bucket(source):
     return bucket
 
 
+# ========== RUN-SERVICE COUNTER (in-memory, per-run) ==========
+
+def run_service_record(url, success):
+    with RUN_SERVICE_LOCK:
+        item = RUN_SERVICE_STATS.setdefault(
+            url, {"attempts": 0, "success": 0}
+        )
+        item["attempts"] += 1
+        if success:
+            item["success"] += 1
+
+
 # ========== ПРОВЕРКА ОДНОЙ НОДЫ ==========
 
 def check_single_uri(
     vless_uri,
     local_port,
-    service_stats=None,
     stats_lock=None
 ):
 
@@ -950,23 +873,7 @@ def check_single_uri(
 
                 success = False
 
-            if service_stats is not None:
-
-                if stats_lock:
-
-                    with stats_lock:
-
-                        service_stats[url]["attempts"] += 1
-
-                        if success:
-                            service_stats[url]["success"] += 1
-
-                else:
-
-                    service_stats[url]["attempts"] += 1
-
-                    if success:
-                        service_stats[url]["success"] += 1
+            run_service_record(url, success)
 
             if success:
                 ok_count += 1
@@ -1084,8 +991,6 @@ def worker(
 
         try:
 
-            # ===== БЫСТРЫЙ TCP PRE-CHECK =====
-
             tcp_ok = tcp_precheck(vless_uri)
 
             if not tcp_ok:
@@ -1100,12 +1005,9 @@ def worker(
 
             else:
 
-                # ===== ПРОВЕРКА ОРИГИНАЛЬНОЙ НОДЫ =====
-
                 res = check_single_uri(
                     vless_uri,
                     local_port,
-                    SERVICE_STATS,
                     lock
                 )
 
@@ -1239,16 +1141,9 @@ def archive_fill_worker(
     lock,
     run_stats
 ):
-    """
-    Параллельный воркер для FILL FROM ARCHIVE.
-    Забирает ноды из archive_task_queue, проверяет TCP → sing-box.
-    Живые идут в all_alive, мёртвые в checked_dead.
-    Останавливается при достижении MAX_NODES или опустошении очереди.
-    """
 
     while not stop_event.is_set():
 
-        # Если уже набрали MAX_NODES — выходим
         with lock:
             if len(all_alive) >= MAX_NODES:
                 stop_event.set()
@@ -1263,7 +1158,6 @@ def archive_fill_worker(
             archive_task_queue.task_done()
             return
 
-        # Пропускаем ноды, которые уже в all_alive
         with lock:
             if node in all_alive:
                 archive_task_queue.task_done()
@@ -1303,7 +1197,6 @@ def archive_fill_worker(
                 res = check_single_uri(
                     node,
                     local_port,
-                    SERVICE_STATS,
                     lock
                 )
 
@@ -1468,6 +1361,19 @@ def main():
     )
 
     reset_protocol_last(PROTOCOL_STATS)
+
+    # Удаляем устаревший service_stats.json, если он остался
+    if os.path.exists(LEGACY_SERVICE_STATS_FILE):
+        try:
+            os.remove(LEGACY_SERVICE_STATS_FILE)
+            logger.info(
+                "🧹 Удалён устаревший service_stats.json "
+                "(накопительная статистика сервисов больше не ведётся)"
+            )
+        except Exception as e:
+            logger.warning(
+                f"Не удалось удалить service_stats.json: {e}"
+            )
 
     try:
 
@@ -1831,7 +1737,6 @@ def main():
 
         checked_dead = set()
 
-        # Параллельная очередь
         archive_task_queue = queue.Queue()
 
         for node in candidates:
@@ -1910,10 +1815,6 @@ def main():
             "skipping update"
         )
 
-        save_service_stats(
-            SERVICE_STATS
-        )
-
         save_json_stats(
             SOURCE_STATS_FILE,
             SOURCE_STATS,
@@ -1935,6 +1836,8 @@ def main():
             len(archive_list),
             0
         )
+
+        _log_run_service_stats()
 
         run_stats["finished_at"] = (
             datetime.now().isoformat(
@@ -2012,47 +1915,6 @@ def main():
             f"{item['live_last']} / {item['dead_last']}"
         )
 
-    # =========================================
-    # SERVICE STATS
-    # =========================================
-
-    logger.info(
-        "\n--- TEST SITE STATS ---"
-    )
-
-    for url, data in SERVICE_STATS.items():
-
-        attempts = data.get(
-            "attempts",
-            0
-        )
-
-        success = data.get(
-            "success",
-            0
-        )
-
-        if attempts > 0:
-
-            rate = (
-                success
-                / attempts
-                * 100
-            )
-
-        else:
-
-            rate = 0
-
-        logger.info(
-            f"{url}: {success}/{attempts} "
-            f"успешных ({rate:.1f}%)"
-        )
-
-    save_service_stats(
-        SERVICE_STATS
-    )
-
     save_json_stats(
         SOURCE_STATS_FILE,
         SOURCE_STATS,
@@ -2075,6 +1937,8 @@ def main():
         len(subscribe_nodes)
     )
 
+    _log_run_service_stats()
+
     run_stats["finished_at"] = (
         datetime.now().isoformat(
             timespec="seconds"
@@ -2086,6 +1950,34 @@ def main():
         run_stats,
         "Статистика запуска"
     )
+
+
+def _log_run_service_stats():
+    """
+    Минимальный вывод по 3 сайтам за текущий запуск.
+    Ничего не сохраняет на диск.
+    """
+    logger.info(
+        "\n--- ПРОВЕРКА САЙТОВ (за текущий запуск) ---"
+    )
+
+    for url in TEST_URLS:
+        item = RUN_SERVICE_STATS.get(
+            url, {"attempts": 0, "success": 0}
+        )
+
+        attempts = item["attempts"]
+        success = item["success"]
+
+        if attempts > 0:
+            rate = success / attempts * 100
+        else:
+            rate = 0
+
+        logger.info(
+            f"{url}: {success}/{attempts} "
+            f"({rate:.1f}%)"
+        )
 
 
 def _log_summary(
