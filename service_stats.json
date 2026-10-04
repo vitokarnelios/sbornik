@@ -1,26 +1,26 @@
 {
   "https://telegram.org": {
-    "attempts": 32675,
-    "success": 1377
+    "attempts": 32955,
+    "success": 1505
   },
   "https://www.instagram.com": {
-    "attempts": 32632,
-    "success": 1379
+    "attempts": 32912,
+    "success": 1499
   },
   "https://www.youtube.com": {
-    "attempts": 32586,
-    "success": 1387
+    "attempts": 32866,
+    "success": 1516
   },
   "https://chatgpt.com": {
-    "attempts": 32261,
-    "success": 1051
+    "attempts": 32541,
+    "success": 1170
   },
   "https://gemini.google.com": {
-    "attempts": 32466,
-    "success": 1178
+    "attempts": 32746,
+    "success": 1296
   },
   "https://www.google.com": {
-    "attempts": 32403,
-    "success": 1259
+    "attempts": 32683,
+    "success": 1360
   }
 }

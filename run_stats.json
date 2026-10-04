@@ -1,12 +1,16 @@
 {
-  "started_at": "2026-10-04T08:49:52",
+  "started_at": "2026-10-04T09:27:06",
   "sources": 7,
   "source_fetch_success": 7,
   "lines_total": 0,
   "vless_total": 0,
-  "unique_nodes": 169,
-  "nodes_tested": 169,
-  "original_live": 87,
-  "dead": 82,
-  "finished_at": "2026-10-04T08:50:52"
+  "unique_nodes": 174,
+  "nodes_tested": 174,
+  "original_live": 73,
+  "dead": 101,
+  "archive_checked": 144,
+  "archive_revived": 54,
+  "archive_removed": 90,
+  "min_sites_ok": 3,
+  "finished_at": "2026-10-04T10:02:24"
 }
