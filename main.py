@@ -11,12 +11,13 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - Проверяются ВСЕ ноды из источников (без остановки на 100 живых)
 - Один архив: archive.txt — только рабочие ноды, без дубликатов
 - В архив уходят ВСЕ живые ноды (не только 100)
+- ARCHIVE TCP CLEANUP: параллельная TCP-проверка всего архива каждый запуск.
+  Не прошли TCP — сразу удаляются из архива.
 - Если живых < MAX_NODES — добираем из архива с TCP+sing-box,
   ровно до MAX_NODES, дальше архив не трогаем
 - Мёртвые проверенные архивные ноды удаляются из архива
 - Статистика по транспортам и security: protocol_stats.json
-- Сохраняет статистику сервисов, нод и источников
-- Отдельно пишет агрегат текущего запуска
+- Финальный итог запуска в лог + run_stats.json
 - Потоки берут задачи из очереди
 """
 
@@ -69,12 +70,10 @@ logger = logging.getLogger(__name__)
 
 SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
 SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
-NODE_STATS_FILE = os.path.join(BASE_PATH, "node_stats.json")
 SOURCE_STATS_FILE = os.path.join(BASE_PATH, "source_stats.json")
 RUN_STATS_FILE = os.path.join(BASE_PATH, "run_stats.json")
 PROTOCOL_STATS_FILE = os.path.join(BASE_PATH, "protocol_stats.json")
 
-MAX_NODE_STATS = 30000
 MAX_SOURCE_NODE_LIST = 5000
 
 
@@ -651,10 +650,6 @@ def empty_source_stats():
     return {}
 
 
-def empty_node_stats():
-    return {}
-
-
 # ========== PROTOCOL STATS (transport / security) ==========
 
 PROTOCOL_TRANSPORTS = ["tcp", "ws", "grpc", "xhttp"]
@@ -810,7 +805,6 @@ PROTOCOL_STATS = load_protocol_stats(PROTOCOL_STATS_FILE)
 
 
 SOURCE_STATS = load_json_stats(SOURCE_STATS_FILE, empty_source_stats)
-NODE_STATS = load_json_stats(NODE_STATS_FILE, empty_node_stats)
 
 
 def node_id(vless_uri):
@@ -842,58 +836,6 @@ def ensure_source_bucket(source):
         "recent_node_ids": []
     })
     return bucket
-
-
-def ensure_node_record(vless_uri):
-    nid = node_id(vless_uri)
-    rec = NODE_STATS.setdefault(nid, {
-        "attempts": 0,
-        "live": 0,
-        "original_live": 0,
-        "dead": 0,
-        "last_status": "unknown",
-        "last_sni": "",
-        "original_sni": extract_sni(vless_uri),
-        "sources": [],
-        "first_seen": "",
-        "last_seen": ""
-    })
-    return nid, rec
-
-
-def record_node_source(vless_uri, source_names):
-    nid, rec = ensure_node_record(vless_uri)
-    now = datetime.now().isoformat(timespec="seconds")
-
-    if not rec.get("first_seen"):
-        rec["first_seen"] = now
-
-    rec["last_seen"] = now
-
-    sources = rec.setdefault("sources", [])
-
-    for src in source_names:
-        if src not in sources:
-            sources.append(src)
-
-    if len(sources) > 30:
-        del sources[:-30]
-
-    return nid, rec
-
-
-def prune_node_stats():
-    if len(NODE_STATS) <= MAX_NODE_STATS:
-        return
-
-    ranked = sorted(
-        NODE_STATS.items(),
-        key=lambda kv: kv[1].get("last_seen", ""),
-        reverse=True
-    )[:MAX_NODE_STATS]
-
-    NODE_STATS.clear()
-    NODE_STATS.update(dict(ranked))
 
 
 # ========== ПРОВЕРКА ОДНОЙ НОДЫ ==========
@@ -1119,11 +1061,6 @@ def worker(
 
         result_uri = None
 
-        nid, node_rec = record_node_source(
-            vless_uri,
-            node_sources_map.get(vless_uri, [])
-        )
-
         original_sni = extract_sni(
             vless_uri
         )
@@ -1133,12 +1070,6 @@ def worker(
         security = classify_security(vless_uri)
 
         with lock:
-
-            node_rec["attempts"] = (
-                node_rec.get("attempts", 0) + 1
-            )
-
-            node_rec["last_status"] = "testing"
 
             run_stats["nodes_tested"] += 1
 
@@ -1178,11 +1109,6 @@ def worker(
 
                     with lock:
 
-                        node_rec["live"] += 1
-                        node_rec["original_live"] += 1
-                        node_rec["last_status"] = "original_live"
-                        node_rec["last_sni"] = original_sni
-
                         run_stats["original_live"] += 1
 
                         protocol_inc(
@@ -1221,12 +1147,6 @@ def worker(
             if result_uri is None:
 
                 with lock:
-
-                    node_rec["dead"] = (
-                        node_rec.get("dead", 0) + 1
-                    )
-
-                    node_rec["last_status"] = "dead"
 
                     run_stats["dead"] += 1
 
@@ -1312,6 +1232,66 @@ def save_archive(path, nodes):
     return ordered
 
 
+def archive_tcp_cleanup(archive_list, lock, run_stats):
+    """
+    Параллельная TCP-проверка ВСЕГО архива.
+    Ноды, не прошедшие TCP, удаляются (возвращаются только прошедшие).
+    """
+    if not archive_list:
+        return archive_list
+
+    logger.info(
+        f"\n--- ARCHIVE TCP CLEANUP "
+        f"({len(archive_list)} nodes, threads: {MAX_THREADS}) ---"
+    )
+
+    start_time = time.time()
+
+    alive_after_tcp = []
+    removed = 0
+
+    def check_one(node):
+        return node, tcp_precheck(node)
+
+    with ThreadPoolExecutor(
+        max_workers=MAX_THREADS
+    ) as executor:
+
+        for node, ok in executor.map(
+            check_one,
+            archive_list
+        ):
+
+            if ok:
+                alive_after_tcp.append(node)
+            else:
+                removed += 1
+
+                transport = classify_transport(node)
+                security = classify_security(node)
+
+                with lock:
+                    protocol_inc(
+                        PROTOCOL_STATS,
+                        transport,
+                        security,
+                        False
+                    )
+
+    elapsed = time.time() - start_time
+
+    logger.info(
+        f"ARCHIVE TCP CLEANUP done: "
+        f"alive={len(alive_after_tcp)}, "
+        f"removed={removed}, "
+        f"time={elapsed:.1f}с"
+    )
+
+    run_stats["archive_tcp_removed"] = removed
+
+    return alive_after_tcp
+
+
 # ========== MAIN ==========
 
 def main():
@@ -1393,6 +1373,15 @@ def main():
             0,
 
         "archive_removed":
+            0,
+
+        "archive_tcp_removed":
+            0,
+
+        "archive_total":
+            0,
+
+        "subscribe_total":
             0,
 
         "min_sites_ok":
@@ -1485,35 +1474,6 @@ def main():
                 src
             )["unique_nodes"] += 1
 
-            nid = node_id(node)
-
-            rec = NODE_STATS.setdefault(
-                nid,
-                {
-                    "attempts": 0,
-                    "live": 0,
-                    "original_live": 0,
-                    "dead": 0,
-                    "last_status": "discovered",
-                    "last_sni": "",
-                    "original_sni": extract_sni(node),
-                    "sources": [],
-                    "first_seen": "",
-                    "last_seen": ""
-                }
-            )
-
-            if src not in rec.setdefault(
-                "sources",
-                []
-            ):
-
-                rec["sources"].append(src)
-
-            if len(rec["sources"]) > 30:
-
-                del rec["sources"][:-30]
-
     # =========================================
     # ARCHIVE (единственный: archive.txt)
     # =========================================
@@ -1541,11 +1501,41 @@ def main():
                 f"Не удалось удалить alive_archive.txt: {e}"
             )
 
+    # Устаревший node_stats.json больше не используется
+    legacy_node_stats_path = os.path.join(
+        BASE_PATH,
+        "node_stats.json"
+    )
+
+    if os.path.exists(legacy_node_stats_path):
+        try:
+            os.remove(legacy_node_stats_path)
+            logger.info(
+                "🧹 Удалён устаревший node_stats.json "
+                "(статистика нод больше не ведётся)"
+            )
+        except Exception as e:
+            logger.warning(
+                f"Не удалось удалить node_stats.json: {e}"
+            )
+
     archive_list = load_archive(archive_path)
 
     logger.info(
         f"archive.txt loaded: "
         f"{len(archive_list)} nodes"
+    )
+
+    lock = threading.Lock()
+
+    # =========================================
+    # ARCHIVE TCP CLEANUP
+    # =========================================
+
+    archive_list = archive_tcp_cleanup(
+        archive_list,
+        lock,
+        run_stats
     )
 
     # =========================================
@@ -1600,8 +1590,6 @@ def main():
 
     stop_event.clear()
 
-    lock = threading.Lock()
-
     with ThreadPoolExecutor(
         max_workers=MAX_THREADS
     ) as executor:
@@ -1638,6 +1626,8 @@ def main():
         f"{len(all_alive)} live nodes ---"
     )
 
+    source_live_count = len(all_alive)
+
     # =========================================
     # ОБНОВЛЕНИЕ ARCHIVE + FILL (единый блок)
     # =========================================
@@ -1645,6 +1635,8 @@ def main():
     # all_alive      — ВСЕ живые ноды (источники + добранные из архива).
     #                  Идут в архив.
     # subscribe_nodes — первые MAX_NODES из all_alive. Идут в подписку.
+
+    archive_revived_count = 0
 
     # 1. Если живых < MAX_NODES — добираем из архива с проверкой,
     #    ровно до MAX_NODES, дальше архив не трогаем.
@@ -1681,6 +1673,8 @@ def main():
             try:
 
                 # ===== Быстрый TCP pre-check =====
+                # (может быть уже пройден в ARCHIVE TCP CLEANUP,
+                # но делаем ещё раз — нода могла упасть за это время)
 
                 tcp_ok = tcp_precheck(node)
 
@@ -1720,6 +1714,7 @@ def main():
                         )
 
                         all_alive.append(node)
+                        archive_revived_count += 1
 
                         run_stats["archive_revived"] += 1
 
@@ -1830,15 +1825,20 @@ def main():
             "Статистика источников"
         )
 
-        save_json_stats(
-            NODE_STATS_FILE,
-            NODE_STATS,
-            "Статистика нод"
-        )
-
         save_protocol_stats(
             PROTOCOL_STATS_FILE,
             PROTOCOL_STATS
+        )
+
+        run_stats["archive_total"] = len(archive_list)
+        run_stats["subscribe_total"] = 0
+
+        _log_summary(
+            run_stats,
+            source_live_count,
+            archive_revived_count,
+            len(archive_list),
+            0
         )
 
         run_stats["finished_at"] = (
@@ -1958,23 +1958,30 @@ def main():
         SERVICE_STATS
     )
 
-    prune_node_stats()
-
     save_json_stats(
         SOURCE_STATS_FILE,
         SOURCE_STATS,
         "Статистика источников"
     )
 
-    save_json_stats(
-        NODE_STATS_FILE,
-        NODE_STATS,
-        "Статистика нод"
-    )
-
     save_protocol_stats(
         PROTOCOL_STATS_FILE,
         PROTOCOL_STATS
+    )
+
+    run_stats["archive_total"] = len(archive_list)
+    run_stats["subscribe_total"] = len(subscribe_nodes)
+
+    # =========================================
+    # ИТОГ ЗАПУСКА В ЛОГ
+    # =========================================
+
+    _log_summary(
+        run_stats,
+        source_live_count,
+        archive_revived_count,
+        len(archive_list),
+        len(subscribe_nodes)
     )
 
     run_stats["finished_at"] = (
@@ -1987,6 +1994,33 @@ def main():
         RUN_STATS_FILE,
         run_stats,
         "Статистика запуска"
+    )
+
+
+def _log_summary(
+    run_stats,
+    source_live,
+    archive_revived,
+    archive_total,
+    subscribe_total
+):
+    """
+    Краткий итог запуска в лог.
+    """
+    archive_removed = (
+        run_stats.get("archive_removed", 0)
+        + run_stats.get("archive_tcp_removed", 0)
+    )
+
+    logger.info(
+        "\n"
+        "============ ИТОГ ЗАПУСКА ============\n"
+        f"Живых из источников:          {source_live}\n"
+        f"Оживлено из архива:           {archive_revived}\n"
+        f"Удалено из архива (мёртвых):  {archive_removed}\n"
+        f"Итого в подписке:             {subscribe_total}\n"
+        f"Итого в архиве:               {archive_total}\n"
+        "======================================"
     )
 
 
