@@ -1129,4 +1129,68 @@ def main():
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
         "vless_found": RUN_STATS["vless_found"],
         "unique_nodes": RUN_STATS["unique_nodes"],
-        "checked":
+        "checked": RUN_STATS["checked"],
+        "live": RUN_STATS["live"],
+        "dead": RUN_STATS["dead"],
+        "tcp_failed": RUN_STATS["tcp_failed"],
+        "fresh_live": len(current_live),
+        "archive_checked": archive_checked,
+        "archive_live": archive_live,
+        "archive_dead": archive_dead,
+        "subscription_nodes": len(subscription_nodes),
+        "elapsed": round(RUN_STATS["elapsed"], 2),
+    })
+
+    save_json(RUN_STATS_FILE, RUN_STATS_FILE_DATA)
+    save_json(NODE_STATS_FILE, NODE_STATS)
+    save_json(SOURCE_STATS_FILE, SOURCE_STATS)
+    save_json(SERVICE_STATS_FILE, SERVICE_STATS)
+
+    # --------------------------------------------------------
+    # REPORT
+    # --------------------------------------------------------
+
+    print()
+    print("=" * 70)
+    print("=== CURRENT RUN ===")
+    print("=" * 70)
+    print(f"VLESS found:       {RUN_STATS['vless_found']}")
+    print(f"Unique nodes:      {RUN_STATS['unique_nodes']}")
+    print(f"Checked:           {RUN_STATS['checked']}")
+    print(f"Fresh LIVE:        {len(current_live)}")
+    print(f"Fresh DEAD:        {RUN_STATS['dead']}")
+    print(f"TCP precheck DEAD: {RUN_STATS['tcp_failed']}")
+    print(f"Archive checked:   {archive_checked}")
+    print(f"Archive LIVE:      {archive_live}")
+    print(f"Archive DEAD:      {archive_dead}")
+    print(f"Subscription:      {len(subscription_nodes)}")
+    print(f"Service attempts:  {RUN_STATS['service_attempts']}")
+    print(f"Service success:   {RUN_STATS['service_success']}")
+    print(
+        f"Service failed:    "
+        f"{RUN_STATS['service_attempts'] - RUN_STATS['service_success']}"
+    )
+    print(f"Elapsed:           {RUN_STATS['elapsed']:.2f}s")
+    print()
+    print(f"Subscription file: {SUBSCRIPTION_FILE}")
+    print(f"Live archive:      {LIVE_ARCHIVE_FILE}")
+
+    print_source_stats()
+    print_service_stats()
+    print_totals()
+
+
+# ============================================================
+# ENTRY
+# ============================================================
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        print("Interrupted by user.")
+    except Exception as e:
+        logging.exception("MAIN FAILED")
+        print()
+        print(f"FATAL ERROR: {e}")
