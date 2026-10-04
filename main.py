@@ -1,50 +1,21 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""
-GITHUB MAIN — SING-BOX VLESS TESTER
-
-Логика:
-- источники берутся ТОЛЬКО из sources.txt
-- никаких зашитых списков источников
-- sing-box остаётся движком
-- SNI mutation полностью отключена
-- SNI используется только как штатный параметр VLESS TLS/Reality
-- 5 сервисов
-- LIVE = минимум 3 успешных сервиса из 5
-- сначала проверяются все свежие ноды из sources.txt
-- затем, если LIVE < 100, перепроверяется live_archive.txt
-- мёртвые архивные ноды удаляются
-- архив содержит только ноды, которые когда-либо были подтверждены LIVE
-- архив не ограничен по размеру
-- единственная подписка: subs/vless_001.txt
-- единственный архив: subs/live_archive.txt
-- одинаковый URI проверяется один раз за запуск
-- принадлежность ноды к источникам сохраняется
-- TCP precheck перед запуском sing-box
-"""
-
+import os
+import re
+import json
+import time
 import base64
 import hashlib
-import json
-import logging
-import os
-import queue
-import shutil
 import socket
+import shutil
 import subprocess
-import tempfile
 import threading
-import time
-
-from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import urlparse, parse_qs, unquote
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 
 
 # ============================================================
-# PATHS
+# CONFIG
 # ============================================================
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -58,14 +29,8 @@ TEMP_DIR = os.path.join(BASE_PATH, "temp")
 
 SUBSCRIPTION_FILE = os.path.join(SUBS_DIR, "vless_001.txt")
 ARCHIVE_FILE = os.path.join(SUBS_DIR, "live_archive.txt")
-
 STATS_FILE = os.path.join(STATS_DIR, "stats.json")
 ERROR_LOG = os.path.join(LOGS_DIR, "singbox_errors.log")
-
-
-# ============================================================
-# SETTINGS
-# ============================================================
 
 SINGBOX_BIN = os.environ.get("SINGBOX_BIN", "sing-box")
 
@@ -75,10 +40,11 @@ MAX_THREADS = 40
 SOURCE_TIMEOUT = 15
 SERVICE_TIMEOUT = 4
 TCP_TIMEOUT = 2.0
+
 SINGBOX_START_WAIT = 1.2
 
-PORT_START = 20000
-PORT_END = 55000
+NEXT_PORT = 20000
+MAX_PORT = 55000
 
 GOOD_CODES = {200, 204, 301, 302}
 
@@ -105,216 +71,117 @@ for directory in (
 
 
 # ============================================================
+# GLOBALS
+# ============================================================
+
+port_lock = threading.Lock()
+next_port_value = NEXT_PORT
+
+log_lock = threading.Lock()
+stats_lock = threading.Lock()
+
+
+# ============================================================
 # LOGGING
 # ============================================================
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-)
+def log(message):
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
 
-logger = logging.getLogger("main")
+    line = f"[{timestamp}] {message}"
 
-
-# ============================================================
-# PORT POOL
-# ============================================================
-
-PORT_QUEUE = queue.Queue()
-
-for port in range(PORT_START, PORT_START + MAX_THREADS):
-    PORT_QUEUE.put(port)
+    with log_lock:
+        print(line, flush=True)
 
 
-# ============================================================
-# STATS LOCK
-# ============================================================
+def log_error(message):
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
 
-STATS_LOCK = threading.Lock()
+    line = f"[{timestamp}] {message}"
 
+    with log_lock:
+        print(line, flush=True)
 
-# ============================================================
-# STATS
-# ============================================================
-
-def make_dimension_bucket():
-    return {
-        "tested": 0,
-        "live": 0,
-        "dead": 0,
-    }
-
-
-def make_source_bucket():
-    return {
-        "downloads_ok": 0,
-        "downloads_failed": 0,
-        "found": 0,
-        "tested": 0,
-        "live": 0,
-        "dead": 0,
-    }
-
-
-def make_service_bucket():
-    return {
-        "attempts": 0,
-        "success": 0,
-        "failed": 0,
-    }
-
-
-def default_stats():
-    return {
-        "version": 3,
-
-        "sources": {},
-
-        "protocols": {},
-
-        "transports": {},
-
-        "security": {},
-
-        "services": {
-            url: make_service_bucket()
-            for url in TEST_URLS
-        },
-
-        "totals": {
-            "runs": 0,
-
-            "source_downloads_ok": 0,
-            "source_downloads_failed": 0,
-
-            "source_nodes_found": 0,
-            "unique_nodes": 0,
-
-            "source_nodes_tested": 0,
-            "source_live": 0,
-            "source_dead": 0,
-
-            "archive_tested": 0,
-            "archive_live": 0,
-            "archive_dead": 0,
-
-            "tcp_failed": 0,
-
-            "service_attempts": 0,
-            "service_success": 0,
-            "service_failed": 0,
-
-            "subscription_live": 0,
-        },
-
-        "run_history": [],
-    }
-
-
-def load_stats():
-    if not os.path.exists(STATS_FILE):
-        return default_stats()
-
-    try:
-        with open(STATS_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        if not isinstance(data, dict):
-            return default_stats()
-
-        if data.get("version") != 3:
-            return default_stats()
-
-        base = default_stats()
-
-        for key in (
-            "sources",
-            "protocols",
-            "transports",
-            "security",
-            "services",
-            "totals",
-            "run_history",
-        ):
-            if key in data:
-                base[key] = data[key]
-
-        for url in TEST_URLS:
-            if url not in base["services"]:
-                base["services"][url] = make_service_bucket()
-
-        return base
-
-    except Exception as e:
-        logger.warning("Stats load failed: %s", e)
-        return default_stats()
-
-
-def save_stats(stats):
-    tmp = STATS_FILE + ".tmp"
-
-    with open(tmp, "w", encoding="utf-8") as f:
-        json.dump(
-            stats,
-            f,
-            ensure_ascii=False,
-            indent=2,
-        )
-
-    os.replace(tmp, STATS_FILE)
+        try:
+            with open(ERROR_LOG, "a", encoding="utf-8") as f:
+                f.write(line + "\n")
+        except Exception:
+            pass
 
 
 # ============================================================
 # HELPERS
 # ============================================================
 
+def safe_int(value, default=None):
+    try:
+        return int(value)
+    except Exception:
+        return default
+
+
+def get_free_port():
+    global next_port_value
+
+    with port_lock:
+        start = next_port_value
+
+        while True:
+            port = next_port_value
+            next_port_value += 1
+
+            if next_port_value > MAX_PORT:
+                next_port_value = NEXT_PORT
+
+            if port == start:
+                raise RuntimeError("No free tester ports available")
+
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                    s.bind(("127.0.0.1", port))
+                    return port
+            except OSError:
+                continue
+
+
 def node_id(uri):
+    """
+    IMPORTANT:
+    SNI mutation is not used anymore.
+    Therefore node identity is simply based on the original URI.
+    """
+
     return hashlib.sha256(
-        uri.strip().encode("utf-8")
-    ).hexdigest()[:16]
+        uri.strip().encode("utf-8", errors="ignore")
+    ).hexdigest()[:32]
 
 
 def clean_uri(uri):
     return uri.strip()
 
 
-def source_name(url):
-    return url.split("/")[-1] or url
-
-
-def ensure_source_bucket(stats, source):
-    if source not in stats["sources"]:
-        stats["sources"][source] = make_source_bucket()
-
-    return stats["sources"][source]
-
-
-def ensure_dimension_bucket(container, key):
-    if key not in container:
-        container[key] = make_dimension_bucket()
-
-    return container[key]
-
-
 # ============================================================
-# SOURCES.TXT
+# SOURCES
 # ============================================================
 
 def load_sources():
+    """
+    IMPORTANT:
+    sources.txt is the ONLY source list.
+
+    Add/remove source URLs there.
+    Nothing is hardcoded in this script.
+    """
+
     if not os.path.exists(SOURCES_FILE):
         raise FileNotFoundError(
-            f"sources.txt not found: {SOURCES_FILE}"
+            f"Sources file not found: {SOURCES_FILE}"
         )
 
     sources = []
 
-    with open(
-        SOURCES_FILE,
-        "r",
-        encoding="utf-8",
-        errors="ignore",
-    ) as f:
-
+    with open(SOURCES_FILE, "r", encoding="utf-8", errors="ignore") as f:
         for line in f:
             line = line.strip()
 
@@ -324,7 +191,7 @@ def load_sources():
             if line.startswith("#"):
                 continue
 
-            if not line.startswith(("http://", "https://")):
+            if not line.lower().startswith(("http://", "https://")):
                 continue
 
             if line not in sources:
@@ -333,307 +200,380 @@ def load_sources():
     return sources
 
 
+def download_source(url):
+    try:
+        response = requests.get(
+            url,
+            timeout=SOURCE_TIMEOUT,
+            headers={
+                "User-Agent": "Mozilla/5.0 NodeTester/1.0"
+            },
+        )
+
+        response.raise_for_status()
+
+        return True, response.text, None
+
+    except Exception as e:
+        return False, "", str(e)
+
+
 # ============================================================
-# SOURCE DECODING
+# VLESS EXTRACTION
 # ============================================================
 
-def decode_base64_text(text):
-    text = text.strip()
+def extract_vless(text):
+    """
+    Extract VLESS URIs from plain text.
+
+    Also tries base64 if the source itself is encoded.
+    """
+
+    found = []
 
     if not text:
-        return ""
+        return found
 
-    candidates = [
+    # Normal VLESS URIs
+    for match in re.findall(
+        r"vless://[^\s<>'\"`]+",
         text,
-        text.replace("\n", "").replace("\r", ""),
-    ]
+        flags=re.IGNORECASE,
+    ):
+        uri = match.strip().rstrip(",;")
 
-    for candidate in candidates:
+        if uri:
+            found.append(uri)
+
+    # Base64 fallback
+    compact = re.sub(r"\s+", "", text)
+
+    if len(compact) >= 16:
         try:
-            padding = "=" * (-len(candidate) % 4)
+            padding = "=" * (-len(compact) % 4)
 
             decoded = base64.b64decode(
-                candidate + padding,
+                compact + padding,
                 validate=False,
             ).decode(
                 "utf-8",
                 errors="ignore",
             )
 
-            if "vless://" in decoded:
-                return decoded
+            for match in re.findall(
+                r"vless://[^\s<>'\"`]+",
+                decoded,
+                flags=re.IGNORECASE,
+            ):
+                uri = match.strip().rstrip(",;")
+
+                if uri:
+                    found.append(uri)
 
         except Exception:
             pass
 
-    return ""
-
-
-def extract_vless(text):
+    # De-duplicate while preserving order
     result = []
+    seen = set()
 
-    for raw_line in text.splitlines():
+    for uri in found:
+        uri = clean_uri(uri)
 
-        line = raw_line.strip()
-
-        if not line:
-            continue
-
-        if line.startswith("vless://"):
-            result.append(line)
-            continue
-
-        if "vless://" in line:
-            start = line.find("vless://")
-
-            value = line[start:].strip()
-
-            if value:
-                result.append(value)
-
-    if result:
-        return result
-
-    decoded = decode_base64_text(text)
-
-    if decoded:
-        for line in decoded.splitlines():
-
-            line = line.strip()
-
-            if line.startswith("vless://"):
-                result.append(line)
+        if uri not in seen:
+            seen.add(uri)
+            result.append(uri)
 
     return result
-
-
-# ============================================================
-# DOWNLOAD SOURCE
-# ============================================================
-
-def download_source(url):
-    try:
-
-        response = requests.get(
-            url,
-            timeout=SOURCE_TIMEOUT,
-            headers={
-                "User-Agent": "Mozilla/5.0",
-            },
-        )
-
-        response.raise_for_status()
-
-        nodes = extract_vless(response.text)
-
-        # Убираем дубликаты внутри одного источника.
-        unique = []
-        seen = set()
-
-        for uri in nodes:
-            uri = clean_uri(uri)
-
-            if not uri.startswith("vless://"):
-                continue
-
-            if uri in seen:
-                continue
-
-            seen.add(uri)
-            unique.append(uri)
-
-        return True, unique, None
-
-    except Exception as e:
-        return False, [], str(e)
 
 
 # ============================================================
 # VLESS PARSER
 # ============================================================
 
-def parse_vless(uri, local_port):
-    parsed = urlparse(uri)
+def parse_vless(uri):
+    try:
+        parsed = urlparse(uri)
 
-    if parsed.scheme.lower() != "vless":
-        raise ValueError("Not VLESS URI")
+        if parsed.scheme.lower() != "vless":
+            return None
 
-    uuid = unquote(parsed.username or "")
+        if not parsed.hostname:
+            return None
 
-    server = parsed.hostname
+        if not parsed.port:
+            return None
 
-    if not server:
-        raise ValueError("Missing server")
+        if not parsed.username:
+            return None
 
-    port = parsed.port
+        uuid = unquote(parsed.username)
+        server = parsed.hostname
+        port = parsed.port
 
-    if not port:
-        raise ValueError("Missing port")
+        raw_params = parse_qs(
+            parsed.query,
+            keep_blank_values=True,
+        )
 
-    params_raw = parse_qs(
-        parsed.query,
-        keep_blank_values=True,
-    )
+        params = {}
 
-    params = {
-        key.lower(): values[0]
-        for key, values in params_raw.items()
-        if values
-    }
+        for key, values in raw_params.items():
+            key_lower = key.lower()
 
-    security = params.get("security", "").lower()
+            if values:
+                params[key_lower] = unquote(values[-1])
+            else:
+                params[key_lower] = ""
 
-    if not security:
-        security = "none"
+        transport = params.get("type", "tcp").lower()
 
-    transport = params.get("type", "tcp").lower()
+        security = params.get(
+            "security",
+            "none",
+        ).lower()
 
-    if transport == "raw":
-        transport_name = "raw"
-    else:
-        transport_name = transport
+        flow = params.get("flow", "")
 
-    # --------------------------------------------------------
-    # OUTBOUND
-    # --------------------------------------------------------
+        sni = params.get(
+            "sni",
+            server,
+        )
 
-    outbound = {
-        "type": "vless",
-        "server": server,
-        "server_port": port,
-        "uuid": uuid,
-    }
+        fp = params.get(
+            "fp",
+            "",
+        )
 
-    flow = params.get("flow")
+        alpn_value = params.get(
+            "alpn",
+            "",
+        )
 
-    if flow:
-        outbound["flow"] = flow
+        alpn = []
 
-    # --------------------------------------------------------
-    # TLS / REALITY
-    # --------------------------------------------------------
-
-    if security in ("tls", "reality"):
-
-        tls = {
-            "enabled": True,
-            "server_name": params.get(
-                "sni",
-                server,
-            ),
-        }
-
-        fingerprint = params.get("fp")
-
-        if fingerprint:
-            tls["utls"] = {
-                "enabled": True,
-                "fingerprint": fingerprint,
-            }
-
-        if security == "reality":
-
-            reality = {
-                "enabled": True,
-            }
-
-            public_key = (
-                params.get("pbk")
-                or params.get("publickey")
-            )
-
-            short_id = (
-                params.get("sid")
-                or params.get("shortid")
-            )
-
-            if public_key:
-                reality["public_key"] = public_key
-
-            if short_id:
-                reality["short_id"] = short_id
-
-            tls["reality"] = reality
-
-        alpn = params.get("alpn")
-
-        if alpn:
-            tls["alpn"] = [
+        if alpn_value:
+            alpn = [
                 x.strip()
-                for x in alpn.split(",")
+                for x in alpn_value.split(",")
                 if x.strip()
             ]
 
-        outbound["tls"] = tls
+        # ----------------------------------------------------
+        # OUTBOUND
+        # ----------------------------------------------------
 
-    # --------------------------------------------------------
-    # TRANSPORT
-    # --------------------------------------------------------
+        outbound = {
+            "type": "vless",
 
-    if transport == "ws":
+            # CRITICAL:
+            # route.final points to this tag.
+            "tag": "proxy",
 
-        transport_config = {
-            "type": "ws",
-            "path": params.get("path", "/"),
+            "server": server,
+            "server_port": port,
+            "uuid": uuid,
         }
 
-        host = params.get("host")
+        if flow:
+            outbound["flow"] = flow
 
-        if host:
-            transport_config["headers"] = {
-                "Host": host,
+        # ----------------------------------------------------
+        # TLS / REALITY
+        # ----------------------------------------------------
+
+        if security in ("tls", "reality"):
+
+            tls = {
+                "enabled": True,
+                "server_name": sni,
             }
 
-        outbound["transport"] = transport_config
+            if fp:
+                tls["utls"] = {
+                    "enabled": True,
+                    "fingerprint": fp,
+                }
 
-    elif transport == "grpc":
+            if alpn:
+                tls["alpn"] = alpn
 
-        outbound["transport"] = {
-            "type": "grpc",
-            "service_name": params.get(
-                "servicename",
+            if security == "reality":
+
+                public_key = params.get(
+                    "pbk",
+                    "",
+                )
+
+                if not public_key:
+                    public_key = params.get(
+                        "publickey",
+                        "",
+                    )
+
+                short_id = params.get(
+                    "sid",
+                    "",
+                )
+
+                if not short_id:
+                    short_id = params.get(
+                        "shortid",
+                        "",
+                    )
+
+                if public_key:
+                    tls["reality"] = {
+                        "enabled": True,
+                        "public_key": public_key,
+                        "short_id": short_id,
+                    }
+
+            outbound["tls"] = tls
+
+        elif security == "none":
+            pass
+
+        else:
+            return None
+
+        # ----------------------------------------------------
+        # TRANSPORT
+        # ----------------------------------------------------
+
+        if transport in ("tcp", "raw"):
+            pass
+
+        elif transport == "ws":
+
+            ws_path = params.get(
+                "path",
+                "/",
+            )
+
+            ws_headers = {}
+
+            host = params.get(
+                "host",
                 "",
-            ),
+            )
+
+            if host:
+                ws_headers["Host"] = host
+
+            transport_config = {
+                "type": "ws",
+                "path": ws_path,
+            }
+
+            if ws_headers:
+                transport_config["headers"] = ws_headers
+
+            outbound["transport"] = transport_config
+
+        elif transport == "grpc":
+
+            service_name = (
+                params.get("servicename")
+                or params.get("serviceName")
+                or params.get("service_name")
+                or ""
+            )
+
+            grpc_config = {
+                "type": "grpc",
+                "service_name": service_name,
+            }
+
+            mode = params.get(
+                "mode",
+                "",
+            ).lower()
+
+            if mode == "multi":
+                grpc_config["multi_mode"] = True
+
+            outbound["transport"] = grpc_config
+
+        elif transport == "httpupgrade":
+
+            path = params.get(
+                "path",
+                "/",
+            )
+
+            host = params.get(
+                "host",
+                "",
+            )
+
+            httpupgrade = {
+                "type": "httpupgrade",
+                "path": path,
+            }
+
+            if host:
+                httpupgrade["host"] = host
+
+            outbound["transport"] = httpupgrade
+
+        elif transport == "xhttp":
+
+            path = params.get(
+                "path",
+                "/",
+            )
+
+            host = params.get(
+                "host",
+                "",
+            )
+
+            xhttp = {
+                "type": "httpupgrade",
+                "path": path,
+            }
+
+            if host:
+                xhttp["host"] = host
+
+            outbound["transport"] = xhttp
+
+        else:
+            return None
+
+        return {
+            "uri": uri,
+            "server": server,
+            "port": port,
+            "uuid": uuid,
+            "transport": transport,
+            "security": security,
+            "sni": sni,
+            "outbound": outbound,
         }
 
-    elif transport == "httpupgrade":
+    except Exception:
+        return None
 
-        outbound["transport"] = {
-            "type": "httpupgrade",
-            "path": params.get("path", "/"),
-        }
 
-        host = params.get("host")
+# ============================================================
+# SING-BOX CONFIG
+# ============================================================
 
-        if host:
-            outbound["transport"]["host"] = host
+def build_config(node, local_port):
+    """
+    Creates a minimal sing-box configuration.
 
-    elif transport == "xhttp":
+    IMPORTANT FIX:
+    VLESS outbound has tag "proxy".
+    route.final points to "proxy".
 
-        transport_config = {
-            "type": "xhttp",
-            "path": params.get("path", "/"),
-        }
+    This prevents the previous situation where route.final
+    referenced an outbound tag that did not exist.
+    """
 
-        host = params.get("host")
-
-        if host:
-            transport_config["host"] = host
-
-        mode = params.get("mode")
-
-        if mode:
-            transport_config["mode"] = mode
-
-        outbound["transport"] = transport_config
-
-    # tcp/raw = стандартный transport sing-box
-
-    # --------------------------------------------------------
-    # CONFIG
-    # --------------------------------------------------------
-
-    config = {
+    return {
         "log": {
             "level": "error",
         },
@@ -641,14 +581,14 @@ def parse_vless(uri, local_port):
         "inbounds": [
             {
                 "type": "mixed",
-                "tag": "proxy",
+                "tag": "socks",
                 "listen": "127.0.0.1",
                 "listen_port": local_port,
             }
         ],
 
         "outbounds": [
-            outbound,
+            node["outbound"],
 
             {
                 "type": "direct",
@@ -666,16 +606,6 @@ def parse_vless(uri, local_port):
         },
     }
 
-    meta = {
-        "server": server,
-        "port": port,
-        "protocol": "vless",
-        "transport": transport_name,
-        "security": security,
-    }
-
-    return config, meta
-
 
 # ============================================================
 # TCP PRECHECK
@@ -683,169 +613,71 @@ def parse_vless(uri, local_port):
 
 def tcp_precheck(server, port):
     try:
-
-        sock = socket.create_connection(
+        with socket.create_connection(
             (server, port),
             timeout=TCP_TIMEOUT,
-        )
-
-        sock.close()
-
-        return True, ""
+        ):
+            return True, None
 
     except Exception as e:
-
         return False, str(e)
 
 
 # ============================================================
-# SERVICE TEST
+# SING-BOX PROCESS
 # ============================================================
 
-def test_services(local_port):
-    results = {}
-
-    proxies = {
-        "http": f"socks5h://127.0.0.1:{local_port}",
-        "https": f"socks5h://127.0.0.1:{local_port}",
-    }
-
-    session = requests.Session()
-
-    for url in TEST_URLS:
-
-        try:
-
-            response = session.get(
-                url,
-                proxies=proxies,
-                timeout=SERVICE_TIMEOUT,
-                allow_redirects=True,
-                headers={
-                    "User-Agent": "Mozilla/5.0",
-                },
-            )
-
-            results[url] = (
-                response.status_code in GOOD_CODES
-            )
-
-        except Exception:
-
-            results[url] = False
-
-    session.close()
-
-    return results
+def write_json(path, data):
+    with open(
+        path,
+        "w",
+        encoding="utf-8",
+    ) as f:
+        json.dump(
+            data,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
 
-# ============================================================
-# SING-BOX CHECK
-# ============================================================
-
-def check_single_uri(uri, local_port):
-    config_path = os.path.join(
-        TEMP_DIR,
-        f"config_{local_port}.json",
-    )
-
-    proc = None
-
+def run_singbox_check(config_path):
     try:
-
-        config, meta = parse_vless(
-            uri,
-            local_port,
-        )
-
-        tcp_ok, tcp_error = tcp_precheck(
-            meta["server"],
-            meta["port"],
-        )
-
-        if not tcp_ok:
-
-            return {
-                "uri": uri,
-                "id": node_id(uri),
-                "protocol": meta["protocol"],
-                "transport": meta["transport"],
-                "security": meta["security"],
-                "tcp_ok": False,
-                "tcp_error": tcp_error,
-                "services": {},
-                "success_count": 0,
-                "live": False,
-                "error": "TCP precheck failed",
-            }
-
-        with open(
-            config_path,
-            "w",
-            encoding="utf-8",
-        ) as f:
-
-            json.dump(
-                config,
-                f,
-                ensure_ascii=False,
-                indent=2,
-            )
-
-        # ----------------------------------------------------
-        # CONFIG CHECK
-        # ----------------------------------------------------
-
-        check = subprocess.run(
+        result = subprocess.run(
             [
                 SINGBOX_BIN,
                 "check",
                 "-c",
                 config_path,
             ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
-            timeout=10,
+            timeout=15,
         )
 
-        if check.returncode != 0:
+        if result.returncode != 0:
 
             error_text = (
-                check.stderr.strip()
-                or check.stdout.strip()
-                or "sing-box config check failed"
+                result.stderr.strip()
+                or result.stdout.strip()
+                or f"exit code {result.returncode}"
             )
 
-            with open(
-                ERROR_LOG,
-                "a",
-                encoding="utf-8",
-            ) as log:
+            return False, error_text
 
-                log.write(
-                    f"\n{uri}\n{error_text}\n"
-                )
+        return True, None
 
-            return {
-                "uri": uri,
-                "id": node_id(uri),
-                "protocol": meta["protocol"],
-                "transport": meta["transport"],
-                "security": meta["security"],
-                "tcp_ok": True,
-                "tcp_error": "",
-                "services": {},
-                "success_count": 0,
-                "live": False,
-                "error": error_text,
-            }
+    except subprocess.TimeoutExpired:
+        return False, "sing-box check timeout"
 
-        # ----------------------------------------------------
-        # START SING-BOX
-        # ----------------------------------------------------
+    except Exception as e:
+        return False, str(e)
 
-        proc = subprocess.Popen(
+
+def start_singbox(config_path):
+    try:
+
+        process = subprocess.Popen(
             [
                 SINGBOX_BIN,
                 "run",
@@ -857,99 +689,285 @@ def check_single_uri(uri, local_port):
             text=True,
         )
 
-        deadline = time.time() + SINGBOX_START_WAIT
+        return process, None
 
-        while time.time() < deadline:
+    except Exception as e:
+        return None, str(e)
 
-            if proc.poll() is not None:
 
-                stderr_text = ""
+# ============================================================
+# SERVICE TEST
+# ============================================================
 
-                try:
-                    stderr_text = (
-                        proc.stderr.read() or ""
-                    ).strip()
-                except Exception:
-                    pass
+def test_service(url, proxy_port):
+    proxy = f"socks5h://127.0.0.1:{proxy_port}"
 
-                return {
-                    "uri": uri,
-                    "id": node_id(uri),
-                    "protocol": meta["protocol"],
-                    "transport": meta["transport"],
-                    "security": meta["security"],
-                    "tcp_ok": True,
-                    "tcp_error": "",
-                    "services": {},
-                    "success_count": 0,
-                    "live": False,
-                    "error": (
-                        stderr_text
-                        or "sing-box exited immediately"
-                    ),
-                }
+    proxies = {
+        "http": proxy,
+        "https": proxy,
+    }
 
-            time.sleep(0.05)
+    started = time.time()
 
-        # ----------------------------------------------------
-        # ALL SERVICES
-        # ----------------------------------------------------
-
-        service_results = test_services(
-            local_port
+    try:
+        response = requests.get(
+            url,
+            proxies=proxies,
+            timeout=SERVICE_TIMEOUT,
+            allow_redirects=True,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 "
+                    "(Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 "
+                    "Chrome/154.0 Safari/537.36"
+                )
+            },
         )
 
-        success_count = sum(
-            1
-            for value in service_results.values()
-            if value
-        )
+        elapsed = time.time() - started
 
-        live = (
-            success_count >= 3
-        )
+        ok = response.status_code in GOOD_CODES
 
         return {
-            "uri": uri,
-            "id": node_id(uri),
-            "protocol": meta["protocol"],
-            "transport": meta["transport"],
-            "security": meta["security"],
-            "tcp_ok": True,
-            "tcp_error": "",
-            "services": service_results,
-            "success_count": success_count,
-            "live": live,
-            "error": "",
+            "url": url,
+            "ok": ok,
+            "status": response.status_code,
+            "time": round(elapsed, 3),
+            "error": None,
         }
 
     except Exception as e:
 
+        elapsed = time.time() - started
+
+        return {
+            "url": url,
+            "ok": False,
+            "status": None,
+            "time": round(elapsed, 3),
+            "error": str(e),
+        }
+
+
+def test_services(proxy_port):
+    results = []
+
+    for url in TEST_URLS:
+        result = test_service(
+            url,
+            proxy_port,
+        )
+
+        results.append(result)
+
+    return results
+
+
+# ============================================================
+# SINGLE NODE TEST
+# ============================================================
+
+def check_single_uri(uri):
+    node = parse_vless(uri)
+
+    if not node:
         return {
             "uri": uri,
-            "id": node_id(uri),
-            "protocol": "vless",
-            "transport": "unknown",
-            "security": "unknown",
-            "tcp_ok": False,
-            "tcp_error": "",
-            "services": {},
-            "success_count": 0,
+            "node_id": node_id(uri),
             "live": False,
-            "error": str(e),
+            "tcp_ok": False,
+            "success_count": 0,
+            "services": [],
+            "error": "invalid VLESS URI",
+        }
+
+    # --------------------------------------------------------
+    # TCP PRECHECK
+    # --------------------------------------------------------
+
+    tcp_ok, tcp_error = tcp_precheck(
+        node["server"],
+        node["port"],
+    )
+
+    if not tcp_ok:
+
+        return {
+            "uri": uri,
+            "node_id": node_id(uri),
+            "server": node["server"],
+            "port": node["port"],
+            "transport": node["transport"],
+            "security": node["security"],
+            "sni": node["sni"],
+            "live": False,
+            "tcp_ok": False,
+            "success_count": 0,
+            "services": [],
+            "error": f"TCP FAIL: {tcp_error}",
+        }
+
+    local_port = get_free_port()
+
+    config_path = os.path.join(
+        TEMP_DIR,
+        f"node_{local_port}.json",
+    )
+
+    process = None
+
+    try:
+
+        config = build_config(
+            node,
+            local_port,
+        )
+
+        write_json(
+            config_path,
+            config,
+        )
+
+        # ----------------------------------------------------
+        # SING-BOX CONFIG CHECK
+        # ----------------------------------------------------
+
+        check_ok, check_error = run_singbox_check(
+            config_path,
+        )
+
+        if not check_ok:
+
+            log_error(
+                f"CONFIG FAIL | "
+                f"{node['server']}:{node['port']} | "
+                f"{node['transport']}/{node['security']} | "
+                f"{check_error}"
+            )
+
+            return {
+                "uri": uri,
+                "node_id": node_id(uri),
+                "server": node["server"],
+                "port": node["port"],
+                "transport": node["transport"],
+                "security": node["security"],
+                "sni": node["sni"],
+                "live": False,
+                "tcp_ok": True,
+                "success_count": 0,
+                "services": [],
+                "error": f"CONFIG FAIL: {check_error}",
+            }
+
+        # ----------------------------------------------------
+        # START SING-BOX
+        # ----------------------------------------------------
+
+        process, start_error = start_singbox(
+            config_path,
+        )
+
+        if process is None:
+
+            log_error(
+                f"START FAIL | "
+                f"{node['server']}:{node['port']} | "
+                f"{start_error}"
+            )
+
+            return {
+                "uri": uri,
+                "node_id": node_id(uri),
+                "server": node["server"],
+                "port": node["port"],
+                "transport": node["transport"],
+                "security": node["security"],
+                "sni": node["sni"],
+                "live": False,
+                "tcp_ok": True,
+                "success_count": 0,
+                "services": [],
+                "error": f"START FAIL: {start_error}",
+            }
+
+        # ----------------------------------------------------
+        # WAIT FOR LOCAL SOCKS
+        # ----------------------------------------------------
+
+        time.sleep(SINGBOX_START_WAIT)
+
+        # ----------------------------------------------------
+        # TEST SERVICES
+        # ----------------------------------------------------
+
+        services = test_services(
+            local_port,
+        )
+
+        success_count = sum(
+            1
+            for item in services
+            if item["ok"]
+        )
+
+        live = success_count >= 3
+
+        return {
+            "uri": uri,
+            "node_id": node_id(uri),
+            "server": node["server"],
+            "port": node["port"],
+            "transport": node["transport"],
+            "security": node["security"],
+            "sni": node["sni"],
+            "live": live,
+            "tcp_ok": True,
+            "success_count": success_count,
+            "services": services,
+            "error": None,
+        }
+
+    except Exception as e:
+
+        log_error(
+            f"NODE ERROR | "
+            f"{node['server']}:{node['port']} | "
+            f"{repr(e)}"
+        )
+
+        return {
+            "uri": uri,
+            "node_id": node_id(uri),
+            "server": node["server"],
+            "port": node["port"],
+            "transport": node["transport"],
+            "security": node["security"],
+            "sni": node["sni"],
+            "live": False,
+            "tcp_ok": True,
+            "success_count": 0,
+            "services": [],
+            "error": repr(e),
         }
 
     finally:
 
-        if proc is not None:
+        if process is not None:
 
             try:
-                proc.terminate()
-                proc.wait(timeout=1)
-            except Exception:
+                process.terminate()
 
                 try:
-                    proc.kill()
+                    process.wait(timeout=2)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait(timeout=2)
+
+            except Exception:
+                try:
+                    process.kill()
                 except Exception:
                     pass
 
@@ -961,251 +979,284 @@ def check_single_uri(uri, local_port):
 
 
 # ============================================================
-# NODE WORKER
-# ============================================================
-
-def check_node(task):
-    index, total, uri = task
-
-    port = PORT_QUEUE.get()
-
-    try:
-
-        result = check_single_uri(
-            uri,
-            port,
-        )
-
-        state = (
-            "LIVE"
-            if result["live"]
-            else "DEAD"
-        )
-
-        if not result["tcp_ok"]:
-
-            logger.info(
-                "[%d/%d] %s | %s | %s/%s | TCP FAIL",
-                index,
-                total,
-                state,
-                result["id"],
-                result["transport"],
-                result["security"],
-            )
-
-        else:
-
-            logger.info(
-                "[%d/%d] %s | %s | %s/%s | %d/5",
-                index,
-                total,
-                state,
-                result["id"],
-                result["transport"],
-                result["security"],
-                result["success_count"],
-            )
-
-        return result
-
-    finally:
-
-        PORT_QUEUE.put(port)
-
-
-# ============================================================
 # ARCHIVE
 # ============================================================
 
 def load_archive():
     if not os.path.exists(ARCHIVE_FILE):
-        return []
+        return {}
 
-    result = []
-    seen = set()
+    archive = {}
+
+    try:
+        with open(
+            ARCHIVE_FILE,
+            "r",
+            encoding="utf-8",
+            errors="ignore",
+        ) as f:
+
+            for line in f:
+
+                uri = line.strip()
+
+                if not uri:
+                    continue
+
+                if not uri.lower().startswith("vless://"):
+                    continue
+
+                archive[node_id(uri)] = uri
+
+    except Exception as e:
+        log_error(
+            f"Archive read error: {e}"
+        )
+
+    return archive
+
+
+def save_archive(archive):
+    temp_file = ARCHIVE_FILE + ".tmp"
+
+    values = list(archive.values())
+
+    values.sort()
 
     with open(
-        ARCHIVE_FILE,
-        "r",
-        encoding="utf-8",
-        errors="ignore",
-    ) as f:
-
-        for line in f:
-
-            uri = clean_uri(line)
-
-            if not uri.startswith("vless://"):
-                continue
-
-            if uri in seen:
-                continue
-
-            seen.add(uri)
-            result.append(uri)
-
-    return result
-
-
-def save_archive(nodes):
-    tmp = ARCHIVE_FILE + ".tmp"
-
-    with open(
-        tmp,
+        temp_file,
         "w",
         encoding="utf-8",
     ) as f:
 
-        for uri in nodes:
+        for uri in values:
             f.write(uri + "\n")
 
     os.replace(
-        tmp,
+        temp_file,
         ARCHIVE_FILE,
     )
 
 
 # ============================================================
-# UPDATE STATS
+# STATS
 # ============================================================
 
-def update_stats_for_result(
-    stats,
-    result,
-    source_memberships,
-    archive=False,
-):
-    protocol = result["protocol"]
-    transport = result["transport"]
-    security = result["security"]
+def load_stats():
+    if not os.path.exists(STATS_FILE):
+        return {
+            "runs": 0,
+            "nodes": {},
+            "sources": {},
+            "services": {},
+        }
 
-    protocol_bucket = ensure_dimension_bucket(
-        stats["protocols"],
-        protocol,
-    )
-
-    transport_bucket = ensure_dimension_bucket(
-        stats["transports"],
-        transport,
-    )
-
-    security_bucket = ensure_dimension_bucket(
-        stats["security"],
-        security,
-    )
-
-    for bucket in (
-        protocol_bucket,
-        transport_bucket,
-        security_bucket,
-    ):
-        bucket["tested"] += 1
-
-        if result["live"]:
-            bucket["live"] += 1
-        else:
-            bucket["dead"] += 1
-
-    # --------------------------------------------------------
-    # SERVICES
-    # --------------------------------------------------------
-
-    for url, success in result["services"].items():
-
-        if url not in stats["services"]:
-            stats["services"][url] = make_service_bucket()
-
-        bucket = stats["services"][url]
-
-        bucket["attempts"] += 1
-
-        if success:
-            bucket["success"] += 1
-        else:
-            bucket["failed"] += 1
-
-        stats["totals"]["service_attempts"] += 1
-
-        if success:
-            stats["totals"]["service_success"] += 1
-        else:
-            stats["totals"]["service_failed"] += 1
-
-    if not result["tcp_ok"]:
-
-        stats["totals"]["tcp_failed"] += 1
-
-    # --------------------------------------------------------
-    # SOURCE STATS
-    # --------------------------------------------------------
-
-    if not archive:
-
-        for source in source_memberships:
-
-            bucket = ensure_source_bucket(
-                stats,
-                source,
-            )
-
-            bucket["tested"] += 1
-
-            if result["live"]:
-                bucket["live"] += 1
-            else:
-                bucket["dead"] += 1
-
-        stats["totals"]["source_nodes_tested"] += 1
-
-        if result["live"]:
-            stats["totals"]["source_live"] += 1
-        else:
-            stats["totals"]["source_dead"] += 1
-
-    else:
-
-        stats["totals"]["archive_tested"] += 1
-
-        if result["live"]:
-            stats["totals"]["archive_live"] += 1
-        else:
-            stats["totals"]["archive_dead"] += 1
-
-
-# ============================================================
-# SING-BOX VERSION
-# ============================================================
-
-def show_singbox_version():
     try:
 
-        result = subprocess.run(
-            [
-                SINGBOX_BIN,
-                "version",
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            timeout=10,
-        )
+        with open(
+            STATS_FILE,
+            "r",
+            encoding="utf-8",
+        ) as f:
 
-        logger.info(
-            "%s",
-            result.stdout.strip(),
-        )
+            data = json.load(f)
 
-        return True
+        if not isinstance(data, dict):
+            raise ValueError("stats root is not object")
+
+        data.setdefault("runs", 0)
+        data.setdefault("nodes", {})
+        data.setdefault("sources", {})
+        data.setdefault("services", {})
+
+        return data
 
     except Exception as e:
 
-        logger.error(
-            "Cannot run sing-box: %s",
-            e,
+        log_error(
+            f"Stats read error: {e}"
         )
 
-        return False
+        return {
+            "runs": 0,
+            "nodes": {},
+            "sources": {},
+            "services": {},
+        }
+
+
+def save_stats(stats):
+    temp_file = STATS_FILE + ".tmp"
+
+    with open(
+        temp_file,
+        "w",
+        encoding="utf-8",
+    ) as f:
+
+        json.dump(
+            stats,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    os.replace(
+        temp_file,
+        STATS_FILE,
+    )
+
+
+def ensure_source_bucket(stats, source):
+    if source not in stats["sources"]:
+
+        stats["sources"][source] = {
+            "runs": 0,
+            "downloads_ok": 0,
+            "downloads_failed": 0,
+            "found": 0,
+            "tested": 0,
+            "live": 0,
+            "dead": 0,
+        }
+
+    bucket = stats["sources"][source]
+
+    bucket.setdefault("runs", 0)
+    bucket.setdefault("downloads_ok", 0)
+    bucket.setdefault("downloads_failed", 0)
+    bucket.setdefault("found", 0)
+    bucket.setdefault("tested", 0)
+    bucket.setdefault("live", 0)
+    bucket.setdefault("dead", 0)
+
+    return bucket
+
+
+def update_stats_node(stats, result):
+    nid = result["node_id"]
+
+    if nid not in stats["nodes"]:
+
+        stats["nodes"][nid] = {
+            "uri": result["uri"],
+            "tests": 0,
+            "live": 0,
+            "dead": 0,
+            "tcp_fail": 0,
+            "services": {
+                url: {
+                    "ok": 0,
+                    "fail": 0,
+                }
+                for url in TEST_URLS
+            },
+        }
+
+    bucket = stats["nodes"][nid]
+
+    bucket["uri"] = result["uri"]
+    bucket["tests"] += 1
+
+    if result["live"]:
+        bucket["live"] += 1
+    else:
+        bucket["dead"] += 1
+
+    if not result["tcp_ok"]:
+        bucket["tcp_fail"] += 1
+
+    for service in result.get("services", []):
+
+        url = service["url"]
+
+        if url not in bucket["services"]:
+            bucket["services"][url] = {
+                "ok": 0,
+                "fail": 0,
+            }
+
+        if service["ok"]:
+            bucket["services"][url]["ok"] += 1
+        else:
+            bucket["services"][url]["fail"] += 1
+
+
+def update_stats_services(stats, result):
+
+    for service in result.get("services", []):
+
+        url = service["url"]
+
+        if url not in stats["services"]:
+
+            stats["services"][url] = {
+                "ok": 0,
+                "fail": 0,
+            }
+
+        if service["ok"]:
+            stats["services"][url]["ok"] += 1
+        else:
+            stats["services"][url]["fail"] += 1
+
+
+# ============================================================
+# NODE TEST WRAPPER
+# ============================================================
+
+def check_node(uri):
+    result = check_single_uri(uri)
+
+    status = "LIVE" if result["live"] else "DEAD"
+
+    service_count = result.get(
+        "success_count",
+        0,
+    )
+
+    if result.get("error"):
+        detail = f" | {result['error']}"
+    else:
+        detail = ""
+
+    log(
+        f"{status} | "
+        f"{result.get('server', '?')}:"
+        f"{result.get('port', '?')} | "
+        f"{result.get('transport', '?')}/"
+        f"{result.get('security', '?')} | "
+        f"{service_count}/{len(TEST_URLS)}"
+        f"{detail}"
+    )
+
+    return result
+
+
+# ============================================================
+# SOURCE MEMBERSHIP
+# ============================================================
+
+def build_source_membership(source_nodes):
+    """
+    Returns:
+        node_id -> set(source URLs)
+    """
+
+    membership = {}
+
+    for source, nodes in source_nodes.items():
+
+        for uri in nodes:
+
+            nid = node_id(uri)
+
+            if nid not in membership:
+                membership[nid] = set()
+
+            membership[nid].add(source)
+
+    return membership
 
 
 # ============================================================
@@ -1214,508 +1265,739 @@ def show_singbox_version():
 
 def main():
 
-    logger.info("=" * 70)
-    logger.info("=== SING-BOX VLESS MAIN ===")
-    logger.info("=" * 70)
+    start_time = time.time()
 
-    logger.info(
-        "Sources are loaded from: %s",
-        SOURCES_FILE,
+    log("=" * 70)
+    log("=== VLESS BULK TESTER / SING-BOX ===")
+    log("=== FULL TEST / NO EARLY EXIT ===")
+    log("=" * 70)
+
+    log(
+        f"Services: {len(TEST_URLS)}"
     )
 
-    logger.info(
-        "Threads: %d",
-        MAX_THREADS,
+    log(
+        "Services: "
+        + ", ".join(TEST_URLS)
     )
 
-    logger.info(
-        "Services: %d",
-        len(TEST_URLS),
+    log(
+        f"Live threshold: 3/{len(TEST_URLS)}"
     )
 
-    logger.info(
-        "LIVE requirement: 3/%d",
-        len(TEST_URLS),
+    log(
+        f"Max subscription nodes: {MAX_NODES}"
     )
 
-    logger.info(
-        "Subscription target: %d",
-        MAX_NODES,
+    log(
+        f"Threads: {MAX_THREADS}"
     )
 
-    logger.info(
-        "SNI mutation: DISABLED",
+    log(
+        f"Archive: {ARCHIVE_FILE}"
     )
 
-    logger.info(
-        "Archive: %s",
-        ARCHIVE_FILE,
+    log(
+        f"Subscription: {SUBSCRIPTION_FILE}"
     )
 
     # --------------------------------------------------------
-    # LOAD STATS
+    # SOURCES
+    # --------------------------------------------------------
+
+    try:
+        sources = load_sources()
+    except Exception as e:
+        log_error(
+            f"Cannot load sources.txt: {e}"
+        )
+        return
+
+    log(
+        f"Sources: {len(sources)}"
+    )
+
+    if not sources:
+        log_error(
+            "sources.txt contains no valid URLs"
+        )
+        return
+
+    # --------------------------------------------------------
+    # STATS
     # --------------------------------------------------------
 
     stats = load_stats()
 
-    stats["totals"]["runs"] += 1
+    stats["runs"] += 1
 
-    # --------------------------------------------------------
-    # SING-BOX
-    # --------------------------------------------------------
+    run_number = stats["runs"]
 
-    if not show_singbox_version():
-        raise RuntimeError(
-            "sing-box is not available"
-        )
-
-    # --------------------------------------------------------
-    # LOAD SOURCES
-    # --------------------------------------------------------
-
-    sources = load_sources()
-
-    logger.info(
-        "Sources: %d",
-        len(sources),
+    log(
+        f"Run number: {run_number}"
     )
 
     # --------------------------------------------------------
     # DOWNLOAD SOURCES
     # --------------------------------------------------------
 
-    logger.info("=" * 70)
-    logger.info("=== DOWNLOADING SOURCES ===")
-    logger.info("=" * 70)
+    source_nodes = {}
 
-    all_nodes = {}
-    source_memberships = {}
+    all_unique_nodes = {}
 
-    source_found_total = 0
+    source_results = {}
 
-    for source in sources:
+    total_found = 0
 
-        name = source_name(source)
+    successful_sources = 0
+    failed_sources = 0
+
+    for index, source in enumerate(
+        sources,
+        start=1,
+    ):
+
+        log(
+            f"[SOURCE {index}/{len(sources)}] "
+            f"Downloading: {source}"
+        )
+
+        ok, text, error = download_source(
+            source
+        )
 
         bucket = ensure_source_bucket(
             stats,
             source,
         )
 
-        ok, nodes, error = download_source(
-            source
-        )
+        bucket["runs"] += 1
 
         if not ok:
 
+            failed_sources += 1
+
             bucket["downloads_failed"] += 1
 
-            stats["totals"][
-                "source_downloads_failed"
-            ] += 1
+            source_results[source] = {
+                "download_ok": False,
+                "nodes": [],
+                "error": error,
+            }
 
-            logger.error(
-                "SOURCE FAILED: %s | %s",
-                name,
-                error,
+            log(
+                f"[SOURCE {index}] "
+                f"FAILED: {error}"
             )
 
             continue
 
+        successful_sources += 1
+
         bucket["downloads_ok"] += 1
 
-        stats["totals"][
-            "source_downloads_ok"
-        ] += 1
+        nodes = extract_vless(text)
 
-        bucket["found"] = len(nodes)
+        bucket["found"] += len(nodes)
 
-        source_found_total += len(nodes)
+        total_found += len(nodes)
+
+        source_nodes[source] = nodes
+
+        source_results[source] = {
+            "download_ok": True,
+            "nodes": nodes,
+            "error": None,
+        }
 
         for uri in nodes:
 
-            if uri not in all_nodes:
-                all_nodes[uri] = uri
+            nid = node_id(uri)
 
-            if uri not in source_memberships:
-                source_memberships[uri] = []
+            if nid not in all_unique_nodes:
+                all_unique_nodes[nid] = uri
 
-            if source not in source_memberships[uri]:
-                source_memberships[uri].append(source)
-
-        logger.info(
-            "SOURCE OK: %s | VLESS: %d",
-            name,
-            len(nodes),
+        log(
+            f"[SOURCE {index}] "
+            f"OK | VLESS found: {len(nodes)}"
         )
 
-    stats["totals"]["source_nodes_found"] = (
-        stats["totals"].get(
-            "source_nodes_found",
-            0,
-        )
-        + source_found_total
+    log("-" * 70)
+
+    log(
+        f"Sources successful: "
+        f"{successful_sources}/{len(sources)}"
     )
 
-    stats["totals"]["unique_nodes"] = (
-        len(all_nodes)
+    log(
+        f"Sources failed: {failed_sources}"
     )
 
-    logger.info(
-        "VLESS found across sources: %d",
-        source_found_total,
+    log(
+        f"VLESS found total: {total_found}"
     )
 
-    logger.info(
-        "Unique nodes: %d",
-        len(all_nodes),
+    log(
+        f"Unique nodes: {len(all_unique_nodes)}"
     )
 
     # --------------------------------------------------------
-    # FRESH NODE TEST
+    # SOURCE MEMBERSHIP
     # --------------------------------------------------------
 
-    logger.info("=" * 70)
-    logger.info("=== TESTING FRESH NODES ===")
-    logger.info("=" * 70)
+    source_membership = build_source_membership(
+        source_nodes
+    )
 
-    fresh_nodes = list(all_nodes.keys())
+    # --------------------------------------------------------
+    # TEST ALL UNIQUE FRESH NODES
+    # --------------------------------------------------------
 
-    fresh_live = []
-    fresh_dead = []
+    fresh_results = {}
 
-    results_by_uri = {}
+    fresh_live = {}
+    fresh_dead = {}
 
-    tasks = [
-        (
-            index,
-            len(fresh_nodes),
-            uri,
-        )
-        for index, uri
-        in enumerate(fresh_nodes, 1)
-    ]
+    log("-" * 70)
+
+    log(
+        f"START FRESH TEST: "
+        f"{len(all_unique_nodes)} unique nodes"
+    )
 
     with ThreadPoolExecutor(
         max_workers=MAX_THREADS
     ) as executor:
 
-        for result in executor.map(
-            check_node,
-            tasks,
+        future_map = {
+            executor.submit(
+                check_node,
+                uri,
+            ): nid
+            for nid, uri in all_unique_nodes.items()
+        }
+
+        completed = 0
+
+        for future in as_completed(
+            future_map
         ):
 
-            results_by_uri[
-                result["uri"]
-            ] = result
+            nid = future_map[future]
 
-            update_stats_for_result(
-                stats,
-                result,
-                source_memberships.get(
-                    result["uri"],
-                    [],
-                ),
-                archive=False,
-            )
+            try:
+                result = future.result()
+
+            except Exception as e:
+
+                uri = all_unique_nodes[nid]
+
+                result = {
+                    "uri": uri,
+                    "node_id": nid,
+                    "live": False,
+                    "tcp_ok": False,
+                    "success_count": 0,
+                    "services": [],
+                    "error": repr(e),
+                }
+
+                log_error(
+                    f"THREAD ERROR | {uri} | {repr(e)}"
+                )
+
+            fresh_results[nid] = result
 
             if result["live"]:
-                fresh_live.append(
-                    result["uri"]
-                )
+                fresh_live[nid] = result
             else:
-                fresh_dead.append(
-                    result["uri"]
+                fresh_dead[nid] = result
+
+            completed += 1
+
+            if completed % 10 == 0 or completed == len(all_unique_nodes):
+
+                log(
+                    f"PROGRESS: "
+                    f"{completed}/{len(all_unique_nodes)} | "
+                    f"LIVE={len(fresh_live)} | "
+                    f"DEAD={len(fresh_dead)}"
                 )
 
-    logger.info(
-        "Fresh LIVE: %d",
-        len(fresh_live),
+    log("-" * 70)
+
+    log(
+        f"Fresh LIVE: {len(fresh_live)}"
     )
 
-    logger.info(
-        "Fresh DEAD: %d",
-        len(fresh_dead),
+    log(
+        f"Fresh DEAD: {len(fresh_dead)}"
     )
 
     # --------------------------------------------------------
-    # ARCHIVE LOAD
+    # UPDATE SOURCE TEST STATS
     # --------------------------------------------------------
 
-    archive_nodes = load_archive()
+    for source, nodes in source_nodes.items():
 
-    logger.info(
-        "Archive before update: %d",
-        len(archive_nodes),
+        bucket = ensure_source_bucket(
+            stats,
+            source,
+        )
+
+        bucket["tested"] += len(nodes)
+
+        for uri in nodes:
+
+            nid = node_id(uri)
+
+            result = fresh_results.get(nid)
+
+            if not result:
+                continue
+
+            if result["live"]:
+                bucket["live"] += 1
+            else:
+                bucket["dead"] += 1
+
+    # --------------------------------------------------------
+    # UPDATE NODE / SERVICE STATS
+    # --------------------------------------------------------
+
+    for result in fresh_results.values():
+
+        update_stats_node(
+            stats,
+            result,
+        )
+
+        update_stats_services(
+            stats,
+            result,
+        )
+
+    # --------------------------------------------------------
+    # ARCHIVE
+    # --------------------------------------------------------
+
+    archive = load_archive()
+
+    archive_before = len(archive)
+
+    log("-" * 70)
+
+    log(
+        f"Archive before: {archive_before}"
     )
 
-    archive_map = {
-        uri: uri
-        for uri in archive_nodes
-    }
-
     # --------------------------------------------------------
-    # FRESH LIVE -> ARCHIVE
-    # FRESH DEAD -> REMOVE FROM ARCHIVE
+    # ADD FRESH LIVE TO ARCHIVE
     # --------------------------------------------------------
 
-    for uri in fresh_live:
-        archive_map[uri] = uri
+    for nid, result in fresh_live.items():
 
-    for uri in fresh_dead:
-        archive_map.pop(uri, None)
+        archive[nid] = result["uri"]
 
     # --------------------------------------------------------
-    # CURRENT SOURCE NODES MUST NOT BE RECHECKED FROM ARCHIVE
+    # REMOVE FRESH DEAD FROM ARCHIVE
+    #
+    # Only remove nodes that were actually tested in this run.
+    # Other historical LIVE archive nodes remain untouched.
     # --------------------------------------------------------
 
-    current_source_ids = {
-        node_id(uri)
-        for uri in fresh_nodes
-    }
+    for nid in fresh_dead:
+
+        if nid in archive:
+            del archive[nid]
+
+    log(
+        f"Archive after fresh results: "
+        f"{len(archive)}"
+    )
 
     # --------------------------------------------------------
-    # SUBSCRIPTION
+    # BUILD SUBSCRIPTION CANDIDATES
+    #
+    # Fresh LIVE first.
     # --------------------------------------------------------
 
     subscription = []
 
-    seen_subscription = set()
+    used_ids = set()
 
-    for uri in fresh_live:
-
-        if uri in seen_subscription:
-            continue
-
-        seen_subscription.add(uri)
-
-        subscription.append(uri)
+    for nid, result in fresh_live.items():
 
         if len(subscription) >= MAX_NODES:
             break
 
-    # --------------------------------------------------------
-    # ARCHIVE FILL
-    # --------------------------------------------------------
-
-    if len(subscription) < MAX_NODES:
-
-        logger.info("=" * 70)
-        logger.info("=== RECHECKING ARCHIVE ===")
-        logger.info("=" * 70)
-
-        archive_candidates = []
-
-        # Новые/последние записи проверяем первыми.
-        for uri in reversed(
-            list(archive_map.keys())
-        ):
-
-            if node_id(uri) in current_source_ids:
-                continue
-
-            if uri in seen_subscription:
-                continue
-
-            archive_candidates.append(uri)
-
-        logger.info(
-            "Archive candidates: %d",
-            len(archive_candidates),
+        subscription.append(
+            result["uri"]
         )
 
-        for uri in archive_candidates:
+        used_ids.add(nid)
+
+    # --------------------------------------------------------
+    # ARCHIVE FILL
+    #
+    # If fresh LIVE < 100, test archive candidates.
+    # Fresh nodes are not tested again.
+    # --------------------------------------------------------
+
+    archive_candidates = [
+        (nid, uri)
+        for nid, uri in archive.items()
+        if nid not in fresh_results
+    ]
+
+    need_archive = (
+        MAX_NODES - len(subscription)
+    )
+
+    archive_results = {}
+
+    if need_archive > 0 and archive_candidates:
+
+        log("-" * 70)
+
+        log(
+            f"Archive fill needed: "
+            f"{need_archive}"
+        )
+
+        log(
+            f"Archive candidates to test: "
+            f"{len(archive_candidates)}"
+        )
+
+        with ThreadPoolExecutor(
+            max_workers=MAX_THREADS
+        ) as executor:
+
+            future_map = {
+                executor.submit(
+                    check_node,
+                    uri,
+                ): (nid, uri)
+                for nid, uri in archive_candidates
+            }
+
+            for future in as_completed(
+                future_map
+            ):
+
+                nid, uri = future_map[future]
+
+                try:
+                    result = future.result()
+
+                except Exception as e:
+
+                    result = {
+                        "uri": uri,
+                        "node_id": nid,
+                        "live": False,
+                        "tcp_ok": False,
+                        "success_count": 0,
+                        "services": [],
+                        "error": repr(e),
+                    }
+
+                    log_error(
+                        f"ARCHIVE THREAD ERROR | "
+                        f"{uri} | {repr(e)}"
+                    )
+
+                archive_results[nid] = result
+
+                update_stats_node(
+                    stats,
+                    result,
+                )
+
+                update_stats_services(
+                    stats,
+                    result,
+                )
+
+        # ----------------------------------------------------
+        # ARCHIVE RESULTS
+        # ----------------------------------------------------
+
+        for nid, result in archive_results.items():
+
+            if result["live"]:
+
+                archive[nid] = result["uri"]
+
+            else:
+
+                if nid in archive:
+                    del archive[nid]
+
+        # ----------------------------------------------------
+        # FILL SUBSCRIPTION FROM LIVE ARCHIVE RESULTS
+        # ----------------------------------------------------
+
+        for nid, result in archive_results.items():
 
             if len(subscription) >= MAX_NODES:
                 break
 
-            port = PORT_QUEUE.get()
+            if not result["live"]:
+                continue
 
-            try:
+            if nid in used_ids:
+                continue
 
-                result = check_single_uri(
-                    uri,
-                    port,
-                )
-
-            finally:
-
-                PORT_QUEUE.put(port)
-
-            update_stats_for_result(
-                stats,
-                result,
-                [],
-                archive=True,
+            subscription.append(
+                result["uri"]
             )
 
-            if result["live"]:
+            used_ids.add(nid)
 
-                archive_map[uri] = uri
+        log(
+            f"Archive fill LIVE: "
+            f"{sum(1 for x in archive_results.values() if x['live'])}"
+        )
 
-                if uri not in seen_subscription:
+        log(
+            f"Archive fill DEAD: "
+            f"{sum(1 for x in archive_results.values() if not x['live'])}"
+        )
 
-                    seen_subscription.add(uri)
+    else:
 
-                    subscription.append(uri)
-
-                logger.info(
-                    "ARCHIVE LIVE | %s | %d/5",
-                    result["id"],
-                    result["success_count"],
-                )
-
-            else:
-
-                archive_map.pop(
-                    uri,
-                    None,
-                )
-
-                logger.info(
-                    "ARCHIVE DEAD | %s",
-                    result["id"],
-                )
+        if need_archive > 0:
+            log(
+                "Archive fill skipped: "
+                "no archive candidates"
+            )
 
     # --------------------------------------------------------
-    # SAVE ARCHIVE
+    # IF STILL NOT FULL, USE EXISTING ARCHIVE
+    #
+    # This is only for archive entries that were not selected
+    # as candidates in the current run.
+    #
+    # But we do NOT blindly trust them if they were tested
+    # and failed.
     # --------------------------------------------------------
 
-    final_archive = list(
-        archive_map.keys()
+    if len(subscription) < MAX_NODES:
+
+        for nid, uri in archive.items():
+
+            if len(subscription) >= MAX_NODES:
+                break
+
+            if nid in used_ids:
+                continue
+
+            if nid in fresh_results:
+                continue
+
+            if nid in archive_results:
+                continue
+
+            subscription.append(uri)
+
+            used_ids.add(nid)
+
+    # --------------------------------------------------------
+    # FINAL ARCHIVE SAVE
+    # --------------------------------------------------------
+
+    save_archive(archive)
+
+    log(
+        f"Archive final: {len(archive)}"
     )
 
-    save_archive(
-        final_archive
+    # --------------------------------------------------------
+    # SUBSCRIPTION SAFETY
+    # --------------------------------------------------------
+
+    previous_subscription_exists = os.path.exists(
+        SUBSCRIPTION_FILE
     )
 
-    # --------------------------------------------------------
-    # SAVE SUBSCRIPTION
-    # --------------------------------------------------------
+    previous_subscription_size = 0
 
-    with open(
-        SUBSCRIPTION_FILE,
-        "w",
-        encoding="utf-8",
-    ) as f:
+    if previous_subscription_exists:
 
-        for uri in subscription:
-            f.write(uri + "\n")
-
-    stats["totals"][
-        "subscription_live"
-    ] = len(subscription)
+        try:
+            previous_subscription_size = os.path.getsize(
+                SUBSCRIPTION_FILE
+            )
+        except Exception:
+            previous_subscription_size = 0
 
     # --------------------------------------------------------
-    # RUN HISTORY
+    # IMPORTANT:
+    #
+    # NEVER replace a working subscription with an empty one.
+    #
+    # If this run gets 0 validated LIVE nodes, keep the previous
+    # subscription intact.
     # --------------------------------------------------------
 
-    run_summary = {
+    if subscription:
+
+        temp_subscription = (
+            SUBSCRIPTION_FILE + ".tmp"
+        )
+
+        with open(
+            temp_subscription,
+            "w",
+            encoding="utf-8",
+        ) as f:
+
+            for uri in subscription:
+                f.write(uri + "\n")
+
+        os.replace(
+            temp_subscription,
+            SUBSCRIPTION_FILE,
+        )
+
+        log(
+            f"Subscription updated: "
+            f"{len(subscription)} nodes"
+        )
+
+    else:
+
+        if previous_subscription_exists:
+
+            log(
+                "Subscription update SKIPPED: "
+                "0 validated LIVE nodes. "
+                "Existing vless_001.txt preserved."
+            )
+
+            log(
+                f"Existing subscription size: "
+                f"{previous_subscription_size} bytes"
+            )
+
+        else:
+
+            # No previous subscription exists.
+            # Create an empty file only in this case.
+            with open(
+                SUBSCRIPTION_FILE,
+                "w",
+                encoding="utf-8",
+            ):
+                pass
+
+            log(
+                "Subscription remains empty: "
+                "no validated LIVE nodes."
+            )
+
+    # --------------------------------------------------------
+    # RUN STATS
+    # --------------------------------------------------------
+
+    stats["last_run"] = {
+        "run": run_number,
         "timestamp": time.strftime(
             "%Y-%m-%d %H:%M:%S"
         ),
-
         "sources": len(sources),
-
-        "source_nodes_found":
-            source_found_total,
-
-        "unique_nodes":
-            len(fresh_nodes),
-
-        "fresh_live":
-            len(fresh_live),
-
-        "fresh_dead":
-            len(fresh_dead),
-
-        "archive_before":
-            len(archive_nodes),
-
-        "archive_after":
-            len(final_archive),
-
-        "subscription":
-            len(subscription),
+        "sources_ok": successful_sources,
+        "sources_failed": failed_sources,
+        "vless_found": total_found,
+        "unique_nodes": len(all_unique_nodes),
+        "fresh_live": len(fresh_live),
+        "fresh_dead": len(fresh_dead),
+        "archive_before": archive_before,
+        "archive_after": len(archive),
+        "subscription_nodes": len(subscription),
+        "subscription_updated": bool(subscription),
+        "services": len(TEST_URLS),
+        "live_threshold": 3,
+        "threads": MAX_THREADS,
+        "duration_seconds": round(
+            time.time() - start_time,
+            2,
+        ),
     }
 
-    stats["run_history"].append(
-        run_summary
-    )
-
-    # Не даём истории бесконечно разрастаться.
-    if len(stats["run_history"]) > 1000:
-        stats["run_history"] = (
-            stats["run_history"][-1000:]
-        )
+    # --------------------------------------------------------
+    # SAVE STATS
+    # --------------------------------------------------------
 
     save_stats(stats)
 
     # --------------------------------------------------------
-    # REPORT
+    # FINAL REPORT
     # --------------------------------------------------------
 
-    logger.info("=" * 70)
-    logger.info("=== FINAL RESULT ===")
-    logger.info("=" * 70)
+    elapsed = time.time() - start_time
 
-    logger.info(
-        "Sources: %d",
-        len(sources),
+    log("=" * 70)
+    log("=== RUN FINISHED ===")
+    log("=" * 70)
+
+    log(
+        f"Run: {run_number}"
     )
 
-    logger.info(
-        "VLESS found: %d",
-        source_found_total,
+    log(
+        f"Sources: "
+        f"{successful_sources}/{len(sources)} OK"
     )
 
-    logger.info(
-        "Unique nodes: %d",
-        len(fresh_nodes),
+    log(
+        f"VLESS found: "
+        f"{total_found}"
     )
 
-    logger.info(
-        "Fresh LIVE: %d",
-        len(fresh_live),
+    log(
+        f"Unique nodes: "
+        f"{len(all_unique_nodes)}"
     )
 
-    logger.info(
-        "Fresh DEAD: %d",
-        len(fresh_dead),
+    log(
+        f"Fresh LIVE: "
+        f"{len(fresh_live)}"
     )
 
-    logger.info(
-        "Archive before: %d",
-        len(archive_nodes),
+    log(
+        f"Fresh DEAD: "
+        f"{len(fresh_dead)}"
     )
 
-    logger.info(
-        "Archive after: %d",
-        len(final_archive),
+    log(
+        f"Archive: "
+        f"{archive_before} -> {len(archive)}"
     )
 
-    logger.info(
-        "Subscription: %d",
-        len(subscription),
+    log(
+        f"Subscription candidates: "
+        f"{len(subscription)}"
     )
 
-    logger.info(
-        "Subscription file: %s",
-        SUBSCRIPTION_FILE,
+    log(
+        f"Subscription file: "
+        f"{SUBSCRIPTION_FILE}"
     )
 
-    logger.info(
-        "Archive file: %s",
-        ARCHIVE_FILE,
+    log(
+        f"Duration: "
+        f"{elapsed:.1f} sec"
     )
 
-    logger.info(
-        "Stats file: %s",
-        STATS_FILE,
-    )
+    log("=" * 70)
 
-    logger.info("=" * 70)
 
+# ============================================================
+# ENTRY POINT
+# ============================================================
 
 if __name__ == "__main__":
     main()
