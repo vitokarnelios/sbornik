@@ -1,0 +1,8 @@
+2026-10-04 08:19:41,062 | ERROR | MAIN FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/sbornik/sbornik/main.py", line 1189, in <module>
+    main()
+  File "/home/runner/work/sbornik/sbornik/main.py", line 933, in main
+    run_number = RUN_STATS_FILE_DATA["runs"] + 1
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+TypeError: can only concatenate list (not "int") to list
