@@ -14,6 +14,7 @@ TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 - Если живых < MAX_NODES — добираем из архива с TCP+sing-box,
   ровно до MAX_NODES, дальше архив не трогаем
 - Мёртвые проверенные архивные ноды удаляются из архива
+- Статистика по транспортам и security: protocol_stats.json
 - Сохраняет статистику сервисов, нод и источников
 - Отдельно пишет агрегат текущего запуска
 - Потоки берут задачи из очереди
@@ -71,6 +72,7 @@ SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
 NODE_STATS_FILE = os.path.join(BASE_PATH, "node_stats.json")
 SOURCE_STATS_FILE = os.path.join(BASE_PATH, "source_stats.json")
 RUN_STATS_FILE = os.path.join(BASE_PATH, "run_stats.json")
+PROTOCOL_STATS_FILE = os.path.join(BASE_PATH, "protocol_stats.json")
 
 MAX_NODE_STATS = 30000
 MAX_SOURCE_NODE_LIST = 5000
@@ -653,6 +655,160 @@ def empty_node_stats():
     return {}
 
 
+# ========== PROTOCOL STATS (transport / security) ==========
+
+PROTOCOL_TRANSPORTS = ["tcp", "ws", "grpc", "xhttp"]
+PROTOCOL_SECURITIES = ["none", "tls", "reality"]
+
+
+def empty_protocol_bucket():
+    return {
+        "live_total": 0,
+        "dead_total": 0,
+        "live_last": 0,
+        "dead_last": 0
+    }
+
+
+def empty_protocol_stats():
+    return {
+        "by_transport": {
+            t: empty_protocol_bucket()
+            for t in PROTOCOL_TRANSPORTS
+        },
+        "by_security": {
+            s: empty_protocol_bucket()
+            for s in PROTOCOL_SECURITIES
+        }
+    }
+
+
+def load_protocol_stats(path):
+    """
+    Загружает protocol_stats.json.
+    Гарантирует наличие всех ключей by_transport / by_security.
+    """
+    default = empty_protocol_stats()
+
+    if not os.path.exists(path):
+        return default
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        if not isinstance(data, dict):
+            return default
+
+        for section, keys in (
+            ("by_transport", PROTOCOL_TRANSPORTS),
+            ("by_security", PROTOCOL_SECURITIES),
+        ):
+            block = data.setdefault(section, {})
+            for k in keys:
+                item = block.setdefault(k, empty_protocol_bucket())
+                for field in (
+                    "live_total",
+                    "dead_total",
+                    "live_last",
+                    "dead_last"
+                ):
+                    item[field] = int(item.get(field, 0))
+
+        return data
+
+    except Exception as e:
+        logger.warning(
+            f"Ошибка загрузки protocol_stats.json: {e}"
+        )
+        return default
+
+
+def save_protocol_stats(path, data):
+    save_json_stats(
+        path,
+        data,
+        "Статистика протоколов"
+    )
+
+
+def reset_protocol_last(data):
+    """
+    Сбрасывает _last поля в 0 перед новым запуском.
+    _total не трогает.
+    """
+    for section in ("by_transport", "by_security"):
+        block = data.get(section, {})
+        for item in block.values():
+            item["live_last"] = 0
+            item["dead_last"] = 0
+
+
+def classify_transport(vless_uri):
+    """
+    Возвращает транспорт из type= (default 'tcp').
+    Если тип не входит в PROTOCOL_TRANSPORTS — возвращает 'tcp'.
+    """
+    try:
+        q = parse_qs(urlparse(vless_uri).query)
+        t = q.get("type", ["tcp"])[0].strip().lower()
+        if t in PROTOCOL_TRANSPORTS:
+            return t
+        return "tcp"
+    except Exception:
+        return "tcp"
+
+
+def classify_security(vless_uri):
+    """
+    Возвращает security из security= (default 'none').
+    reality — если security=reality или есть pbk.
+    Если не none/tls/reality — считаем 'none'.
+    """
+    try:
+        q = parse_qs(urlparse(vless_uri).query)
+        s = q.get("security", ["none"])[0].strip().lower()
+
+        if s == "reality" or "pbk" in q:
+            return "reality"
+
+        if s == "tls":
+            return "tls"
+
+        return "none"
+    except Exception:
+        return "none"
+
+
+def protocol_inc(data, transport, security, alive):
+    """
+    Инкрементирует live/dead для by_transport и by_security.
+    alive=True → live_total/live_last, alive=False → dead_total/dead_last.
+    """
+    tr = data["by_transport"].setdefault(
+        transport,
+        empty_protocol_bucket()
+    )
+    se = data["by_security"].setdefault(
+        security,
+        empty_protocol_bucket()
+    )
+
+    if alive:
+        tr["live_total"] += 1
+        tr["live_last"] += 1
+        se["live_total"] += 1
+        se["live_last"] += 1
+    else:
+        tr["dead_total"] += 1
+        tr["dead_last"] += 1
+        se["dead_total"] += 1
+        se["dead_last"] += 1
+
+
+PROTOCOL_STATS = load_protocol_stats(PROTOCOL_STATS_FILE)
+
+
 SOURCE_STATS = load_json_stats(SOURCE_STATS_FILE, empty_source_stats)
 NODE_STATS = load_json_stats(NODE_STATS_FILE, empty_node_stats)
 
@@ -972,6 +1128,10 @@ def worker(
             vless_uri
         )
 
+        # Классификация для protocol_stats
+        transport = classify_transport(vless_uri)
+        security = classify_security(vless_uri)
+
         with lock:
 
             node_rec["attempts"] = (
@@ -1025,6 +1185,13 @@ def worker(
 
                         run_stats["original_live"] += 1
 
+                        protocol_inc(
+                            PROTOCOL_STATS,
+                            transport,
+                            security,
+                            True
+                        )
+
                         for src in node_sources_map.get(
                             vless_uri,
                             []
@@ -1062,6 +1229,13 @@ def worker(
                     node_rec["last_status"] = "dead"
 
                     run_stats["dead"] += 1
+
+                    protocol_inc(
+                        PROTOCOL_STATS,
+                        transport,
+                        security,
+                        False
+                    )
 
                     for src in node_sources_map.get(
                         vless_uri,
@@ -1145,6 +1319,9 @@ def main():
     logger.info(
         "=== SING-BOX STATUS ==="
     )
+
+    # Сброс _last полей в protocol_stats перед запуском
+    reset_protocol_last(PROTOCOL_STATS)
 
     try:
 
@@ -1497,6 +1674,10 @@ def main():
 
             run_stats["archive_checked"] += 1
 
+            # Классификация для protocol_stats
+            transport = classify_transport(node)
+            security = classify_security(node)
+
             try:
 
                 # ===== Быстрый TCP pre-check =====
@@ -1513,6 +1694,14 @@ def main():
                     checked_dead.add(node)
 
                     run_stats["archive_removed"] += 1
+
+                    with lock:
+                        protocol_inc(
+                            PROTOCOL_STATS,
+                            transport,
+                            security,
+                            False
+                        )
 
                 else:
 
@@ -1534,6 +1723,14 @@ def main():
 
                         run_stats["archive_revived"] += 1
 
+                        with lock:
+                            protocol_inc(
+                                PROTOCOL_STATS,
+                                transport,
+                                security,
+                                True
+                            )
+
                     else:
 
                         logger.info(
@@ -1544,6 +1741,14 @@ def main():
                         checked_dead.add(node)
 
                         run_stats["archive_removed"] += 1
+
+                        with lock:
+                            protocol_inc(
+                                PROTOCOL_STATS,
+                                transport,
+                                security,
+                                False
+                            )
 
             except Exception as e:
 
@@ -1631,6 +1836,11 @@ def main():
             "Статистика нод"
         )
 
+        save_protocol_stats(
+            PROTOCOL_STATS_FILE,
+            PROTOCOL_STATS
+        )
+
         run_stats["finished_at"] = (
             datetime.now().isoformat(
                 timespec="seconds"
@@ -1674,61 +1884,38 @@ def main():
     )
 
     # =========================================
-    # PROTOCOL STATS
+    # PROTOCOL STATS LOG
     # =========================================
 
-    types_count = {
-
-        "reality": 0,
-        "tls": 0,
-        "grpc": 0,
-        "xhttp": 0,
-        "ws": 0,
-        "other": 0
-    }
-
-    for node in subscribe_nodes:
-
-        if (
-            "security=reality"
-            in node
-            or "pbk="
-            in node
-        ):
-
-            types_count["reality"] += 1
-
-        elif "type=grpc" in node:
-
-            types_count["grpc"] += 1
-
-        elif "type=xhttp" in node:
-
-            types_count["xhttp"] += 1
-
-        elif "type=ws" in node:
-
-            types_count["ws"] += 1
-
-        elif "security=tls" in node:
-
-            types_count["tls"] += 1
-
-        else:
-
-            types_count["other"] += 1
-
     logger.info(
-        "\n--- STATS BY PROTOCOL ---"
+        "\n--- STATS BY TRANSPORT (live_total / dead_total | "
+        "live_last / dead_last) ---"
     )
 
-    for proto, count in types_count.items():
+    for t in PROTOCOL_TRANSPORTS:
+        item = PROTOCOL_STATS["by_transport"].get(
+            t, empty_protocol_bucket()
+        )
+        logger.info(
+            f"{t}: "
+            f"{item['live_total']} / {item['dead_total']} | "
+            f"{item['live_last']} / {item['dead_last']}"
+        )
 
-        if count > 0:
+    logger.info(
+        "\n--- STATS BY SECURITY (live_total / dead_total | "
+        "live_last / dead_last) ---"
+    )
 
-            logger.info(
-                f"{proto}: {count}"
-            )
+    for s in PROTOCOL_SECURITIES:
+        item = PROTOCOL_STATS["by_security"].get(
+            s, empty_protocol_bucket()
+        )
+        logger.info(
+            f"{s}: "
+            f"{item['live_total']} / {item['dead_total']} | "
+            f"{item['live_last']} / {item['dead_last']}"
+        )
 
     # =========================================
     # SERVICE STATS
@@ -1783,6 +1970,11 @@ def main():
         NODE_STATS_FILE,
         NODE_STATS,
         "Статистика нод"
+    )
+
+    save_protocol_stats(
+        PROTOCOL_STATS_FILE,
+        PROTOCOL_STATS
     )
 
     run_stats["finished_at"] = (
