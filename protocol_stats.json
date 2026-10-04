@@ -1,48 +1,48 @@
 {
   "by_transport": {
     "tcp": {
-      "live_total": 440,
-      "dead_total": 549,
-      "live_last": 75,
-      "dead_last": 134
+      "live_total": 524,
+      "dead_total": 630,
+      "live_last": 84,
+      "dead_last": 81
     },
     "ws": {
-      "live_total": 143,
-      "dead_total": 179,
-      "live_last": 25,
-      "dead_last": 32
+      "live_total": 159,
+      "dead_total": 199,
+      "live_last": 16,
+      "dead_last": 20
     },
     "grpc": {
       "live_total": 0,
-      "dead_total": 55,
+      "dead_total": 69,
       "live_last": 0,
-      "dead_last": 9
+      "dead_last": 14
     },
     "xhttp": {
       "live_total": 0,
-      "dead_total": 224,
+      "dead_total": 324,
       "live_last": 0,
-      "dead_last": 35
+      "dead_last": 100
     }
   },
   "by_security": {
     "none": {
-      "live_total": 45,
-      "dead_total": 24,
-      "live_last": 8,
-      "dead_last": 5
+      "live_total": 56,
+      "dead_total": 31,
+      "live_last": 11,
+      "dead_last": 7
     },
     "tls": {
-      "live_total": 251,
-      "dead_total": 363,
-      "live_last": 37,
-      "dead_last": 67
+      "live_total": 280,
+      "dead_total": 456,
+      "live_last": 29,
+      "dead_last": 93
     },
     "reality": {
-      "live_total": 287,
-      "dead_total": 620,
-      "live_last": 55,
-      "dead_last": 138
+      "live_total": 347,
+      "dead_total": 735,
+      "live_last": 60,
+      "dead_last": 115
     }
   }
 }
