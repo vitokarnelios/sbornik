@@ -1,15 +1,15 @@
 {
   "https://telegram.org": {
-    "attempts": 33767,
-    "success": 1945
+    "attempts": 33975,
+    "success": 2024
   },
   "https://www.instagram.com": {
-    "attempts": 33724,
-    "success": 1934
+    "attempts": 33932,
+    "success": 2039
   },
   "https://www.youtube.com": {
-    "attempts": 33678,
-    "success": 1971
+    "attempts": 33886,
+    "success": 2071
   },
   "https://gemini.google.com": {
     "attempts": 33558,
