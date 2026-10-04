@@ -11,10 +11,6 @@
     "attempts": 33001,
     "success": 1599
   },
-  "https://chatgpt.com": {
-    "attempts": 32541,
-    "success": 1170
-  },
   "https://gemini.google.com": {
     "attempts": 32881,
     "success": 1368
