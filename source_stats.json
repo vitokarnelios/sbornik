@@ -8,27 +8,8 @@
     "unique_nodes": 1168,
     "nodes_tested": 196,
     "original_live": 171,
-    "mutated_live": 3,
     "dead": 994,
-    "mutation_attempts": 15999,
-    "mutation_success": 3,
     "last_run": "2026-10-04T10:29:08",
-    "recent_node_ids": []
-  },
-  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt": {
-    "runs": 17,
-    "fetch_attempts": 17,
-    "fetch_success": 0,
-    "lines_total": 0,
-    "vless_total": 0,
-    "unique_nodes": 0,
-    "nodes_tested": 0,
-    "original_live": 0,
-    "mutated_live": 0,
-    "dead": 0,
-    "mutation_attempts": 0,
-    "mutation_success": 0,
-    "last_run": "2026-10-04T06:49:23",
     "recent_node_ids": []
   },
   "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-checked.txt": {
@@ -40,10 +21,7 @@
     "unique_nodes": 106,
     "nodes_tested": 76,
     "original_live": 71,
-    "mutated_live": 0,
     "dead": 35,
-    "mutation_attempts": 420,
-    "mutation_success": 0,
     "last_run": "2026-10-04T10:29:08",
     "recent_node_ids": []
   },
@@ -56,10 +34,7 @@
     "unique_nodes": 44,
     "nodes_tested": 25,
     "original_live": 25,
-    "mutated_live": 0,
     "dead": 19,
-    "mutation_attempts": 341,
-    "mutation_success": 0,
     "last_run": "2026-10-04T10:29:08",
     "recent_node_ids": []
   },
@@ -72,10 +47,7 @@
     "unique_nodes": 1168,
     "nodes_tested": 197,
     "original_live": 172,
-    "mutated_live": 3,
     "dead": 993,
-    "mutation_attempts": 15427,
-    "mutation_success": 3,
     "last_run": "2026-10-04T10:29:08",
     "recent_node_ids": []
   },
@@ -88,10 +60,7 @@
     "unique_nodes": 3009,
     "nodes_tested": 1390,
     "original_live": 1213,
-    "mutated_live": 0,
     "dead": 1412,
-    "mutation_attempts": 8468,
-    "mutation_success": 0,
     "last_run": "2026-10-04T10:29:08",
     "recent_node_ids": []
   },
@@ -104,10 +73,7 @@
     "unique_nodes": 2378,
     "nodes_tested": 1047,
     "original_live": 895,
-    "mutated_live": 0,
     "dead": 1189,
-    "mutation_attempts": 7512,
-    "mutation_success": 0,
     "last_run": "2026-10-04T10:29:08",
     "recent_node_ids": []
   },
@@ -120,10 +86,7 @@
     "unique_nodes": 735,
     "nodes_tested": 157,
     "original_live": 153,
-    "mutated_live": 0,
     "dead": 294,
-    "mutation_attempts": 2923,
-    "mutation_success": 0,
     "last_run": "2026-10-04T10:29:08",
     "recent_node_ids": []
   }
