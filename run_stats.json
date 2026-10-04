@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-10-04T04:49:24",
+  "started_at": "2026-10-04T06:49:23",
   "sources": 8,
   "source_fetch_success": 7,
   "lines_total": 0,
   "vless_total": 0,
-  "unique_nodes": 229,
-  "nodes_tested": 229,
-  "original_live": 89,
-  "mutated_live": 3,
-  "dead": 137,
-  "mutation_attempts": 1337,
-  "mutation_success": 3,
-  "finished_at": "2026-10-04T04:57:32"
+  "unique_nodes": 157,
+  "nodes_tested": 157,
+  "original_live": 56,
+  "mutated_live": 0,
+  "dead": 101,
+  "mutation_attempts": 1040,
+  "mutation_success": 0,
+  "finished_at": "2026-10-04T06:55:38"
 }
