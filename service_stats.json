@@ -1,14 +1,14 @@
 {
   "https://telegram.org": {
-    "attempts": 33975,
-    "success": 2024
+    "attempts": 34226,
+    "success": 2130
   },
   "https://www.instagram.com": {
-    "attempts": 33932,
-    "success": 2039
+    "attempts": 34178,
+    "success": 2167
   },
   "https://www.youtube.com": {
-    "attempts": 33886,
-    "success": 2071
+    "attempts": 34119,
+    "success": 2186
   }
 }
