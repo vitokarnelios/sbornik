@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 """
-SNI STATS REMOVED + SERVICE CHECKS + LOGS + QUEUE
+TCP PRE-CHECK + SERVICE CHECKS + LOGS + QUEUE
 
 - Проверяет ноды с оригинальным SNI
 - Мутация SNI удалена полностью
 - Статистика SNI удалена полностью
-- Живая нода = прошла проверку минимум на 3 из 6 тестовых сайтов
-- Проверяет Telegram, Instagram, YouTube и др.
-- Каждый тестовый сайт проверяется полностью, чтобы собирать статистику по сервисам
-- Один архив: alive_archive.txt — только рабочие ноды, без дубликатов
-- Если живых меньше MAX_NODES — берём из архива, проверяем, мёртвые удаляем
+- Перед запуском sing-box делает быстрый TCP pre-check
+- Живая нода = прошла проверку минимум на 3 из 5 тестовых сайтов
+- Проверяет Telegram, Instagram, YouTube, Gemini, Google
+- Проверяются ВСЕ ноды из источников (без остановки на 100 живых)
+- Один архив: archive.txt — только рабочие ноды, без дубликатов
+- В архив уходят ВСЕ живые ноды (не только 100)
+- Если живых < MAX_NODES — добираем из архива с TCP+sing-box,
+  ровно до MAX_NODES, дальше архив не трогаем
+- Мёртвые проверенные архивные ноды удаляются из архива
 - Сохраняет статистику сервисов, нод и источников
 - Отдельно пишет агрегат текущего запуска
 - Потоки берут задачи из очереди
 """
 
 import os
+import socket
 import requests
 import base64
 import random
@@ -92,6 +97,9 @@ MAX_THREADS = 40
 # Минимум успешных тестовых сайтов, чтобы нода считалась живой
 MIN_SITES_OK = 3
 
+# Таймаут TCP pre-check (секунды)
+TCP_TIMEOUT = 2.0
+
 stop_event = threading.Event()
 
 port_queue = queue.Queue()
@@ -106,10 +114,50 @@ TEST_URLS = [
     "https://telegram.org",
     "https://www.instagram.com",
     "https://www.youtube.com",
-    "https://chatgpt.com",
     "https://gemini.google.com",
     "https://www.google.com",
 ]
+
+
+# ========== TCP PRE-CHECK ==========
+
+def tcp_precheck(vless_uri, timeout=TCP_TIMEOUT):
+    """
+    Быстрая проверка: открывается ли TCP-соединение до server:port.
+    Возвращает True, если соединение установлено.
+    """
+    try:
+        parsed = urlparse(vless_uri)
+
+        netloc = parsed.netloc
+
+        if "@" not in netloc:
+            return False
+
+        _uuid, server_part = netloc.split("@", 1)
+
+        if ":" in server_part:
+            host, port_str = server_part.rsplit(":", 1)
+            try:
+                port = int(port_str)
+            except ValueError:
+                return False
+        else:
+            host = server_part
+            port = 443
+
+        # IPv6 в квадратных скобках
+        if host.startswith("[") and host.endswith("]"):
+            host = host[1:-1]
+
+        with socket.create_connection(
+            (host, port),
+            timeout=timeout
+        ):
+            return True
+
+    except Exception:
+        return False
 
 
 # ========== BASE64 ==========
@@ -936,51 +984,64 @@ def worker(
 
         try:
 
-            # ===== ПРОВЕРКА ОРИГИНАЛЬНОЙ НОДЫ =====
+            # ===== БЫСТРЫЙ TCP PRE-CHECK =====
 
-            is_alive, ok_count = check_single_uri(
-                vless_uri,
-                local_port,
-                SERVICE_STATS,
-                lock
-            )
+            tcp_ok = tcp_precheck(vless_uri)
 
-            if is_alive:
+            if not tcp_ok:
 
                 logger.debug(
-                    f"[LIVE {ok_count}/{len(TEST_URLS)}] "
-                    f"Нода рабочая "
+                    f"[TCP FAIL] Нода недоступна по TCP "
                     f"(порт {local_port})"
                 )
-
-                result_uri = vless_uri
-
-                with lock:
-
-                    node_rec["live"] += 1
-                    node_rec["original_live"] += 1
-                    node_rec["last_status"] = "original_live"
-                    node_rec["last_sni"] = original_sni
-
-                    run_stats["original_live"] += 1
-
-                    for src in node_sources_map.get(
-                        vless_uri,
-                        []
-                    ):
-
-                        b = ensure_source_bucket(src)
-
-                        b["nodes_tested"] += 1
-                        b["original_live"] += 1
 
             else:
 
-                logger.debug(
-                    f"[DEAD {ok_count}/{len(TEST_URLS)}] "
-                    f"Нода мертва "
-                    f"(порт {local_port})"
+                # ===== ПРОВЕРКА ОРИГИНАЛЬНОЙ НОДЫ =====
+
+                is_alive, ok_count = check_single_uri(
+                    vless_uri,
+                    local_port,
+                    SERVICE_STATS,
+                    lock
                 )
+
+                if is_alive:
+
+                    logger.debug(
+                        f"[LIVE {ok_count}/{len(TEST_URLS)}] "
+                        f"Нода рабочая "
+                        f"(порт {local_port})"
+                    )
+
+                    result_uri = vless_uri
+
+                    with lock:
+
+                        node_rec["live"] += 1
+                        node_rec["original_live"] += 1
+                        node_rec["last_status"] = "original_live"
+                        node_rec["last_sni"] = original_sni
+
+                        run_stats["original_live"] += 1
+
+                        for src in node_sources_map.get(
+                            vless_uri,
+                            []
+                        ):
+
+                            b = ensure_source_bucket(src)
+
+                            b["nodes_tested"] += 1
+                            b["original_live"] += 1
+
+                else:
+
+                    logger.debug(
+                        f"[DEAD {ok_count}/{len(TEST_URLS)}] "
+                        f"Нода мертва "
+                        f"(порт {local_port})"
+                    )
 
         except Exception as e:
 
@@ -1014,6 +1075,8 @@ def worker(
             )
 
         # ===== Сохраняем ЖИВУЮ НОДУ =====
+        # ВАЖНО: не останавливаемся при достижении MAX_NODES,
+        # чтобы проверить ВСЕ ноды из источников.
 
         if result_uri:
 
@@ -1023,20 +1086,16 @@ def worker(
                     result_uri
                 )
 
-                if len(result_list) >= MAX_NODES:
-
-                    stop_event.set()
-
         task_queue.task_done()
 
 
 # ========== АРХИВ ЖИВЫХ НОД ==========
 
-def load_alive_archive(path):
+def load_archive(path):
     """
-    Читает alive_archive.txt.
-    Возвращает список уникальных URI (порядок сохраняется, дубликаты
-    оставляют последнее вхождение).
+    Читает archive.txt.
+    Возвращает список уникальных URI (порядок сохраняется,
+    дубликаты оставляют последнее вхождение).
     """
     if not os.path.exists(path):
         return []
@@ -1048,7 +1107,6 @@ def load_alive_archive(path):
             if line:
                 raw.append(line)
 
-    # Уникализация с сохранением порядка "последнее вхождение в конец"
     seen = set()
     ordered = []
     for uri in reversed(raw):
@@ -1061,9 +1119,9 @@ def load_alive_archive(path):
     return ordered
 
 
-def save_alive_archive(path, nodes):
+def save_archive(path, nodes):
     """
-    Пишет alive_archive.txt: уникальные ноды, свежие — в конец.
+    Пишет archive.txt: уникальные ноды, свежие — в конец.
     """
     seen = set()
     ordered = []
@@ -1280,39 +1338,37 @@ def main():
                 del rec["sources"][:-30]
 
     # =========================================
-    # ALIVE ARCHIVE (единственный)
+    # ARCHIVE (единственный: archive.txt)
     # =========================================
 
-    alive_archive_path = os.path.join(
-        BASE_PATH,
-        "alive_archive.txt"
-    )
-
-    # Устаревший archive.txt больше не используется
-    legacy_archive_path = os.path.join(
+    archive_path = os.path.join(
         BASE_PATH,
         "archive.txt"
     )
 
-    if os.path.exists(legacy_archive_path):
+    # Устаревший alive_archive.txt больше не используется
+    legacy_alive_path = os.path.join(
+        BASE_PATH,
+        "alive_archive.txt"
+    )
+
+    if os.path.exists(legacy_alive_path):
         try:
-            os.remove(legacy_archive_path)
+            os.remove(legacy_alive_path)
             logger.info(
-                "🧹 Удалён устаревший archive.txt "
-                "(теперь используется только alive_archive.txt)"
+                "🧹 Удалён устаревший alive_archive.txt "
+                "(теперь используется только archive.txt)"
             )
         except Exception as e:
             logger.warning(
-                f"Не удалось удалить archive.txt: {e}"
+                f"Не удалось удалить alive_archive.txt: {e}"
             )
 
-    alive_archive_list = load_alive_archive(
-        alive_archive_path
-    )
+    archive_list = load_archive(archive_path)
 
     logger.info(
-        f"alive_archive.txt loaded: "
-        f"{len(alive_archive_list)} nodes"
+        f"archive.txt loaded: "
+        f"{len(archive_list)} nodes"
     )
 
     # =========================================
@@ -1324,7 +1380,7 @@ def main():
     seen_priority = set()
 
     # Сначала свежие живые из архива
-    for node in reversed(alive_archive_list):
+    for node in reversed(archive_list):
 
         if (
             node in seen
@@ -1398,212 +1454,40 @@ def main():
     # RESULTS
     # =========================================
 
-    alive_nodes = result_list
+    all_alive = list(dict.fromkeys(result_list))
 
     logger.info(
         f"\n--- RESULT: Found "
-        f"{len(alive_nodes)} live nodes ---"
+        f"{len(all_alive)} live nodes ---"
     )
-
-    # Дедуп с сохранением порядка
-    dedup = list(
-        dict.fromkeys(
-            alive_nodes
-        )
-    )
-
-    alive_nodes = dedup
-
-    logger.info(
-        f"After dedup: "
-        f"{len(alive_nodes)}"
-    )
-
-    # =========================================
-    # FILL FROM ARCHIVE (с проверкой)
-    # =========================================
-
-    if len(alive_nodes) < MAX_NODES:
-
-        logger.info(
-            f"\n--- FILL FROM ARCHIVE "
-            f"(need {MAX_NODES - len(alive_nodes)} more) ---"
-        )
-
-        # Кандидаты: свежие ноды из архива, которых ещё нет в подписке
-        candidates = [
-            node for node in reversed(alive_archive_list)
-            if node not in alive_nodes
-        ]
-
-        still_alive_from_archive = set()
-
-        for node in candidates:
-
-            if len(alive_nodes) >= MAX_NODES:
-                break
-
-            if stop_event.is_set():
-                break
-
-            # Проверяем кандидата отдельным потоком/портом
-            local_port = port_queue.get()
-
-            run_stats["archive_checked"] += 1
-
-            try:
-
-                is_alive, ok_count = check_single_uri(
-                    node,
-                    local_port,
-                    SERVICE_STATS,
-                    lock
-                )
-
-                if is_alive:
-
-                    logger.info(
-                        f"[ARCHIVE LIVE {ok_count}/{len(TEST_URLS)}] "
-                        f"Нода из архива рабочая, добавляю"
-                    )
-
-                    alive_nodes.append(node)
-                    still_alive_from_archive.add(node)
-
-                    run_stats["archive_revived"] += 1
-
-                else:
-
-                    logger.info(
-                        f"[ARCHIVE DEAD {ok_count}/{len(TEST_URLS)}] "
-                        f"Нода из архива мертва, удаляю из архива"
-                    )
-
-                    run_stats["archive_removed"] += 1
-
-            except Exception as e:
-
-                logger.error(
-                    f"Ошибка проверки архивной ноды: {e}"
-                )
-
-            finally:
-
-                port_queue.put(local_port)
-
-        # =========================================
-        # ОБНОВЛЕНИЕ АРХИВА
-        # =========================================
-        #
-        # 1. Все ноды, которые сейчас живые (alive_nodes) — идут в архив.
-        # 2. Из архива выкидываем те, что мы проверили и признали мёртвыми.
-        # 3. Дубликаты схлопываются.
-        #
-        newly_checked_dead = set()
-
-        for node in candidates:
-            if node not in still_alive_from_archive and node not in alive_nodes:
-                # Мы эту ноду проверяли в текущем проходе и она мертва
-                # (либо не успели проверить, но раз она не попала — не трогаем)
-                pass
-
-        # Формируем новый архив:
-        #   - все живые из текущего запуска
-        #   - все ноды из старого архива, кроме тех, что мы явно проверили и они мертвы
-        dead_in_this_run = set()
-
-        # Собираем мёртвых из архива: те, что были проверены и не прошли
-        # (мы их не добавили в alive_nodes и они не в still_alive_from_archive,
-        #  но проверялись — значит мертвы)
-        checked_in_this_run = set()
-
-        # Пересоберём логику: пройдёмся по candidates и посмотрим, что мы
-        # реально проверили (по факту все, до которых дошли в цикле).
-        # Отметим их.
-        # Проще: dead_in_this_run = candidates - still_alive_from_archive - alive_nodes,
-        # но только те, что мы успели проверить.
-
-        # Точный учёт: во время цикла мы увеличивали archive_checked.
-        # Запоминаем отдельно.
-        # Однако у нас нет прямого списка проверенных, поэтому добавим его.
-        # Сделаем проще: считаем мёртвыми только те, которые были в проверке.
-
-        # Для корректности введём список проверенных.
-        # (Ниже цикл уже прошёл — восстановим логику через отдельный список
-        #  мы это сделаем до цикла.)
-
-    # =========================================
-    # ARCHIVE UPDATE
-    # =========================================
-
-    # Итоговый архив:
-    #   - все живые ноды текущего запуска
-    #   - из старого архива: те, что НЕ были проверены как мёртвые
-    #
-    # Но чтобы понять, что было проверено и мертво, мы должны во время
-    # цикла выше это запомнить. Так как цикл выше уже прошёл, мы не можем
-    # это сделать постфактум. Поэтому переписываем блок fill-from-archive
-    # ниже, с явным списком проверенных и мёртвых.
-
-    # ВАЖНО: чтобы не плодить хаос, архив обновляем в одном месте —
-    # ниже. Здесь ничего не делаем.
-
-    # =========================================
-    # (см. ниже единый блок ARCHIVE UPDATE)
-    # =========================================
 
     # =========================================
     # ОБНОВЛЕНИЕ ARCHIVE + FILL (единый блок)
     # =========================================
-
-    # Пересоберём правильно: заново пройдём по архиву, проверим только тех,
-    # кого не хватает до MAX_NODES, и сразу отсеем мёртвых.
-
-    # Очищаем то, что могло быть добавлено выше (защита от ошибок логики),
-    # оставляя только тех, кто реально прошёл живую проверку на шаге 3.
-    # На шаге 3 мы уже собрали alive_nodes (source-based).
-
-    # Сброс флага и повторная корректная обработка.
-    # Для этого перезапускаем логику fill+archive-update с нуля.
-
-    # Так как выше мы уже что-то делали, аккуратно пересоберём:
-    # — удалим из alive_nodes всё, что не из первичного result_list.
-
-    # Чтобы не запутаться, просто ориентируемся на текущее состояние:
-    # alive_nodes содержит живые source-ноды + возможно добавленные из архива.
-    # Нам нужно: гарантировать, что каждая нода в alive_nodes прошла проверку
-    # (source-ноды прошли на шаге 3; архивные — в цикле fill).
-    # Дубликаты схлопнуты. Ограничение MAX_NODES соблюдено.
     #
-    # Дальше: архив = alive_nodes ∪ (старый архив без мёртвых проверенных).
+    # all_alive      — ВСЕ живые ноды (источники + добранные из архива).
+    #                  Идут в архив.
+    # subscribe_nodes — первые MAX_NODES из all_alive. Идут в подписку.
 
-    # Из-за сложности структуры кода выше, ниже идёт финальная пересборка:
-
-    # 1. Все живые source-ноды (изначальный result_list, дедуп).
-    source_alive = list(dict.fromkeys(result_list))
-
-    # 2. Финальный список нод для подписки.
-    final_alive = source_alive[:MAX_NODES]
-
-    # 3. Если не хватает — добираем из архива с проверкой.
-    if len(final_alive) < MAX_NODES:
+    # 1. Если живых < MAX_NODES — добираем из архива с проверкой,
+    #    ровно до MAX_NODES, дальше архив не трогаем.
+    if len(all_alive) < MAX_NODES:
 
         logger.info(
             f"\n--- FILL FROM ARCHIVE "
-            f"(need {MAX_NODES - len(final_alive)} more) ---"
+            f"(need {MAX_NODES - len(all_alive)} more) ---"
         )
 
         candidates = [
-            node for node in reversed(alive_archive_list)
-            if node not in final_alive
+            node for node in reversed(archive_list)
+            if node not in all_alive
         ]
 
-        checked_alive = set()
         checked_dead = set()
 
         for node in candidates:
 
-            if len(final_alive) >= MAX_NODES:
+            if len(all_alive) >= MAX_NODES:
                 break
 
             if stop_event.is_set():
@@ -1615,36 +1499,52 @@ def main():
 
             try:
 
-                is_alive, ok_count = check_single_uri(
-                    node,
-                    local_port,
-                    SERVICE_STATS,
-                    lock
-                )
+                # ===== Быстрый TCP pre-check =====
 
-                if is_alive:
+                tcp_ok = tcp_precheck(node)
+
+                if not tcp_ok:
 
                     logger.info(
-                        f"[ARCHIVE LIVE {ok_count}/{len(TEST_URLS)}] "
-                        f"Нода из архива рабочая, добавляю"
-                    )
-
-                    final_alive.append(node)
-                    checked_alive.add(node)
-
-                    run_stats["archive_revived"] += 1
-
-                else:
-
-                    logger.info(
-                        f"[ARCHIVE DEAD {ok_count}/{len(TEST_URLS)}] "
-                        f"Нода из архива мертва, удаляю"
+                        "[ARCHIVE TCP FAIL] "
+                        "Нода из архива недоступна, удаляю"
                     )
 
                     checked_dead.add(node)
 
                     run_stats["archive_removed"] += 1
 
+                else:
+
+                    is_alive, ok_count = check_single_uri(
+                        node,
+                        local_port,
+                        SERVICE_STATS,
+                        lock
+                    )
+
+                    if is_alive:
+
+                        logger.info(
+                            f"[ARCHIVE LIVE {ok_count}/{len(TEST_URLS)}] "
+                            f"Нода из архива рабочая, добавляю"
+                        )
+
+                        all_alive.append(node)
+
+                        run_stats["archive_revived"] += 1
+
+                    else:
+
+                        logger.info(
+                            f"[ARCHIVE DEAD {ok_count}/{len(TEST_URLS)}] "
+                            f"Нода из архива мертва, удаляю"
+                        )
+
+                        checked_dead.add(node)
+
+                        run_stats["archive_removed"] += 1
+
             except Exception as e:
 
                 logger.error(
@@ -1655,49 +1555,60 @@ def main():
 
                 port_queue.put(local_port)
 
-        # 4. Новый архив = все живые (source + добавленные из архива)
+        # 2. Новый архив = ВСЕ живые (источники + добавленные из архива)
         #    + старые архивные, которые мы НЕ проверяли в этом запуске
-        #    (их сохраняем как есть, чтобы не терять).
-        #    Мёртвых (checked_dead) выкидываем.
+        #    (их сохраняем как есть). Мёртвых (checked_dead) выкидываем.
 
         new_archive = []
 
-        # 4.1. Живые ноды текущего запуска — в конец (свежие)
-        for node in final_alive:
+        # 2.1. ВСЕ живые ноды текущего запуска — в конец (свежие)
+        for node in all_alive:
             new_archive.append(node)
 
-        # 4.2. Старый архив, кроме мёртвых и уже добавленных
-        for node in alive_archive_list:
+        # 2.2. Старый архив, кроме мёртвых и уже добавленных
+        for node in archive_list:
             if node in checked_dead:
                 continue
-            if node in final_alive:
+            if node in all_alive:
                 continue
             new_archive.append(node)
 
     else:
 
-        # Всё уместилось без архива — просто все живые в архив.
-        new_archive = list(final_alive)
+        # Живых ≥ MAX_NODES — архив не трогаем, но ВСЕ живые в архив.
+        checked_dead = set()
+
+        new_archive = []
+
+        # 2.1. ВСЕ живые ноды текущего запуска — в конец (свежие)
+        for node in all_alive:
+            new_archive.append(node)
+
+        # 2.2. Старый архив, кроме уже добавленных
+        for node in archive_list:
+            if node in all_alive:
+                continue
+            new_archive.append(node)
 
     # =========================================
     # SAVE ARCHIVE (уникальный, свежие в конце)
     # =========================================
 
-    alive_archive_list = save_alive_archive(
-        alive_archive_path,
+    archive_list = save_archive(
+        archive_path,
         new_archive
     )
 
     logger.info(
-        f"alive_archive.txt updated: "
-        f"{len(alive_archive_list)} nodes"
+        f"archive.txt updated: "
+        f"{len(archive_list)} nodes"
     )
 
     # =========================================
     # НЕТ НОД
     # =========================================
 
-    if len(final_alive) == 0:
+    if len(all_alive) == 0:
 
         logger.warning(
             "0 live nodes, "
@@ -1738,6 +1649,8 @@ def main():
     # SUBSCRIPTION
     # =========================================
 
+    subscribe_nodes = all_alive[:MAX_NODES]
+
     out_path = os.path.join(
         FINAL_DIR,
         "vless_001.txt"
@@ -1751,13 +1664,13 @@ def main():
 
         f.write(
             "\n".join(
-                final_alive[:MAX_NODES]
+                subscribe_nodes
             )
         )
 
     logger.info(
         f"Subscription updated: "
-        f"{out_path} ({len(final_alive[:MAX_NODES])} nodes)"
+        f"{out_path} ({len(subscribe_nodes)} nodes)"
     )
 
     # =========================================
@@ -1774,7 +1687,7 @@ def main():
         "other": 0
     }
 
-    for node in final_alive:
+    for node in subscribe_nodes:
 
         if (
             "security=reality"
