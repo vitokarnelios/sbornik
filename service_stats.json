@@ -10,13 +10,5 @@
   "https://www.youtube.com": {
     "attempts": 33886,
     "success": 2071
-  },
-  "https://gemini.google.com": {
-    "attempts": 33558,
-    "success": 1727
-  },
-  "https://www.google.com": {
-    "attempts": 33495,
-    "success": 1764
   }
 }
