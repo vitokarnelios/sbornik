@@ -1,0 +1,93 @@
+{
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 23,
+    "vless_total": 15,
+    "unique_nodes": 15,
+    "nodes_tested": 15,
+    "original_live": 0,
+    "dead": 15,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-checked.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 10,
+    "vless_total": 5,
+    "unique_nodes": 5,
+    "nodes_tested": 5,
+    "original_live": 0,
+    "dead": 5,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 5,
+    "vless_total": 0,
+    "unique_nodes": 0,
+    "nodes_tested": 0,
+    "original_live": 0,
+    "dead": 0,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 25,
+    "vless_total": 15,
+    "unique_nodes": 15,
+    "nodes_tested": 15,
+    "original_live": 0,
+    "dead": 15,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 128,
+    "vless_total": 123,
+    "unique_nodes": 123,
+    "nodes_tested": 123,
+    "original_live": 22,
+    "dead": 101,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  },
+  "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 144,
+    "vless_total": 111,
+    "unique_nodes": 111,
+    "nodes_tested": 111,
+    "original_live": 18,
+    "dead": 93,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  },
+  "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt": {
+    "runs": 1,
+    "fetch_attempts": 1,
+    "fetch_success": 1,
+    "lines_total": 28,
+    "vless_total": 14,
+    "unique_nodes": 14,
+    "nodes_tested": 14,
+    "original_live": 9,
+    "dead": 5,
+    "last_run": "2026-10-04T07:02:29.647688",
+    "recent_node_ids": []
+  }
+}

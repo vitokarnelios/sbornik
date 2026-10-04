@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "started": "2026-10-04T07:02:29.647688",
+      "finished": "2026-10-04T07:03:33.063315",
+      "sources": 7,
+      "vless_found": 283,
+      "unique_nodes": 157,
+      "fresh_tested": 157,
+      "fresh_live": 31,
+      "fresh_dead": 126,
+      "archive_before": 0,
+      "archive_rechecked": 0,
+      "archive_live_after_recheck": 0,
+      "archive_after": 31,
+      "subscription_count": 31,
+      "services": [
+        "https://telegram.org",
+        "https://www.instagram.com",
+        "https://www.youtube.com",
+        "https://gemini.google.com",
+        "https://www.google.com"
+      ],
+      "live_rule": "3 of 5"
+    }
+  ]
+}
