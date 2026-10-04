@@ -1,0 +1,188 @@
+{
+  "version": 3,
+  "sources": {
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 25,
+      "tested": 25,
+      "live": 0,
+      "dead": 25
+    },
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt": {
+      "downloads_ok": 0,
+      "downloads_failed": 1,
+      "found": 0,
+      "tested": 0,
+      "live": 0,
+      "dead": 0
+    },
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-checked.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 0,
+      "tested": 0,
+      "live": 0,
+      "dead": 0
+    },
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-SNI-RU-all.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 0,
+      "tested": 0,
+      "live": 0,
+      "dead": 0
+    },
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 25,
+      "tested": 25,
+      "live": 0,
+      "dead": 25
+    },
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 123,
+      "tested": 123,
+      "live": 0,
+      "dead": 123
+    },
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 111,
+      "tested": 111,
+      "live": 0,
+      "dead": 111
+    },
+    "https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt": {
+      "downloads_ok": 1,
+      "downloads_failed": 0,
+      "found": 14,
+      "tested": 14,
+      "live": 0,
+      "dead": 14
+    }
+  },
+  "protocols": {
+    "vless": {
+      "tested": 162,
+      "live": 0,
+      "dead": 162
+    }
+  },
+  "transports": {
+    "grpc": {
+      "tested": 21,
+      "live": 0,
+      "dead": 21
+    },
+    "xhttp": {
+      "tested": 27,
+      "live": 0,
+      "dead": 27
+    },
+    "raw": {
+      "tested": 5,
+      "live": 0,
+      "dead": 5
+    },
+    "ws": {
+      "tested": 32,
+      "live": 0,
+      "dead": 32
+    },
+    "tcp": {
+      "tested": 72,
+      "live": 0,
+      "dead": 72
+    },
+    "httpupgrade": {
+      "tested": 5,
+      "live": 0,
+      "dead": 5
+    }
+  },
+  "security": {
+    "reality": {
+      "tested": 95,
+      "live": 0,
+      "dead": 95
+    },
+    "tls": {
+      "tested": 50,
+      "live": 0,
+      "dead": 50
+    },
+    "false": {
+      "tested": 3,
+      "live": 0,
+      "dead": 3
+    },
+    "none": {
+      "tested": 14,
+      "live": 0,
+      "dead": 14
+    }
+  },
+  "services": {
+    "https://telegram.org": {
+      "attempts": 0,
+      "success": 0,
+      "failed": 0
+    },
+    "https://www.instagram.com": {
+      "attempts": 0,
+      "success": 0,
+      "failed": 0
+    },
+    "https://www.youtube.com": {
+      "attempts": 0,
+      "success": 0,
+      "failed": 0
+    },
+    "https://gemini.google.com": {
+      "attempts": 0,
+      "success": 0,
+      "failed": 0
+    },
+    "https://www.google.com": {
+      "attempts": 0,
+      "success": 0,
+      "failed": 0
+    }
+  },
+  "totals": {
+    "runs": 1,
+    "source_downloads_ok": 7,
+    "source_downloads_failed": 1,
+    "source_nodes_found": 298,
+    "unique_nodes": 162,
+    "source_nodes_tested": 162,
+    "source_live": 0,
+    "source_dead": 162,
+    "archive_tested": 0,
+    "archive_live": 0,
+    "archive_dead": 0,
+    "tcp_failed": 35,
+    "service_attempts": 0,
+    "service_success": 0,
+    "service_failed": 0,
+    "subscription_live": 0
+  },
+  "run_history": [
+    {
+      "timestamp": "2026-10-04 06:33:18",
+      "sources": 8,
+      "source_nodes_found": 298,
+      "unique_nodes": 162,
+      "fresh_live": 0,
+      "fresh_dead": 162,
+      "archive_before": 0,
+      "archive_after": 0,
+      "subscription": 0
+    }
+  ]
+}
