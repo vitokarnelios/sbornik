@@ -1,8 +1,22 @@
 #!/usr/bin/env python3
+"""
+SNI STATS REMOVED + SERVICE CHECKS + LOGS + QUEUE
+
+- Проверяет ноды с оригинальным SNI
+- Мутация SNI удалена полностью
+- Статистика SNI удалена полностью
+- Проверяет Telegram, Instagram, YouTube и др.
+- Нода считается живой, если отвечает хотя бы один тестовый сайт
+- Каждый тестовый сайт проверяется полностью, чтобы собирать статистику по сервисам
+- Сохраняет статистику сервисов, нод и источников
+- Отдельно пишет агрегат текущего запуска
+- Потоки берут задачи из очереди
+"""
 
 import os
 import requests
 import base64
+import random
 import json
 import subprocess
 import time
@@ -10,19 +24,13 @@ import queue
 import threading
 import logging
 import hashlib
-
 from collections import defaultdict
 from datetime import datetime
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import urlparse, parse_qs, unquote, urlencode, urlunparse
 from concurrent.futures import ThreadPoolExecutor
 
 
-# =========================================================
-# PATHS
-# =========================================================
-
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-
 FINAL_DIR = os.path.join(BASE_PATH, "subs")
 LOG_DIR = os.path.join(BASE_PATH, "logs")
 
@@ -30,9 +38,7 @@ os.makedirs(FINAL_DIR, exist_ok=True)
 os.makedirs(LOG_DIR, exist_ok=True)
 
 
-# =========================================================
-# LOGGING
-# =========================================================
+# ========== ЛОГИРОВАНИЕ ==========
 
 log_file = os.path.join(
     LOG_DIR,
@@ -41,9 +47,9 @@ log_file = os.path.join(
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
+    format='%(asctime)s | %(levelname)s | %(message)s',
     handlers=[
-        logging.FileHandler(log_file, encoding="utf-8"),
+        logging.FileHandler(log_file, encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
@@ -51,339 +57,57 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# =========================================================
-# FILES
-# =========================================================
+# ========== КОНФИГ ==========
 
-SOURCES_FILE = os.path.join(
-    BASE_PATH,
-    "sources.txt"
-)
+SOURCES_FILE = os.path.join(BASE_PATH, "sources.txt")
+SERVICE_STATS_FILE = os.path.join(BASE_PATH, "service_stats.json")
+NODE_STATS_FILE = os.path.join(BASE_PATH, "node_stats.json")
+SOURCE_STATS_FILE = os.path.join(BASE_PATH, "source_stats.json")
+RUN_STATS_FILE = os.path.join(BASE_PATH, "run_stats.json")
 
-SERVICE_STATS_FILE = os.path.join(
-    BASE_PATH,
-    "service_stats.json"
-)
-
-NODE_STATS_FILE = os.path.join(
-    BASE_PATH,
-    "node_stats.json"
-)
-
-SOURCE_STATS_FILE = os.path.join(
-    BASE_PATH,
-    "source_stats.json"
-)
-
-RUN_STATS_FILE = os.path.join(
-    BASE_PATH,
-    "run_stats.json"
-)
-
-# ЕДИНСТВЕННЫЙ архив LIVE
-ALIVE_ARCHIVE_FILE = os.path.join(
-    FINAL_DIR,
-    "live_archive.txt"
-)
-
-SUBSCRIPTION_FILE = os.path.join(
-    FINAL_DIR,
-    "vless_001.txt"
-)
+MAX_NODE_STATS = 30000
+MAX_SOURCE_NODE_LIST = 5000
 
 
-# =========================================================
-# LIMITS
-# =========================================================
+if not os.path.exists(SOURCES_FILE):
+    logger.error("Файл sources.txt не найден")
+    exit(1)
+
+
+with open(SOURCES_FILE, "r", encoding="utf-8") as f:
+    SOURCES = [
+        line.strip()
+        for line in f
+        if line.strip() and not line.strip().startswith("#")
+    ]
+
+
+# ========== ОСНОВНЫЕ НАСТРОЙКИ ==========
 
 MAX_NODES = 100
 MAX_THREADS = 40
 
-MAX_NODE_STATS = 30000
-
-
-# =========================================================
-# SOURCES
-# =========================================================
-
-if not os.path.exists(SOURCES_FILE):
-    logger.error("Файл sources.txt не найден")
-    raise SystemExit(1)
-
-
-with open(
-    SOURCES_FILE,
-    "r",
-    encoding="utf-8"
-) as f:
-
-    SOURCES = [
-        line.strip()
-        for line in f
-        if line.strip()
-        and not line.strip().startswith("#")
-    ]
-
-
-# =========================================================
-# JSON HELPERS
-# =========================================================
-
-def load_json_stats(path, default_factory):
-
-    if not os.path.exists(path):
-        return default_factory()
-
-    try:
-
-        with open(
-            path,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            data = json.load(f)
-
-        return (
-            data
-            if isinstance(data, dict)
-            else default_factory()
-        )
-
-    except Exception as e:
-
-        logger.warning(
-            f"Ошибка загрузки "
-            f"{os.path.basename(path)}: {e}"
-        )
-
-        return default_factory()
-
-
-def save_json_stats(
-    path,
-    data,
-    label
-):
-
-    tmp = path + ".tmp"
-
-    try:
-
-        with open(
-            tmp,
-            "w",
-            encoding="utf-8"
-        ) as f:
-
-            json.dump(
-                data,
-                f,
-                indent=2,
-                ensure_ascii=False
-            )
-
-        os.replace(
-            tmp,
-            path
-        )
-
-        logger.info(
-            f"💾 {label}: "
-            f"{os.path.basename(path)}"
-        )
-
-    except Exception as e:
-
-        logger.warning(
-            f"Ошибка сохранения {label}: {e}"
-        )
-
-        try:
-
-            if os.path.exists(tmp):
-                os.remove(tmp)
-
-        except Exception:
-            pass
-
-
-# =========================================================
-# SOURCE STATS
-# =========================================================
-
-SOURCE_STATS = load_json_stats(
-    SOURCE_STATS_FILE,
-    lambda: {}
-)
-
-
-def ensure_source_bucket(source):
-
-    bucket = SOURCE_STATS.setdefault(
-        source,
-        {
-            "runs": 0,
-            "fetch_attempts": 0,
-            "fetch_success": 0,
-            "lines_total": 0,
-            "vless_total": 0,
-            "unique_nodes": 0,
-            "nodes_tested": 0,
-            "original_live": 0,
-            "dead": 0,
-            "last_run": ""
-        }
-    )
-
-    return bucket
-
-
-# =========================================================
-# NODE STATS
-# =========================================================
-
-NODE_STATS = load_json_stats(
-    NODE_STATS_FILE,
-    lambda: {}
-)
-
-
-def node_id(vless_uri):
-
-    return hashlib.sha256(
-        vless_uri.encode(
-            "utf-8",
-            errors="ignore"
-        )
-    ).hexdigest()[:24]
-
-
-def extract_sni(vless_uri):
-
-    try:
-
-        q = parse_qs(
-            urlparse(vless_uri).query
-        )
-
-        return q.get(
-            "sni",
-            [""]
-        )[0].strip().lower()
-
-    except Exception:
-
-        return ""
-
-
-def ensure_node_record(vless_uri):
-
-    nid = node_id(vless_uri)
-
-    rec = NODE_STATS.setdefault(
-        nid,
-        {
-            "attempts": 0,
-            "live": 0,
-            "original_live": 0,
-            "dead": 0,
-            "last_status": "unknown",
-            "original_sni": extract_sni(vless_uri),
-            "sources": [],
-            "first_seen": "",
-            "last_seen": ""
-        }
-    )
-
-    return nid, rec
-
-
-def record_node_source(
-    vless_uri,
-    source_names
-):
-
-    nid, rec = ensure_node_record(
-        vless_uri
-    )
-
-    now = datetime.now().isoformat(
-        timespec="seconds"
-    )
-
-    if not rec.get("first_seen"):
-        rec["first_seen"] = now
-
-    rec["last_seen"] = now
-
-    sources = rec.setdefault(
-        "sources",
-        []
-    )
-
-    for src in source_names:
-
-        if src not in sources:
-            sources.append(src)
-
-    if len(sources) > 30:
-        del sources[:-30]
-
-    return nid, rec
-
-
-def prune_node_stats():
-
-    if len(NODE_STATS) <= MAX_NODE_STATS:
-        return
-
-    ranked = sorted(
-        NODE_STATS.items(),
-        key=lambda kv:
-            kv[1].get(
-                "last_seen",
-                ""
-            ),
-        reverse=True
-    )[:MAX_NODE_STATS]
-
-    NODE_STATS.clear()
-
-    NODE_STATS.update(
-        dict(ranked)
-    )
-
-
-# =========================================================
-# PORT QUEUE
-# =========================================================
+stop_event = threading.Event()
 
 port_queue = queue.Queue()
 
 for i in range(MAX_THREADS):
-
-    port_queue.put(
-        11000 + i
-    )
+    port_queue.put(11000 + i)
 
 
-# =========================================================
-# TEST SITES
-# =========================================================
+# ========== САЙТЫ ДЛЯ ПРОВЕРКИ ==========
 
 TEST_URLS = [
     "https://telegram.org",
     "https://www.instagram.com",
     "https://www.youtube.com",
+    "https://chatgpt.com",
     "https://gemini.google.com",
-    "https://www.google.com"
+    "https://www.google.com",
 ]
 
 
-# =========================================================
-# BASE64
-# =========================================================
+# ========== BASE64 ==========
 
 def decode_base64_content(text):
 
@@ -397,9 +121,7 @@ def decode_base64_content(text):
         padding = len(text) % 4
 
         if padding:
-            text += "=" * (
-                4 - padding
-            )
+            text += "=" * (4 - padding)
 
         decoded = base64.b64decode(
             text
@@ -410,14 +132,12 @@ def decode_base64_content(text):
 
         return decoded.splitlines()
 
-    except Exception:
+    except:
 
         return []
 
 
-# =========================================================
-# FETCH SOURCE
-# =========================================================
+# ========== ЗАГРУЗКА SOURCE ==========
 
 def fetch_source(url):
 
@@ -425,8 +145,7 @@ def fetch_source(url):
 
         headers = {
             "User-Agent":
-                "Mozilla/5.0 "
-                "(Windows NT 10.0; Win64; x64) "
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36"
         }
 
@@ -436,50 +155,42 @@ def fetch_source(url):
             headers=headers
         )
 
-        if r.status_code != 200:
-            return []
+        if r.status_code == 200:
 
-        final_lines = []
+            final_lines = []
 
-        for line in r.text.splitlines():
+            for line in r.text.splitlines():
 
-            line = line.strip()
+                line = line.strip()
 
-            if not line:
-                continue
+                if not line:
+                    continue
 
-            if (
-                "://" not in line
-                and len(line) > 50
-            ):
+                if (
+                    "://" not in line
+                    and len(line) > 50
+                ):
 
-                final_lines.extend(
-                    decode_base64_content(
-                        line
+                    final_lines.extend(
+                        decode_base64_content(line)
                     )
-                )
 
-            else:
+                else:
 
-                final_lines.append(
-                    line
-                )
+                    final_lines.append(line)
 
-        return final_lines
+            return final_lines
 
     except Exception as e:
 
         logger.debug(
-            f"Ошибка загрузки "
-            f"{url}: {e}"
+            f"Ошибка загрузки {url}: {e}"
         )
 
-        return []
+    return []
 
 
-# =========================================================
-# VLESS
-# =========================================================
+# ========== VLESS ==========
 
 def is_valid_vless(line):
 
@@ -488,10 +199,7 @@ def is_valid_vless(line):
     )
 
 
-# =========================================================
-# VLESS → SING-BOX JSON
-# НЕ МЕНЯТЬ
-# =========================================================
+# ========== VLESS → SING-BOX JSON ==========
 
 def parse_vless_to_json(
     vless_uri,
@@ -544,10 +252,15 @@ def parse_vless_to_json(
         )
 
         outbound = {
+
             "type": "vless",
+
             "tag": node_name,
+
             "server": server_address,
+
             "server_port": server_port,
+
             "uuid": uuid,
         }
 
@@ -588,7 +301,9 @@ def parse_vless_to_json(
                     ),
 
                 "utls": {
+
                     "enabled": True,
+
                     "fingerprint":
                         params.get(
                             "fp",
@@ -597,12 +312,15 @@ def parse_vless_to_json(
                 },
 
                 "reality": {
+
                     "enabled": True,
+
                     "public_key":
                         params.get(
                             "pbk",
                             ""
                         ),
+
                     "short_id":
                         params.get(
                             "sid",
@@ -629,7 +347,9 @@ def parse_vless_to_json(
                     ),
 
                 "utls": {
+
                     "enabled": True,
+
                     "fingerprint":
                         params.get(
                             "fp",
@@ -700,6 +420,7 @@ def parse_vless_to_json(
                     ),
 
                 "headers": {
+
                     "Host":
                         params.get(
                             "host",
@@ -717,6 +438,7 @@ def parse_vless_to_json(
             "inbounds": [
 
                 {
+
                     "type": "socks",
 
                     "tag": "socks-in",
@@ -741,12 +463,9 @@ def parse_vless_to_json(
         return None
 
 
-# =========================================================
-# SERVICE STATS
-# =========================================================
+# ========== СТАТИСТИКА СЕРВИСОВ ==========
 
 def empty_service_stats():
-
     return {
         url: {
             "attempts": 0,
@@ -758,10 +477,8 @@ def empty_service_stats():
 
 def load_service_stats():
 
-    if not os.path.exists(
-        SERVICE_STATS_FILE
-    ):
-
+    if not os.path.exists(SERVICE_STATS_FILE):
+        logger.info("📊 Файл статистики сервисов не найден")
         return empty_service_stats()
 
     try:
@@ -782,21 +499,12 @@ def load_service_stats():
 
                 stats[url] = {
                     "attempts": int(
-                        value.get(
-                            "attempts",
-                            0
-                        )
+                        value.get("attempts", 0)
                     ),
                     "success": int(
-                        value.get(
-                            "success",
-                            0
-                        )
+                        value.get("success", 0)
                     )
                 }
-
-        # Старый ChatGPT не переносим
-        # в новую статистику.
 
         for url in TEST_URLS:
 
@@ -807,9 +515,18 @@ def load_service_stats():
                     "success": 0
                 }
 
+        logger.info(
+            f"📊 Загружена статистика сервисов: "
+            f"{len(stats)} сайтов"
+        )
+
         return stats
 
-    except Exception:
+    except Exception as e:
+
+        logger.warning(
+            f"Ошибка загрузки статистики сервисов: {e}"
+        )
 
         return empty_service_stats()
 
@@ -831,20 +548,146 @@ def save_service_stats(stats):
                 ensure_ascii=False
             )
 
+        logger.info(
+            "💾 Статистика сервисов сохранена"
+        )
+
     except Exception as e:
 
         logger.warning(
-            f"Ошибка сохранения "
-            f"статистики сервисов: {e}"
+            f"Ошибка сохранения статистики сервисов: {e}"
         )
 
 
 SERVICE_STATS = load_service_stats()
 
 
-# =========================================================
-# CHECK ONE NODE
-# =========================================================
+# ========== JSON STATS HELPERS ==========
+
+def load_json_stats(path, default_factory):
+    if not os.path.exists(path):
+        return default_factory()
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else default_factory()
+    except Exception as e:
+        logger.warning(f"Ошибка загрузки {os.path.basename(path)}: {e}")
+        return default_factory()
+
+
+def save_json_stats(path, data, label):
+    tmp = path + ".tmp"
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        os.replace(tmp, path)
+        logger.info(f"💾 {label} сохранена: {os.path.basename(path)}")
+    except Exception as e:
+        logger.warning(f"Ошибка сохранения {label}: {e}")
+        try:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        except Exception:
+            pass
+
+
+def empty_source_stats():
+    return {}
+
+
+def empty_node_stats():
+    return {}
+
+
+SOURCE_STATS = load_json_stats(SOURCE_STATS_FILE, empty_source_stats)
+NODE_STATS = load_json_stats(NODE_STATS_FILE, empty_node_stats)
+
+
+def node_id(vless_uri):
+    return hashlib.sha256(
+        vless_uri.encode("utf-8", errors="ignore")
+    ).hexdigest()[:24]
+
+
+def extract_sni(vless_uri):
+    try:
+        q = parse_qs(urlparse(vless_uri).query)
+        return q.get("sni", [""])[0].strip().lower()
+    except Exception:
+        return ""
+
+
+def ensure_source_bucket(source):
+    bucket = SOURCE_STATS.setdefault(source, {
+        "runs": 0,
+        "fetch_attempts": 0,
+        "fetch_success": 0,
+        "lines_total": 0,
+        "vless_total": 0,
+        "unique_nodes": 0,
+        "nodes_tested": 0,
+        "original_live": 0,
+        "dead": 0,
+        "last_run": "",
+        "recent_node_ids": []
+    })
+    return bucket
+
+
+def ensure_node_record(vless_uri):
+    nid = node_id(vless_uri)
+    rec = NODE_STATS.setdefault(nid, {
+        "attempts": 0,
+        "live": 0,
+        "original_live": 0,
+        "dead": 0,
+        "last_status": "unknown",
+        "last_sni": "",
+        "original_sni": extract_sni(vless_uri),
+        "sources": [],
+        "first_seen": "",
+        "last_seen": ""
+    })
+    return nid, rec
+
+
+def record_node_source(vless_uri, source_names):
+    nid, rec = ensure_node_record(vless_uri)
+    now = datetime.now().isoformat(timespec="seconds")
+
+    if not rec.get("first_seen"):
+        rec["first_seen"] = now
+
+    rec["last_seen"] = now
+
+    sources = rec.setdefault("sources", [])
+
+    for src in source_names:
+        if src not in sources:
+            sources.append(src)
+
+    if len(sources) > 30:
+        del sources[:-30]
+
+    return nid, rec
+
+
+def prune_node_stats():
+    if len(NODE_STATS) <= MAX_NODE_STATS:
+        return
+
+    ranked = sorted(
+        NODE_STATS.items(),
+        key=lambda kv: kv[1].get("last_seen", ""),
+        reverse=True
+    )[:MAX_NODE_STATS]
+
+    NODE_STATS.clear()
+    NODE_STATS.update(dict(ranked))
+
+
+# ========== ПРОВЕРКА ОДНОЙ НОДЫ ==========
 
 def check_single_uri(
     vless_uri,
@@ -852,6 +695,9 @@ def check_single_uri(
     service_stats=None,
     stats_lock=None
 ):
+
+    if stop_event.is_set():
+        return False
 
     temp_config_path = os.path.join(
         BASE_PATH,
@@ -905,12 +751,17 @@ def check_single_uri(
         )
 
         for _ in range(15):
+
+            if stop_event.is_set():
+                return False
+
             time.sleep(0.1)
 
         if proc.poll() is not None:
             return False
 
         proxies = {
+
             "http":
                 f"socks5h://127.0.0.1:{local_port}",
 
@@ -920,20 +771,18 @@ def check_single_uri(
 
         headers = {
             "User-Agent":
-                "Mozilla/5.0 "
-                "(Windows NT 10.0; Win64; x64) "
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 "
                 "(KHTML, like Gecko) "
-                "Chrome/154.0.0.0 "
-                "Safari/537.36"
+                "Chrome/154.0.0.0 Safari/537.36"
         }
 
-        success_count = 0
-
-        # ВСЕ 5 сайтов проверяются.
-        # Даже после получения 3 успехов.
+        is_alive = False
 
         for url in TEST_URLS:
+
+            if stop_event.is_set():
+                return False
 
             try:
 
@@ -958,32 +807,22 @@ def check_single_uri(
 
                         with stats_lock:
 
-                            service_stats[url][
-                                "attempts"
-                            ] += 1
+                            service_stats[url]["attempts"] += 1
 
                             if success:
-
-                                service_stats[url][
-                                    "success"
-                                ] += 1
+                                service_stats[url]["success"] += 1
 
                     else:
 
-                        service_stats[url][
-                            "attempts"
-                        ] += 1
+                        service_stats[url]["attempts"] += 1
 
                         if success:
-
-                            service_stats[url][
-                                "success"
-                            ] += 1
+                            service_stats[url]["success"] += 1
 
                 if success:
-                    success_count += 1
+                    is_alive = True
 
-            except Exception:
+            except:
 
                 if service_stats is not None:
 
@@ -991,25 +830,19 @@ def check_single_uri(
 
                         with stats_lock:
 
-                            service_stats[url][
-                                "attempts"
-                            ] += 1
+                            service_stats[url]["attempts"] += 1
 
                     else:
 
-                        service_stats[url][
-                            "attempts"
-                        ] += 1
+                        service_stats[url]["attempts"] += 1
 
                 continue
 
-        # LIVE = минимум 3 из 5
+        return is_alive
 
-        return success_count >= 3
+    except:
 
-    except Exception:
-
-        return False
+        pass
 
     finally:
 
@@ -1018,7 +851,8 @@ def check_single_uri(
             if log_file:
                 log_file.close()
 
-        except Exception:
+        except:
+
             pass
 
         if proc:
@@ -1043,27 +877,27 @@ def check_single_uri(
             if os.path.exists(f):
 
                 try:
+
                     os.remove(f)
 
-                except Exception:
+                except:
+
                     pass
 
+    return False
 
-# =========================================================
-# WORKER
-# =========================================================
+
+# ========== WORKER ==========
 
 def worker(
     task_queue,
     result_list,
     lock,
     node_sources_map,
-    run_stats,
-    count_source_stats=True,
-    archive_mode=False
+    run_stats
 ):
 
-    while True:
+    while not stop_event.is_set():
 
         try:
 
@@ -1075,40 +909,35 @@ def worker(
 
             break
 
+        if stop_event.is_set():
+            break
+
         local_port = port_queue.get()
+
+        result_uri = None
+
+        nid, node_rec = record_node_source(
+            vless_uri,
+            node_sources_map.get(vless_uri, [])
+        )
+
+        original_sni = extract_sni(
+            vless_uri
+        )
+
+        with lock:
+
+            node_rec["attempts"] = (
+                node_rec.get("attempts", 0) + 1
+            )
+
+            node_rec["last_status"] = "testing"
+
+            run_stats["nodes_tested"] += 1
 
         try:
 
-            nid, node_rec = record_node_source(
-                vless_uri,
-                node_sources_map.get(
-                    vless_uri,
-                    []
-                )
-            )
-
-            with lock:
-
-                node_rec["attempts"] = (
-                    node_rec.get(
-                        "attempts",
-                        0
-                    ) + 1
-                )
-
-                node_rec["last_status"] = (
-                    "testing"
-                )
-
-                run_stats[
-                    "nodes_tested"
-                ] += 1
-
-                if archive_mode:
-
-                    run_stats[
-                        "archive_nodes_tested"
-                    ] += 1
+            # ===== ПРОВЕРКА ОРИГИНАЛЬНОЙ НОДЫ =====
 
             is_alive = check_single_uri(
                 vless_uri,
@@ -1117,323 +946,90 @@ def worker(
                 lock
             )
 
-            with lock:
+            if is_alive:
 
-                if is_alive:
+                logger.debug(
+                    f"[LIVE] Исходная нода рабочая "
+                    f"(порт {local_port})"
+                )
 
-                    result_list.append(
-                        vless_uri
-                    )
+                result_uri = vless_uri
+
+                with lock:
 
                     node_rec["live"] += 1
-                    node_rec[
-                        "original_live"
-                    ] += 1
+                    node_rec["original_live"] += 1
+                    node_rec["last_status"] = "original_live"
+                    node_rec["last_sni"] = original_sni
 
-                    node_rec[
-                        "last_status"
-                    ] = "original_live"
+                    run_stats["original_live"] += 1
 
-                    run_stats[
-                        "original_live"
-                    ] += 1
+                    for src in node_sources_map.get(
+                        vless_uri,
+                        []
+                    ):
 
-                    if archive_mode:
+                        b = ensure_source_bucket(src)
 
-                        run_stats[
-                            "archive_live"
-                        ] += 1
+                        b["nodes_tested"] += 1
+                        b["original_live"] += 1
 
-                    if count_source_stats:
+            else:
 
-                        for src in node_sources_map.get(
-                            vless_uri,
-                            []
-                        ):
-
-                            bucket = (
-                                ensure_source_bucket(
-                                    src
-                                )
-                            )
-
-                            bucket[
-                                "nodes_tested"
-                            ] += 1
-
-                            bucket[
-                                "original_live"
-                            ] += 1
-
-                else:
-
-                    node_rec["dead"] += 1
-
-                    node_rec[
-                        "last_status"
-                    ] = "dead"
-
-                    run_stats[
-                        "dead"
-                    ] += 1
-
-                    if archive_mode:
-
-                        run_stats[
-                            "archive_dead"
-                        ] += 1
-
-                    if count_source_stats:
-
-                        for src in node_sources_map.get(
-                            vless_uri,
-                            []
-                        ):
-
-                            bucket = (
-                                ensure_source_bucket(
-                                    src
-                                )
-                            )
-
-                            bucket[
-                                "nodes_tested"
-                            ] += 1
-
-                            bucket[
-                                "dead"
-                            ] += 1
+                logger.debug(
+                    f"[DEAD] Нода мертва "
+                    f"(порт {local_port})"
+                )
 
         except Exception as e:
 
-            logger.debug(
-                f"Ошибка проверки ноды: {e}"
+            logger.error(
+                f"Ошибка в воркере: {e}"
             )
 
-            with lock:
-
-                run_stats[
-                    "dead"
-                ] += 1
-
-                if archive_mode:
-
-                    run_stats[
-                        "archive_dead"
-                    ] += 1
-
         finally:
+
+            if result_uri is None:
+
+                with lock:
+
+                    node_rec["dead"] = (
+                        node_rec.get("dead", 0) + 1
+                    )
+
+                    node_rec["last_status"] = "dead"
+
+                    run_stats["dead"] += 1
+
+                    for src in node_sources_map.get(
+                        vless_uri,
+                        []
+                    ):
+
+                        ensure_source_bucket(src)["dead"] += 1
 
             port_queue.put(
                 local_port
             )
 
-            task_queue.task_done()
+        # ===== Сохраняем ЖИВУЮ НОДУ =====
 
+        if result_uri:
 
-# =========================================================
-# RUN CHECKS
-# =========================================================
+            with lock:
 
-def run_node_checks(
-    nodes,
-    node_sources_map,
-    run_stats,
-    count_source_stats=True,
-    archive_mode=False
-):
-
-    if not nodes:
-        return []
-
-    task_queue = queue.Queue()
-
-    for node in nodes:
-        task_queue.put(node)
-
-    result_list = []
-
-    lock = threading.Lock()
-
-    with ThreadPoolExecutor(
-        max_workers=MAX_THREADS
-    ) as executor:
-
-        executor.map(
-            lambda _:
-                worker(
-                    task_queue,
-                    result_list,
-                    lock,
-                    node_sources_map,
-                    run_stats,
-                    count_source_stats,
-                    archive_mode
-                ),
-            range(MAX_THREADS)
-        )
-
-    return result_list
-
-
-# =========================================================
-# ARCHIVE
-# =========================================================
-
-def load_alive_archive():
-
-    if not os.path.exists(
-        ALIVE_ARCHIVE_FILE
-    ):
-
-        return []
-
-    try:
-
-        with open(
-            ALIVE_ARCHIVE_FILE,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            nodes = [
-                line.strip()
-                for line in f
-                if (
-                    line.strip()
-                    and is_valid_vless(
-                        line.strip()
-                    )
+                result_list.append(
+                    result_uri
                 )
-            ]
 
-        return list(
-            dict.fromkeys(nodes)
-        )
+                if len(result_list) >= MAX_NODES:
 
-    except Exception as e:
+                    stop_event.set()
 
-        logger.warning(
-            f"Ошибка загрузки "
-            f"live_archive.txt: {e}"
-        )
-
-        return []
+        task_queue.task_done()
 
 
-def save_alive_archive(nodes):
-
-    unique = list(
-        dict.fromkeys(
-            node
-            for node in nodes
-            if (
-                node
-                and is_valid_vless(node)
-            )
-        )
-    )
-
-    tmp = (
-        ALIVE_ARCHIVE_FILE
-        + ".tmp"
-    )
-
-    with open(
-        tmp,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        if unique:
-
-            f.write(
-                "\n".join(unique)
-            )
-
-            f.write("\n")
-
-    os.replace(
-        tmp,
-        ALIVE_ARCHIVE_FILE
-    )
-
-
-# =========================================================
-# RUN HISTORY
-# =========================================================
-
-def load_run_history():
-
-    if not os.path.exists(
-        RUN_STATS_FILE
-    ):
-
-        return {
-            "runs": []
-        }
-
-    try:
-
-        with open(
-            RUN_STATS_FILE,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            data = json.load(f)
-
-        if (
-            isinstance(data, dict)
-            and isinstance(
-                data.get("runs"),
-                list
-            )
-        ):
-
-            return data
-
-        # Совместимость со старым
-        # форматом одного запуска.
-
-        if isinstance(data, dict):
-
-            return {
-                "runs": [data]
-            }
-
-    except Exception:
-
-        pass
-
-    return {
-        "runs": []
-    }
-
-
-def save_run_history(run_stats):
-
-    history = load_run_history()
-
-    history.setdefault(
-        "runs",
-        []
-    )
-
-    history["runs"].append(
-        run_stats
-    )
-
-    save_json_stats(
-        RUN_STATS_FILE,
-        history,
-        "Единый отчёт по запускам"
-    )
-
-
-# =========================================================
-# MAIN
-# =========================================================
+# ========== MAIN ==========
 
 def main():
 
@@ -1461,18 +1057,24 @@ def main():
 
         return
 
-    # =====================================================
-    # RUN STATS
-    # =====================================================
+    # =========================================
+    # STEP 1
+    # =========================================
 
-    started_at = datetime.now().isoformat(
-        timespec="seconds"
+    logger.info(
+        "\n--- STEP 1: FETCHING SOURCES ---"
     )
+
+    all_nodes = []
+
+    source_nodes = defaultdict(list)
 
     run_stats = {
 
         "started_at":
-            started_at,
+            datetime.now().isoformat(
+                timespec="seconds"
+            ),
 
         "sources":
             len(SOURCES),
@@ -1496,96 +1098,51 @@ def main():
             0,
 
         "dead":
-            0,
-
-        "archive_nodes_tested":
-            0,
-
-        "archive_live":
-            0,
-
-        "archive_dead":
             0
     }
 
-    # =====================================================
-    # STEP 1 — SOURCES
-    # =====================================================
-
-    logger.info(
-        "\n--- STEP 1: FETCHING SOURCES ---"
-    )
-
-    all_nodes = []
-
-    source_nodes = defaultdict(list)
-
     for url in SOURCES:
 
-        bucket = ensure_source_bucket(
-            url
-        )
+        bucket = ensure_source_bucket(url)
 
         bucket["runs"] += 1
 
         bucket["fetch_attempts"] += 1
 
         bucket["last_run"] = (
-            started_at
+            run_stats["started_at"]
         )
 
-        nodes = fetch_source(
-            url
-        )
+        nodes = fetch_source(url)
 
         if nodes:
 
-            bucket[
-                "fetch_success"
-            ] += 1
+            bucket["fetch_success"] += 1
 
-            run_stats[
-                "source_fetch_success"
-            ] += 1
+            run_stats["source_fetch_success"] += 1
 
-        bucket[
-            "lines_total"
-        ] += len(nodes)
-
-        run_stats[
-            "lines_total"
-        ] += len(nodes)
+        bucket["lines_total"] += len(nodes)
 
         logger.info(
             f"Loaded {len(nodes)} lines "
             f"from {url[:80]}..."
         )
 
-        all_nodes.extend(
-            nodes
-        )
+        all_nodes.extend(nodes)
 
         for line in nodes:
 
             if is_valid_vless(line):
 
-                line = line.strip()
+                source_nodes[url].append(
+                    line.strip()
+                )
 
-                source_nodes[
-                    url
-                ].append(line)
+                bucket["vless_total"] += 1
 
-                bucket[
-                    "vless_total"
-                ] += 1
-
-                run_stats[
-                    "vless_total"
-                ] += 1
-
-    # =====================================================
-    # STEP 2 — UNIQUE
-    # =====================================================
+    # =========================================
+    # STEP 2
+    # =========================================
 
     logger.info(
         "\n--- STEP 2: VALIDATION ---"
@@ -1607,51 +1164,45 @@ def main():
 
         seen.add(line)
 
-        unique_nodes.append(
-            line
-        )
-
-    run_stats[
-        "unique_nodes"
-    ] = len(unique_nodes)
+        unique_nodes.append(line)
 
     logger.info(
         f"Unique VLESS configs: "
         f"{len(unique_nodes)}"
     )
 
-    # =====================================================
-    # SOURCE → NODE MAP
-    # =====================================================
-
-    node_sources_map = defaultdict(
-        list
+    run_stats["unique_nodes"] = (
+        len(unique_nodes)
     )
+
+    node_sources_map = defaultdict(list)
 
     for src, nodes in source_nodes.items():
 
-        unique_source_nodes = set(
-            nodes
-        )
+        for node in set(nodes):
 
-        bucket = ensure_source_bucket(
-            src
-        )
+            node_sources_map[node].append(src)
 
-        bucket[
-            "unique_nodes"
-        ] += len(
-            unique_source_nodes
-        )
+            ensure_source_bucket(
+                src
+            )["unique_nodes"] += 1
 
-        for node in unique_source_nodes:
+            nid = node_id(node)
 
-            node_sources_map[
-                node
-            ].append(src)
-
-            nid, rec = ensure_node_record(
-                node
+            rec = NODE_STATS.setdefault(
+                nid,
+                {
+                    "attempts": 0,
+                    "live": 0,
+                    "original_live": 0,
+                    "dead": 0,
+                    "last_status": "discovered",
+                    "last_sni": "",
+                    "original_sni": extract_sni(node),
+                    "sources": [],
+                    "first_seen": "",
+                    "last_seen": ""
+                }
             )
 
             if src not in rec.setdefault(
@@ -1659,53 +1210,169 @@ def main():
                 []
             ):
 
-                rec[
-                    "sources"
-                ].append(src)
+                rec["sources"].append(src)
 
-            if len(
-                rec["sources"]
-            ) > 30:
+            if len(rec["sources"]) > 30:
 
-                del rec[
-                    "sources"
-                ][:-30]
+                del rec["sources"][:-30]
 
-    # =====================================================
-    # LOAD CUMULATIVE ARCHIVE
-    # =====================================================
+    # =========================================
+    # ARCHIVES
+    # =========================================
 
-    archive_before = (
-        load_alive_archive()
+    archive_path = os.path.join(
+        BASE_PATH,
+        "archive.txt"
     )
 
-    archive_set = set(
-        archive_before
+    alive_archive_path = os.path.join(
+        BASE_PATH,
+        "alive_archive.txt"
     )
 
-    # =====================================================
-    # STEP 3 — ALL FRESH NODES
-    # =====================================================
+    archive_list = []
+
+    alive_archive_list = []
+
+    if os.path.exists(
+        archive_path
+    ):
+
+        with open(
+            archive_path,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            archive_list = [
+                x.strip()
+                for x in f
+                if x.strip()
+            ]
+
+    if os.path.exists(
+        alive_archive_path
+    ):
+
+        with open(
+            alive_archive_path,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            alive_archive_list = [
+                x.strip()
+                for x in f
+                if x.strip()
+            ]
+
+    archive_seen = set(
+        archive_list
+    )
+
+    for node in unique_nodes:
+
+        if node not in archive_seen:
+
+            archive_list.append(
+                node
+            )
+
+            archive_seen.add(node)
+
+    if len(archive_list) > 10000:
+
+        archive_list = archive_list[-10000:]
+
+    with open(
+        archive_path,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        f.write(
+            "\n".join(
+                archive_list
+            )
+        )
+
+    logger.info(
+        f"Archive updated: "
+        f"{len(archive_list)} nodes "
+        f"(limit 10000)"
+    )
+
+    # =========================================
+    # PRIORITY ORDER
+    # =========================================
+
+    priority_order = []
+
+    for node in reversed(
+        alive_archive_list
+    ):
+
+        if (
+            node in seen
+            and node not in priority_order
+        ):
+
+            priority_order.append(
+                node
+            )
+
+    for node in unique_nodes:
+
+        if node not in priority_order:
+
+            priority_order.append(
+                node
+            )
+
+    # =========================================
+    # LIVE CHECK
+    # =========================================
 
     logger.info(
         f"\n--- STEP 3: LIVE CHECK "
-        f"({len(unique_nodes)} nodes, "
+        f"({len(priority_order)} nodes, "
         f"threads: {MAX_THREADS}) ---"
     )
 
     start_time = time.time()
 
-    fresh_results = run_node_checks(
-        unique_nodes,
-        node_sources_map,
-        run_stats,
-        count_source_stats=True,
-        archive_mode=False
-    )
+    task_queue = queue.Queue()
+
+    for node in priority_order:
+
+        task_queue.put(
+            node
+        )
+
+    result_list = []
+
+    stop_event.clear()
+
+    lock = threading.Lock()
+
+    with ThreadPoolExecutor(
+        max_workers=MAX_THREADS
+    ) as executor:
+
+        executor.map(
+            lambda _:
+                worker(
+                    task_queue,
+                    result_list,
+                    lock,
+                    node_sources_map,
+                    run_stats
+                ),
+            range(MAX_THREADS)
+        )
 
     elapsed = (
-        time.time()
-        - start_time
+        time.time() - start_time
     )
 
     logger.info(
@@ -1713,304 +1380,170 @@ def main():
         f"{elapsed:.1f} сек"
     )
 
-    fresh_live_nodes = list(
-        dict.fromkeys(
-            fresh_results
-        )
-    )
+    # =========================================
+    # RESULTS
+    # =========================================
 
-    fresh_live_set = set(
-        fresh_live_nodes
-    )
-
-    fresh_dead_set = (
-        set(unique_nodes)
-        - fresh_live_set
-    )
+    alive_nodes = result_list
 
     logger.info(
         f"\n--- RESULT: Found "
-        f"{len(fresh_live_nodes)} "
-        f"live nodes ---"
+        f"{len(alive_nodes)} live nodes ---"
     )
 
-    # =====================================================
-    # UPDATE ARCHIVE:
-    # свежие DEAD удаляем,
-    # свежие LIVE добавляем
-    # =====================================================
-
-    new_archive = []
-
-    for node in archive_before:
-
-        # Нода была свежей.
-        # Если она DEAD — удалить.
-        # Если LIVE — добавим ниже заново.
-        if node in unique_nodes:
-            continue
-
-        new_archive.append(
-            node
-        )
-
-    # Все свежие LIVE
-    # добавляются в накопительный архив.
-
-    for node in fresh_live_nodes:
-
-        if node not in new_archive:
-
-            new_archive.append(
-                node
-            )
-
-    # =====================================================
-    # ARCHIVE RECHECK
-    #
-    # Проверяем архив только если
-    # свежих LIVE меньше 100.
-    #
-    # Проверяем партиями, пока не наберём
-    # достаточно LIVE.
-    # =====================================================
-
-    archive_live_nodes = []
-
-    need = (
-        MAX_NODES
-        - len(fresh_live_nodes)
-    )
-
-    archive_candidates = [
-        node
-        for node in archive_before
-        if (
-            node not in unique_nodes
-            and node not in fresh_live_set
-        )
-    ]
-
-    archive_checked = set()
-
-    if need > 0 and archive_candidates:
-
-        logger.info(
-            f"\n--- ARCHIVE RECHECK "
-            f"({len(archive_candidates)} "
-            f"candidates, need {need}) ---"
-        )
-
-        # Проверяем партиями.
-        # Это позволяет не гонять весь огромный
-        # архив, когда 100 LIVE уже набраны.
-
-        position = 0
-
-        while (
-            position < len(archive_candidates)
-            and len(archive_live_nodes) < need
-        ):
-
-            batch = archive_candidates[
-                position:
-                position + MAX_THREADS
-            ]
-
-            position += len(batch)
-
-            batch_results = run_node_checks(
-                batch,
-                node_sources_map,
-                run_stats,
-                count_source_stats=False,
-                archive_mode=True
-            )
-
-            batch_live = list(
-                dict.fromkeys(
-                    batch_results
-                )
-            )
-
-            archive_live_nodes.extend(
-                batch_live
-            )
-
-            archive_checked.update(
-                batch
-            )
-
-            # Чтобы не было дублей.
-
-            archive_live_nodes = list(
-                dict.fromkeys(
-                    archive_live_nodes
-                )
-            )
-
-        archive_live_set = set(
-            archive_live_nodes
-        )
-
-    else:
-
-        archive_live_set = set()
-
-    # =====================================================
-    # ARCHIVE UPDATE AFTER RECHECK
-    # =====================================================
-
-    # Удаляем из архива проверенные DEAD.
-    # Проверенные LIVE оставляем.
-    # Непроверенные старые остаются.
-
-    final_archive = []
-
-    for node in archive_before:
-
-        # Свежая нода уже обработана выше.
-        if node in unique_nodes:
-            continue
-
-        # Архивная нода была перепроверена.
-        if node in archive_checked:
-
-            if node in archive_live_set:
-
-                final_archive.append(
-                    node
-                )
-
-            # DEAD сюда не возвращаем.
-
-            continue
-
-        # Архивная нода ещё не проверялась.
-        # Оставляем её для следующих запусков.
-
-        final_archive.append(
-            node
-        )
-
-    # Свежие LIVE.
-
-    for node in fresh_live_nodes:
-
-        if node not in final_archive:
-
-            final_archive.append(
-                node
-            )
-
-    # LIVE из архивной перепроверки.
-
-    for node in archive_live_nodes:
-
-        if node not in final_archive:
-
-            final_archive.append(
-                node
-            )
-
-    final_archive = list(
+    alive_nodes = list(
         dict.fromkeys(
-            final_archive
+            alive_nodes
         )
     )
-
-    # БЕЗ ЛИМИТА.
-    save_alive_archive(
-        final_archive
-    )
-
-    # =====================================================
-    # FINAL SUBSCRIPTION
-    # =====================================================
-
-    alive_nodes = []
-
-    # Сначала свежие LIVE.
-
-    for node in fresh_live_nodes:
-
-        if node not in alive_nodes:
-
-            alive_nodes.append(
-                node
-            )
-
-        if len(alive_nodes) >= MAX_NODES:
-            break
-
-    # Затем архивные LIVE.
-
-    if len(alive_nodes) < MAX_NODES:
-
-        for node in archive_live_nodes:
-
-            if node in alive_nodes:
-                continue
-
-            alive_nodes.append(
-                node
-            )
-
-            if len(alive_nodes) >= MAX_NODES:
-                break
 
     logger.info(
-        f"Final LIVE: "
+        f"After dedup: "
         f"{len(alive_nodes)}"
     )
 
+    # =========================================
+    # FILL FROM ARCHIVE
+    # =========================================
+
+    if len(alive_nodes) < MAX_NODES:
+
+        added = 0
+
+        for node in reversed(
+            alive_archive_list
+        ):
+
+            if node not in alive_nodes:
+
+                alive_nodes.append(
+                    node
+                )
+
+                added += 1
+
+                if len(alive_nodes) >= MAX_NODES:
+                    break
+
+        logger.info(
+            f"Filled from archive "
+            f"(+{added}), total: "
+            f"{len(alive_nodes)}"
+        )
+
+    # =========================================
+    # UPDATE ALIVE ARCHIVE
+    # =========================================
+
+    for node in alive_nodes:
+
+        if node in alive_archive_list:
+
+            alive_archive_list.remove(
+                node
+            )
+
+        alive_archive_list.append(
+            node
+        )
+
+    if len(alive_archive_list) > 5000:
+
+        alive_archive_list = (
+            alive_archive_list[-5000:]
+        )
+
+    with open(
+        alive_archive_path,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        f.write(
+            "\n".join(
+                alive_archive_list
+            )
+        )
+
     logger.info(
-        f"live_archive.txt updated: "
-        f"{len(final_archive)} nodes"
+        f"alive_archive.txt updated: "
+        f"{len(alive_archive_list)} nodes "
+        f"(limit 5000)"
     )
 
-    # =====================================================
-    # ZERO LIVE
-    # =====================================================
+    # =========================================
+    # НЕТ НОД
+    # =========================================
 
-    if not alive_nodes:
+    if len(alive_nodes) == 0:
 
         logger.warning(
             "0 live nodes, "
-            "skipping subscription update"
+            "skipping update"
         )
 
-        logger.warning(
-            "Существующая "
-            "vless_001.txt НЕ изменена"
+        save_service_stats(
+            SERVICE_STATS
         )
 
-    else:
+        save_json_stats(
+            SOURCE_STATS_FILE,
+            SOURCE_STATS,
+            "Статистика источников"
+        )
 
-        with open(
-            SUBSCRIPTION_FILE,
-            "w",
-            encoding="utf-8"
-        ) as f:
+        save_json_stats(
+            NODE_STATS_FILE,
+            NODE_STATS,
+            "Статистика нод"
+        )
 
-            f.write(
-                "\n".join(
-                    alive_nodes[:MAX_NODES]
-                )
+        run_stats["finished_at"] = (
+            datetime.now().isoformat(
+                timespec="seconds"
             )
-
-            f.write("\n")
-
-        logger.info(
-            f"Subscription updated: "
-            f"{SUBSCRIPTION_FILE}"
         )
 
-    # =====================================================
+        save_json_stats(
+            RUN_STATS_FILE,
+            run_stats,
+            "Статистика запуска"
+        )
+
+        return
+
+    # =========================================
+    # SUBSCRIPTION
+    # =========================================
+
+    out_path = os.path.join(
+        FINAL_DIR,
+        "vless_001.txt"
+    )
+
+    with open(
+        out_path,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        f.write(
+            "\n".join(
+                alive_nodes[:MAX_NODES]
+            )
+        )
+
+    logger.info(
+        f"Subscription updated: "
+        f"{out_path}"
+    )
+
+    # =========================================
     # PROTOCOL STATS
-    # =====================================================
+    # =========================================
 
     types_count = {
+
         "reality": 0,
         "tls": 0,
         "grpc": 0,
@@ -2024,42 +1557,31 @@ def main():
         if (
             "security=reality"
             in node
-            or "pbk=" in node
+            or "pbk="
+            in node
         ):
 
-            types_count[
-                "reality"
-            ] += 1
+            types_count["reality"] += 1
 
         elif "type=grpc" in node:
 
-            types_count[
-                "grpc"
-            ] += 1
+            types_count["grpc"] += 1
 
         elif "type=xhttp" in node:
 
-            types_count[
-                "xhttp"
-            ] += 1
+            types_count["xhttp"] += 1
 
         elif "type=ws" in node:
 
-            types_count[
-                "ws"
-            ] += 1
+            types_count["ws"] += 1
 
         elif "security=tls" in node:
 
-            types_count[
-                "tls"
-            ] += 1
+            types_count["tls"] += 1
 
         else:
 
-            types_count[
-                "other"
-            ] += 1
+            types_count["other"] += 1
 
     logger.info(
         "\n--- STATS BY PROTOCOL ---"
@@ -2073,23 +1595,15 @@ def main():
                 f"{proto}: {count}"
             )
 
-    # =====================================================
+    # =========================================
     # SERVICE STATS
-    # =====================================================
+    # =========================================
 
     logger.info(
         "\n--- TEST SITE STATS ---"
     )
 
-    for url in TEST_URLS:
-
-        data = SERVICE_STATS.get(
-            url,
-            {
-                "attempts": 0,
-                "success": 0
-            }
-        )
+    for url, data in SERVICE_STATS.items():
 
         attempts = data.get(
             "attempts",
@@ -2101,22 +1615,22 @@ def main():
             0
         )
 
-        rate = (
-            success / attempts * 100
-            if attempts
-            else 0
-        )
+        if attempts > 0:
+
+            rate = (
+                success
+                / attempts
+                * 100
+            )
+
+        else:
+
+            rate = 0
 
         logger.info(
-            f"{url}: "
-            f"{success}/{attempts} "
-            f"успешных "
-            f"({rate:.1f}%)"
+            f"{url}: {success}/{attempts} "
+            f"успешных ({rate:.1f}%)"
         )
-
-    # =====================================================
-    # SAVE STATS
-    # =====================================================
 
     save_service_stats(
         SERVICE_STATS
@@ -2136,79 +1650,23 @@ def main():
         "Статистика нод"
     )
 
-    # =====================================================
-    # RUN REPORT
-    # =====================================================
-
-    run_stats[
-        "finished_at"
-    ] = datetime.now().isoformat(
-        timespec="seconds"
+    run_stats["finished_at"] = (
+        datetime.now().isoformat(
+            timespec="seconds"
+        )
     )
 
-    run_stats[
-        "fresh_live"
-    ] = len(
-        fresh_live_nodes
-    )
-
-    run_stats[
-        "fresh_dead"
-    ] = len(
-        fresh_dead_set
-    )
-
-    run_stats[
-        "archive_before"
-    ] = len(
-        archive_before
-    )
-
-    run_stats[
-        "archive_candidates"
-    ] = len(
-        archive_candidates
-    )
-
-    run_stats[
-        "archive_rechecked"
-    ] = len(
-        archive_checked
-    )
-
-    run_stats[
-        "archive_live"
-    ] = len(
-        archive_live_nodes
-    )
-
-    run_stats[
-        "archive_dead"
-    ] = (
-        len(archive_checked)
-        - len(archive_live_set)
-    )
-
-    run_stats[
-        "final_live"
-    ] = len(
-        alive_nodes
-    )
-
-    run_stats[
-        "archive_after"
-    ] = len(
-        final_archive
-    )
-
-    save_run_history(
-        run_stats
+    save_json_stats(
+        RUN_STATS_FILE,
+        run_stats,
+        "Статистика запуска"
     )
 
 
-# =========================================================
+# =========================================
 # START
-# =========================================================
+# =========================================
 
 if __name__ == "__main__":
+
     main()
