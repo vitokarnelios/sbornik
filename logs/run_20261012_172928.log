@@ -1,0 +1,117 @@
+2026-10-12 17:29:28,183 | INFO | === SING-BOX STATUS ===
+2026-10-12 17:29:28,220 | INFO | sing-box version 1.14.3
+
+Environment: go1.26.8 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_cloudflared,with_naive_outbound,with_usbip,with_openvpn,with_openconnect,badlinkname,tfogo_checklinkname0,with_musl
+Revision: 7054cac5124465ffdb145870d7c01885566711b1
+CGO: enabled
+2026-10-12 17:29:28,220 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-10-12 17:29:28,268 | INFO | Loaded 87 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-12 17:29:28,298 | INFO | Loaded 31 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-12 17:29:28,339 | INFO | Loaded 3 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-12 17:29:28,379 | INFO | Loaded 90 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-12 17:29:28,463 | INFO | Loaded 110 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLES...
+2026-10-12 17:29:28,503 | INFO | Loaded 152 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLES...
+2026-10-12 17:29:28,577 | INFO | Loaded 30 lines from https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt...
+2026-10-12 17:29:28,578 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-10-12 17:29:28,578 | INFO | Unique VLESS configs: 248
+2026-10-12 17:29:28,583 | INFO | archive.txt loaded: 4426 nodes
+2026-10-12 17:29:28,583 | INFO | 
+--- ARCHIVE TCP CLEANUP (4426 nodes, threads: 40) ---
+2026-10-12 17:29:40,611 | INFO | ARCHIVE TCP CLEANUP done: alive=4308, removed=118, time=12.0с
+2026-10-12 17:29:40,611 | INFO | 
+--- STEP 3: LIVE CHECK (248 nodes, threads: 40, min_sites_ok=2) ---
+2026-10-12 17:30:24,713 | INFO | ⏱️ Время проверки: 44.1 сек
+2026-10-12 17:30:24,714 | INFO | 
+--- RESULT: Found 79 live nodes ---
+2026-10-12 17:30:24,714 | INFO | 
+--- FILL FROM ARCHIVE (need 21 more, threads: 40) ---
+2026-10-12 17:30:26,584 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:27,013 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:27,536 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:27,594 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:27,749 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:27,786 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:27,911 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,026 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,063 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,135 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,158 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,176 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,182 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,185 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,186 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,187 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,210 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,213 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,223 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,226 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,256 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,377 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,410 | INFO | [ARCHIVE LIVE 3/3] Нода из архива рабочая, добавляю
+2026-10-12 17:30:28,420 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,425 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,431 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,432 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,433 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,434 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,437 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,438 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,453 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,456 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,463 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,471 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,471 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,472 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,472 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,475 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,490 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,491 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,507 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,515 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,522 | INFO | [ARCHIVE DEAD 0/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,592 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,691 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,706 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,800 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:28,906 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:29,017 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:29,481 | INFO | [ARCHIVE DEAD 1/3] Нода из архива мертва, удаляю
+2026-10-12 17:30:31,081 | INFO | archive.txt updated: 4350 nodes
+2026-10-12 17:30:31,081 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt (100 nodes)
+2026-10-12 17:30:31,081 | INFO | 
+--- STATS BY TRANSPORT (live_total / dead_total | live_last / dead_last) ---
+2026-10-12 17:30:31,082 | INFO | tcp: 2702 / 3123 | 20 / 124
+2026-10-12 17:30:31,082 | INFO | ws: 6983 / 5443 | 80 / 104
+2026-10-12 17:30:31,082 | INFO | grpc: 37 / 1996 | 0 / 56
+2026-10-12 17:30:31,082 | INFO | xhttp: 0 / 1379 | 0 / 33
+2026-10-12 17:30:31,082 | INFO | 
+--- STATS BY SECURITY (live_total / dead_total | live_last / dead_last) ---
+2026-10-12 17:30:31,082 | INFO | none: 1625 / 1573 | 2 / 12
+2026-10-12 17:30:31,082 | INFO | tls: 6067 / 5557 | 79 / 131
+2026-10-12 17:30:31,082 | INFO | reality: 2030 / 4811 | 19 / 174
+2026-10-12 17:30:31,083 | INFO | 💾 Статистика источников сохранена: source_stats.json
+2026-10-12 17:30:31,083 | INFO | 💾 Статистика протоколов сохранена: protocol_stats.json
+2026-10-12 17:30:31,083 | INFO | 
+============ ИТОГ ЗАПУСКА ============
+Живых из источников:          79
+Оживлено из архива:           21
+Удалено из архива (мёртвых):  148
+Итого в подписке:             100
+Итого в архиве:               4350
+
+--- ДЕТАЛИЗАЦИЯ ОШИБОК ---
+dead_tcp (TCP не открылся):    41
+dead_config (битый конфиг):    0
+dead_start (sing-box упал):    33
+dead_sites (мало сайтов):      95
+dead_parse (URI не парсится):  0
+======================================
+2026-10-12 17:30:31,083 | INFO | 
+--- ПРОВЕРКА САЙТОВ (за текущий запуск) ---
+2026-10-12 17:30:31,083 | INFO | https://telegram.org: 122/215 (56.7%)
+2026-10-12 17:30:31,083 | INFO | https://www.instagram.com: 107/208 (51.4%)
+2026-10-12 17:30:31,083 | INFO | https://www.youtube.com: 110/199 (55.3%)
+2026-10-12 17:30:31,084 | INFO | 💾 Статистика запуска сохранена: run_stats.json
