@@ -1,0 +1,64 @@
+2026-10-19 03:43:33,329 | INFO | === SING-BOX STATUS ===
+2026-10-19 03:43:33,352 | INFO | sing-box version 1.14.3
+
+Environment: go1.26.8 linux/amd64
+Tags: with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,with_cloudflared,with_naive_outbound,with_usbip,with_openvpn,with_openconnect,badlinkname,tfogo_checklinkname0,with_musl
+Revision: 7054cac5124465ffdb145870d7c01885566711b1
+CGO: enabled
+2026-10-19 03:43:33,352 | INFO | 
+--- STEP 1: FETCHING SOURCES ---
+2026-10-19 03:43:33,468 | INFO | Loaded 128 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-19 03:43:33,598 | INFO | Loaded 4 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-19 03:43:33,827 | INFO | Loaded 9 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-19 03:43:33,906 | INFO | Loaded 131 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main...
+2026-10-19 03:43:33,964 | INFO | Loaded 351 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLES...
+2026-10-19 03:43:34,095 | INFO | Loaded 152 lines from https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLES...
+2026-10-19 03:43:34,229 | INFO | Loaded 111 lines from https://raw.githubusercontent.com/FLAT447/v2ray-lists/main/WHITE_LITE.txt...
+2026-10-19 03:43:34,229 | INFO | 
+--- STEP 2: VALIDATION ---
+2026-10-19 03:43:34,230 | INFO | Unique VLESS configs: 560
+2026-10-19 03:43:34,231 | INFO | archive.txt loaded: 1515 nodes
+2026-10-19 03:43:34,231 | INFO | 
+--- ARCHIVE TCP CLEANUP (1515 nodes, threads: 40) ---
+2026-10-19 03:43:40,835 | INFO | ARCHIVE TCP CLEANUP done: alive=1485, removed=30, time=6.6с
+2026-10-19 03:43:40,835 | INFO | 
+--- STEP 3: LIVE CHECK (560 nodes, threads: 40, min_sites_ok=2) ---
+2026-10-19 03:44:56,595 | INFO | ⏱️ Время проверки: 75.8 сек
+2026-10-19 03:44:56,595 | INFO | 
+--- RESULT: Found 154 live nodes ---
+2026-10-19 03:44:56,599 | INFO | archive.txt updated: 1536 nodes
+2026-10-19 03:44:56,599 | INFO | Subscription updated: /home/runner/work/sbornik/sbornik/subs/vless_001.txt (100 nodes)
+2026-10-19 03:44:56,599 | INFO | 
+--- STATS BY TRANSPORT (live_total / dead_total | live_last / dead_last) ---
+2026-10-19 03:44:56,599 | INFO | tcp: 4437 / 5422 | 60 / 88
+2026-10-19 03:44:56,599 | INFO | ws: 8715 / 10157 | 94 / 120
+2026-10-19 03:44:56,599 | INFO | grpc: 63 / 4557 | 0 / 201
+2026-10-19 03:44:56,599 | INFO | xhttp: 0 / 2041 | 0 / 27
+2026-10-19 03:44:56,599 | INFO | 
+--- STATS BY SECURITY (live_total / dead_total | live_last / dead_last) ---
+2026-10-19 03:44:56,599 | INFO | none: 1946 / 3056 | 20 / 16
+2026-10-19 03:44:56,599 | INFO | tls: 7635 / 10115 | 79 / 221
+2026-10-19 03:44:56,599 | INFO | reality: 3634 / 9006 | 55 / 199
+2026-10-19 03:44:56,600 | INFO | 💾 Статистика источников сохранена: source_stats.json
+2026-10-19 03:44:56,600 | INFO | 💾 Статистика протоколов сохранена: protocol_stats.json
+2026-10-19 03:44:56,600 | INFO | 
+============ ИТОГ ЗАПУСКА ============
+Живых из источников:          154
+Оживлено из архива:           0
+Удалено из архива (мёртвых):  30
+Итого в подписке:             100
+Итого в архиве:               1536
+
+--- ДЕТАЛИЗАЦИЯ ОШИБОК ---
+dead_tcp (TCP не открылся):    41
+dead_config (битый конфиг):    0
+dead_start (sing-box упал):    26
+dead_sites (мало сайтов):      339
+dead_parse (URI не парсится):  0
+======================================
+2026-10-19 03:44:56,600 | INFO | 
+--- ПРОВЕРКА САЙТОВ (за текущий запуск) ---
+2026-10-19 03:44:56,600 | INFO | https://telegram.org: 144/493 (29.2%)
+2026-10-19 03:44:56,600 | INFO | https://www.instagram.com: 155/493 (31.4%)
+2026-10-19 03:44:56,600 | INFO | https://www.youtube.com: 147/493 (29.8%)
+2026-10-19 03:44:56,600 | INFO | 💾 Статистика запуска сохранена: run_stats.json
